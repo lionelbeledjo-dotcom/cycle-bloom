@@ -10,16 +10,52 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PregnancyRouteImport } from './routes/pregnancy'
+import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as SymptomsRouteImport } from './routes/symptoms'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BloomAiRouteImport } from './routes/bloom-ai'
 import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminContentRouteImport } from './routes/admin/content'
+import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PregnancyRoute = PregnancyRouteImport.update({
+  id: '/pregnancy',
+  path: '/pregnancy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RemindersRoute = RemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SymptomsRoute = SymptomsRouteImport.update({
+  id: '/symptoms',
+  path: '/symptoms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -52,24 +88,76 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/admin/content',
+  path: '/admin/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
+  id: '/admin/subscriptions',
+  path: '/admin/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/admin/analytics',
+  path: '/admin/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
   '/bloom-ai': typeof BloomAiRoute
   '/calendar': typeof CalendarRoute
+  '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
+  '/reminders': typeof RemindersRoute
+  '/symptoms': typeof SymptomsRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/settings': typeof AdminSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
   '/bloom-ai': typeof BloomAiRoute
   '/calendar': typeof CalendarRoute
+  '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
+  '/reminders': typeof RemindersRoute
+  '/symptoms': typeof SymptomsRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/settings': typeof AdminSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,9 +165,20 @@ export interface FileRoutesById {
   '/articles': typeof ArticlesRoute
   '/bloom-ai': typeof BloomAiRoute
   '/calendar': typeof CalendarRoute
+  '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
+  '/reminders': typeof RemindersRoute
+  '/symptoms': typeof SymptomsRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/settings': typeof AdminSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -88,27 +187,60 @@ export interface FileRouteTypes {
     | '/articles'
     | '/bloom-ai'
     | '/calendar'
+    | '/community'
     | '/dashboard'
+    | '/insights'
     | '/login'
+    | '/pregnancy'
     | '/profile'
+    | '/reminders'
+    | '/symptoms'
+    | '/admin'
+    | '/admin/users'
+    | '/admin/content'
+    | '/admin/subscriptions'
+    | '/admin/analytics'
+    | '/admin/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/articles'
     | '/bloom-ai'
     | '/calendar'
+    | '/community'
     | '/dashboard'
+    | '/insights'
     | '/login'
+    | '/pregnancy'
     | '/profile'
+    | '/reminders'
+    | '/symptoms'
+    | '/admin'
+    | '/admin/users'
+    | '/admin/content'
+    | '/admin/subscriptions'
+    | '/admin/analytics'
+    | '/admin/settings'
   id:
     | '__root__'
     | '/'
     | '/articles'
     | '/bloom-ai'
     | '/calendar'
+    | '/community'
     | '/dashboard'
+    | '/insights'
     | '/login'
+    | '/pregnancy'
     | '/profile'
+    | '/reminders'
+    | '/symptoms'
+    | '/admin/'
+    | '/admin/users'
+    | '/admin/content'
+    | '/admin/subscriptions'
+    | '/admin/analytics'
+    | '/admin/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -116,9 +248,20 @@ export interface RootRouteChildren {
   ArticlesRoute: typeof ArticlesRoute
   BloomAiRoute: typeof BloomAiRoute
   CalendarRoute: typeof CalendarRoute
+  CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
+  InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
+  PregnancyRoute: typeof PregnancyRoute
   ProfileRoute: typeof ProfileRoute
+  RemindersRoute: typeof RemindersRoute
+  SymptomsRoute: typeof SymptomsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminContentRoute: typeof AdminContentRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +271,41 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pregnancy': {
+      id: '/pregnancy'
+      path: '/pregnancy'
+      fullPath: '/pregnancy'
+      preLoaderRoute: typeof PregnancyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reminders': {
+      id: '/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof RemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/symptoms': {
+      id: '/symptoms'
+      path: '/symptoms'
+      fullPath: '/symptoms'
+      preLoaderRoute: typeof SymptomsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -172,6 +350,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/admin/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/subscriptions': {
+      id: '/admin/subscriptions'
+      path: '/admin/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminSubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/admin/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -180,9 +400,20 @@ const rootRouteChildren: RootRouteChildren = {
   ArticlesRoute: ArticlesRoute,
   BloomAiRoute: BloomAiRoute,
   CalendarRoute: CalendarRoute,
+  CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
+  InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
+  PregnancyRoute: PregnancyRoute,
   ProfileRoute: ProfileRoute,
+  RemindersRoute: RemindersRoute,
+  SymptomsRoute: SymptomsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminContentRoute: AdminContentRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
