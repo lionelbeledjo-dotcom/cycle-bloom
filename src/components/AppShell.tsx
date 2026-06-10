@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Flower2, LayoutDashboard, Calendar, BookOpen, Sparkles, User, LogOut, Activity, LineChart, Users, Bell, Baby } from "lucide-react";
+import { Flower2, LayoutDashboard, Calendar, BookOpen, Sparkles, User, LogOut, Activity, LineChart, Users, Bell, Baby, Stethoscope, Crown } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [
@@ -10,8 +10,10 @@ const nav = [
   { to: "/articles", label: "Magazine", icon: BookOpen },
   { to: "/bloom-ai", label: "Bloom AI", icon: Sparkles },
   { to: "/community", label: "Communauté", icon: Users },
+  { to: "/doctors", label: "Médecins", icon: Stethoscope },
   { to: "/reminders", label: "Rappels", icon: Bell },
   { to: "/pregnancy", label: "Grossesse", icon: Baby },
+  { to: "/subscription", label: "Premium", icon: Crown },
   { to: "/profile", label: "Profil", icon: User },
 ] as const;
 
@@ -63,7 +65,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
 
       {/* Bottom nav mobile */}
       <nav className="fixed bottom-4 left-4 right-4 z-30 flex items-center justify-around rounded-3xl border border-white/60 bg-white/80 px-3 py-2 shadow-bloom backdrop-blur-xl lg:hidden">
-        {[nav[0], nav[1], nav[2], nav[5], nav[9]].map((item) => {
+        {[nav[0], nav[1], nav[5], nav[7], nav[11]].map((item) => {
           const active = pathname === item.to;
           const Icon = item.icon;
           return (

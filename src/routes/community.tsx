@@ -1,47 +1,190 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { MessageCircle, Heart, TrendingUp, Plus } from "lucide-react";
+import { useState } from "react";
+import { MessageCircle, Heart, TrendingUp, Plus, ChevronLeft, Send, Shield, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/community")({
   head: () => ({ meta: [{ title: "Communauté — CycleBloom AI" }] }),
   component: Community,
 });
 
-const CATEGORIES = ["Tout", "Cycles", "Fertilité", "Grossesse", "Bien-être", "SOPK", "Questions"];
+const CATEGORIES = ["Tout", "Cycles", "Fertilité", "Grossesse", "Bien-être", "SOPK", "Endométriose", "Contraception"];
 
-const POSTS = [
-  { id: 1, author: "Sophie M.", avatar: "S", cat: "Cycles", title: "Cycles irréguliers après arrêt de la pilule", preview: "Ça fait 3 mois que j'ai arrêté ma pilule et mes cycles sont complètement déréglés (35 à 45 jours). Est-ce normal ?", replies: 14, likes: 23, time: "Il y a 2h" },
-  { id: 2, author: "Amina D.", avatar: "A", cat: "Fertilité", title: "Glaire cervicale et ovulation — votre expérience ?", preview: "Comment vous repérez votre ovulation ? Moi c'est surtout la glaire type blanc d'œuf mais parfois je doute...", replies: 22, likes: 38, time: "Il y a 4h" },
-  { id: 3, author: "Julie B.", avatar: "J", cat: "Bien-être", title: "Yoga et règles douloureuses : ça marche vraiment ?", preview: "J'ai commencé le yoga spécial cycle et honnêtement ça change tout. Qui d'autre a essayé ?", replies: 31, likes: 56, time: "Il y a 6h" },
-  { id: 4, author: "Léa F.", avatar: "L", cat: "SOPK", title: "Diagnostiquée SOPK à 26 ans — besoin de soutien", preview: "Je viens d'être diagnostiquée. Mon gynéco m'a prescrit de la metformine. Des retours d'expérience ?", replies: 45, likes: 89, time: "Il y a 8h" },
-  { id: 5, author: "Clara R.", avatar: "C", cat: "Grossesse", title: "Premier trimestre : les nausées 24h/24", preview: "Je suis à 8SA et les nausées sont terribles. Qu'est-ce qui vous a aidé ? Le gingembre ne marche pas pour moi.", replies: 28, likes: 42, time: "Hier" },
-  { id: 6, author: "Fatou N.", avatar: "F", cat: "Questions", title: "Spotting entre les règles — quand consulter ?", preview: "J'ai des petites pertes rosées au milieu du cycle depuis 2 mois. Mon médecin dit que c'est normal mais ça m'inquiète.", replies: 11, likes: 17, time: "Hier" },
-  { id: 7, author: "Inès M.", avatar: "I", cat: "Cycles", title: "Flux très abondant — astuces ?", preview: "Mes règles sont devenues très abondantes ces derniers mois (changement toutes les 2h). Ça vous est arrivé ?", replies: 19, likes: 31, time: "Il y a 2j" },
+interface Post {
+  id: number;
+  author: string;
+  avatar: string;
+  cat: string;
+  title: string;
+  preview: string;
+  replies: Reply[];
+  likes: number;
+  time: string;
+  verified?: boolean;
+}
+
+interface Reply {
+  author: string;
+  avatar: string;
+  text: string;
+  likes: number;
+  time: string;
+  isExpert?: boolean;
+  expertTitle?: string;
+}
+
+const POSTS: Post[] = [
+  {
+    id: 1,
+    author: "Sophie M.",
+    avatar: "S",
+    cat: "Cycles",
+    title: "Cycles irréguliers après arrêt de la pilule — retour d'expérience",
+    preview: "Ça fait 3 mois que j'ai arrêté ma pilule et mes cycles sont complètement déréglés (35 à 45 jours). Est-ce normal ? Combien de temps ça a pris pour vous ?",
+    likes: 47,
+    time: "Il y a 2h",
+    replies: [
+      { author: "Dr. Aminata D.", avatar: "A", text: "C'est tout à fait normal, Sophie. Après l'arrêt d'une contraception hormonale, il faut en moyenne 3 à 6 mois pour que le corps retrouve ses cycles naturels. L'axe hypothalamo-hypophyso-ovarien doit se « réveiller ». Si après 6 mois vos cycles dépassent toujours 45 jours, un bilan hormonal (FSH, LH, AMH, TSH) serait recommandé pour exclure un SOPK ou un problème thyroïdien.", likes: 34, time: "Il y a 1h", isExpert: true, expertTitle: "Gynécologue" },
+      { author: "Marie L.", avatar: "M", text: "Pour moi ça a pris 5 mois après 8 ans de pilule. Mon premier cycle sans pilule faisait 52 jours ! Puis progressivement : 42, 38, 31, et maintenant je suis stable à 29-30 jours. Courage, ça revient !", likes: 23, time: "Il y a 1h30" },
+      { author: "Fatou K.", avatar: "F", text: "J'ai eu le même problème. Mon gynéco m'a prescrit du Gattilier (Vitex agnus-castus) pendant 3 mois et mes cycles se sont régularisés. C'est une plante qui agit sur l'axe hormonal. Demande à ton médecin.", likes: 18, time: "Il y a 45min" },
+      { author: "Clara R.", avatar: "C", text: "Pareil ici ! 4 mois de chaos puis retour à la normale. Les tests d'ovulation m'ont aidée à comprendre que j'ovulais quand même, juste plus tard que « prévu ».", likes: 12, time: "Il y a 30min" },
+    ],
+  },
+  {
+    id: 2,
+    author: "Amina D.",
+    avatar: "A",
+    cat: "Fertilité",
+    title: "Glaire cervicale et ovulation — comment vous la repérez ?",
+    preview: "J'essaie de tomber enceinte et je suis la méthode de la glaire. Parfois j'ai du blanc d'œuf pendant 3 jours, parfois 1 seul jour. C'est normal cette variation ?",
+    likes: 56,
+    time: "Il y a 4h",
+    replies: [
+      { author: "Dr. Léa Bernard", avatar: "L", text: "La durée de la glaire fertile (type blanc d'œuf) peut varier d'un cycle à l'autre, c'est parfaitement normal. Ce qui compte c'est d'identifier le DERNIER jour de glaire fertile (appelé « jour sommet ») — l'ovulation survient dans les 24h qui suivent dans 80% des cas. Combinez avec les tests d'ovulation (LH) et la température basale pour trianguler.", likes: 42, time: "Il y a 3h", isExpert: true, expertTitle: "Spécialiste fertilité" },
+      { author: "Inès M.", avatar: "I", text: "Moi j'ai mis 3 cycles à vraiment savoir la reconnaître. Le truc qui m'a aidée : la vérifier au col (désolée si c'est TMI 😅) plutôt qu'aux sous-vêtements. C'est beaucoup plus fiable car la glaire peut se mélanger avec d'autres sécrétions.", likes: 28, time: "Il y a 2h30" },
+      { author: "Julie B.", avatar: "J", text: "J'ai eu 1 seul jour de blanc d'œuf pendant 3 cycles et je suis quand même tombée enceinte ! Certaines femmes n'en produisent pas beaucoup mais ovulent très bien. La sensation de « glisse » à la vulve est aussi un bon indicateur.", likes: 19, time: "Il y a 2h" },
+    ],
+  },
+  {
+    id: 3,
+    author: "Julie B.",
+    avatar: "J",
+    cat: "Bien-être",
+    title: "Yoga et règles douloureuses : protocole qui a changé ma vie",
+    preview: "J'avais des crampes incapacitantes (ibuprofène 800mg/jour pendant 3 jours). Depuis que je fais ces postures spécifiques, j'ai réduit à 1 seul comprimé le premier jour. Voici ce qui marche :",
+    likes: 89,
+    time: "Il y a 6h",
+    verified: true,
+    replies: [
+      { author: "Julie B.", avatar: "J", text: "Mon protocole : Phase lutéale (J21-28) : Supta Baddha Konasana (papillon allongé) 5min, Balasana (enfant) 3min, torsions douces. Jour 1-2 des règles : PAS d'inversions, juste Child's pose, Cat-Cow très lent, et Savasana avec bouillotte. J3-5 : reprendre doucement avec Pigeon pose et étirements du psoas. Études montrent que 20min de yoga/jour réduit l'intensité des crampes de 50% (étude publiée dans JAMS 2017).", likes: 67, time: "Il y a 6h" },
+      { author: "Dr. Fatou N.", avatar: "F", text: "Excellent partage Julie ! Le yoga agit sur les crampes via plusieurs mécanismes : réduction du cortisol (stress amplifie les prostaglandines), amélioration de la circulation pelvienne, et activation du système nerveux parasympathique. Je recommande aussi le magnésium bisglycinate 300mg/j en phase lutéale en complément.", likes: 45, time: "Il y a 5h", isExpert: true, expertTitle: "Sage-femme" },
+      { author: "Clara R.", avatar: "C", text: "Merci Julie !! J'ai commencé ton protocole il y a 2 cycles et je confirme : énorme différence. Surtout le papillon allongé avec la bouillotte, c'est magique pour les crampes basses.", likes: 31, time: "Il y a 4h" },
+    ],
+  },
+  {
+    id: 4,
+    author: "Léa F.",
+    avatar: "L",
+    cat: "SOPK",
+    title: "Diagnostiquée SOPK à 26 ans — mon parcours et conseils",
+    preview: "Je viens d'être diagnostiquée après 2 ans de cycles de 45-90 jours, acné kystique et hirsutisme. Mon gynéco m'a prescrit metformine + changement d'alimentation. Besoin de vos retours.",
+    likes: 112,
+    time: "Il y a 8h",
+    replies: [
+      { author: "Dr. Marie-Claire O.", avatar: "M", text: "Léa, le SOPK est le trouble endocrinien le plus fréquent chez les femmes (10-13%). La metformine est un excellent choix si vous avez une résistance à l'insuline (HOMA-IR > 2.5). Côté alimentation, visez un index glycémique bas : remplacez les féculents blancs par des légumineuses, ajoutez des fibres à chaque repas (ralentit l'absorption du sucre), et privilégiez les protéines le matin. L'exercice est crucial : 150min/semaine de cardio + renforcement musculaire améliorent la sensibilité à l'insuline de 20-30%.", likes: 78, time: "Il y a 7h", isExpert: true, expertTitle: "Endocrinologue" },
+      { author: "Fatou K.", avatar: "F", text: "Diagnostiquée à 24 ans, aujourd'hui 29. La metformine + alimentation anti-inflammatoire + inositol (myo-inositol 4g/j) a transformé mes cycles : passée de 60-90 jours à 32-35 jours en 6 mois. Mon acné a disparu en 4 mois. Ne lâche pas, ça prend du temps mais ça marche.", likes: 56, time: "Il y a 6h" },
+      { author: "Sophie M.", avatar: "S", text: "J'ai un SOPK léger et la combinaison qui marche pour moi : jeûne intermittent 16:8, marche 10 000 pas/jour, magnésium + zinc + vitamine D, et Vitex. Mes cycles sont passés de 45j à 31j en 4 mois.", likes: 34, time: "Il y a 5h" },
+      { author: "Inès M.", avatar: "I", text: "Courage Léa ! Le diagnostic c'est le plus dur psychologiquement mais une fois qu'on sait, on peut agir. Rejoins aussi le groupe @SOPK_France sur les réseaux, c'est une communauté super soutenante.", likes: 23, time: "Il y a 4h" },
+    ],
+  },
+  {
+    id: 5,
+    author: "Clara R.",
+    avatar: "C",
+    cat: "Grossesse",
+    title: "Premier trimestre : nausées 24h/24 — ce qui m'a VRAIMENT aidée",
+    preview: "8 SA et les nausées sont terribles. Le gingembre seul ne marchait pas. Voici la combinaison qui m'a permis de fonctionner :",
+    likes: 67,
+    time: "Hier",
+    replies: [
+      { author: "Clara R.", avatar: "C", text: "Ce qui a fonctionné : 1) Vitamine B6 25mg 3x/jour (validé par ACOG). 2) Manger AVANT d'avoir faim — toutes les 2h, petites portions protéinées. 3) Acupression point P6 (bracelets Sea-Band). 4) Gingembre EN CAPSULES (pas en tisane, dosage trop faible). 5) Citron frais à sentir en cas de crise. L'estomac vide est l'ennemi #1. Je garde des crackers sur ma table de nuit.", likes: 45, time: "Hier" },
+      { author: "Dr. Léa B.", avatar: "L", text: "Bon résumé Clara ! La B6 (pyridoxine) est le traitement de première intention selon l'ACOG. Si ça ne suffit pas, l'association B6 + doxylamine (Diclectin/Cariban) est sûre en grossesse. N'hésitez pas à consulter si les vomissements sont > 3-4/jour ou si vous perdez du poids — l'hyperemesis gravidarum nécessite parfois un traitement IV.", likes: 38, time: "Hier", isExpert: true, expertTitle: "Obstétricienne" },
+      { author: "Marie L.", avatar: "M", text: "La B6 m'a sauvé la vie aussi ! Et les smoothies le matin plutôt que de manger solide. Accrochez-vous, pour 80% des femmes ça passe vers 12-14 SA.", likes: 22, time: "Hier" },
+    ],
+  },
+  {
+    id: 6,
+    author: "Fatou N.",
+    avatar: "F",
+    cat: "Endométriose",
+    title: "Endométriose stade 3 : comment j'ai réduit mes douleurs de 80%",
+    preview: "Diagnostiquée en 2022 après 8 ans d'errance médicale. Voici mon approche multidisciplinaire qui a changé ma qualité de vie :",
+    likes: 134,
+    time: "Hier",
+    replies: [
+      { author: "Fatou N.", avatar: "F", text: "Mon protocole : 1) Dienogest en continu (plus de règles = moins d'inflammation). 2) Alimentation anti-inflammatoire stricte : zéro gluten, zéro produits laitiers, beaucoup d'oméga-3. 3) Ostéopathie spécialisée pelvi-périnéale 1x/mois. 4) Yoga adapté (pas d'abdos classiques !). 5) Curcumine liposomale 1g/j. Résultat : douleur passée de 8/10 quotidien à 2/10 occasionnel en 6 mois.", likes: 89, time: "Hier" },
+      { author: "Dr. Sophie M.", avatar: "S", text: "Fatou, votre approche est exemplaire. Le Dienogest (Visanne) est effectivement le progestatif de référence pour l'endométriose avec le meilleur rapport efficacité/effets secondaires. L'alimentation anti-inflammatoire a montré des résultats significatifs dans plusieurs études (réduction de 30-50% des douleurs). L'important est cette approche MULTIMODALE — aucun traitement seul ne suffit pour l'endométriose.", likes: 67, time: "Il y a 22h", isExpert: true, expertTitle: "Gynécologue spécialisée endométriose" },
+      { author: "Léa F.", avatar: "L", text: "8 ans d'errance... c'est malheureusement la moyenne. Merci de partager ton parcours, ça aide tellement de savoir qu'on peut retrouver une qualité de vie. Je vais demander à mon gynéco pour le Dienogest.", likes: 34, time: "Il y a 20h" },
+    ],
+  },
+  {
+    id: 7,
+    author: "Inès M.",
+    avatar: "I",
+    cat: "Contraception",
+    title: "DIU cuivre : mon retour après 2 ans (sans hormones !)",
+    preview: "Pour celles qui hésitent à passer au DIU cuivre, voici mon expérience complète après 2 ans : avantages, inconvénients, et ce que j'aurais aimé savoir avant.",
+    likes: 78,
+    time: "Il y a 2j",
+    replies: [
+      { author: "Inès M.", avatar: "I", text: "Avantages : aucune hormone, posé et tranquille pour 5-10 ans, retour fertilité immédiat si retrait. Inconvénients réels : les 3 premiers mois mes règles étaient plus abondantes (+2 jours) et les crampes plus fortes. MAIS : à partir du 4e mois tout s'est calmé. Aujourd'hui : règles normales, pas d'effets secondaires, je ne pense jamais à la contraception. Conseil : prenez ibuprofène 1h avant la pose, et faites-le poser pendant les règles (col plus ouvert).", likes: 56, time: "Il y a 2j" },
+      { author: "Dr. Aminata D.", avatar: "A", text: "Merci Inès pour ce retour ! Le DIU cuivre est une excellente option pour les femmes qui ne souhaitent pas d'hormones. Efficacité > 99%. Les règles plus abondantes les premiers mois sont l'effet secondaire le plus fréquent mais transitoire. Contre-indications : maladie de Wilson, allergie au cuivre, malformation utérine, infection pelvienne active. Le DIU peut être posé à tout âge, même sans avoir eu d'enfant (contrairement à une idée reçue).", likes: 45, time: "Il y a 2j", isExpert: true, expertTitle: "Gynécologue" },
+      { author: "Sophie M.", avatar: "S", text: "J'ai le même depuis 3 ans et je confirme tout ! Les premiers mois sont un investissement mais après c'est le bonheur de ne penser à rien. Pour les crampes des premiers cycles : bouillotte + magnésium = combo gagnant.", likes: 23, time: "Il y a 1j" },
+    ],
+  },
 ];
 
 const TRENDING = [
   "Comment gérer le SPM naturellement",
   "Retour de couches : à quoi s'attendre",
-  "Les meilleures apps de suivi (comparatif)",
   "Endométriose et alimentation anti-inflammatoire",
+  "SOPK : myo-inositol vs metformine",
+  "Cycle et libido : comprendre les fluctuations",
 ];
 
 function Community() {
+  const [activeCategory, setActiveCategory] = useState("Tout");
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [newReply, setNewReply] = useState("");
+
+  const filteredPosts = activeCategory === "Tout"
+    ? POSTS
+    : POSTS.filter(p => p.cat === activeCategory);
+
+  if (selectedPost) {
+    return (
+      <AppShell title="Communauté">
+        <PostDetail post={selectedPost} onBack={() => setSelectedPost(null)} />
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell title="Communauté">
       <div className="flex items-center justify-between -mt-4 mb-6">
-        <p className="text-sm text-foreground/70">Un espace bienveillant entre femmes 💜</p>
-        <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom">
+        <p className="text-sm text-foreground/70">Espace d'entraide bienveillant entre femmes — modéré par des professionnels de santé</p>
+        <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
           <Plus className="h-4 w-4" /> Nouveau post
         </button>
       </div>
 
       <div className="-mx-2 mb-6 flex gap-2 overflow-x-auto px-2 pb-1">
-        {CATEGORIES.map((c, i) => (
+        {CATEGORIES.map(c => (
           <button
             key={c}
+            onClick={() => setActiveCategory(c)}
             className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${
-              i === 0
+              activeCategory === c
                 ? "bg-gradient-to-r from-rose-vif to-violet-doux text-white shadow-bloom"
                 : "bg-white/80 text-foreground/70 hover:text-foreground"
             }`}
@@ -53,23 +196,37 @@ function Community() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
         <div className="space-y-4">
-          {POSTS.map(post => (
-            <article key={post.id} className="rounded-3xl border border-white/70 glass p-5 shadow-bloom transition hover:-translate-y-0.5 cursor-pointer">
+          {filteredPosts.map(post => (
+            <article
+              key={post.id}
+              onClick={() => setSelectedPost(post)}
+              className="rounded-3xl border border-white/70 glass p-5 shadow-bloom transition hover:-translate-y-0.5 cursor-pointer"
+            >
               <div className="flex items-start gap-4">
                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-rose-vif to-violet-doux flex items-center justify-center text-sm font-bold text-white shrink-0">
                   {post.avatar}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-xs font-semibold">{post.author}</span>
                     <span className="rounded-full bg-lavande px-2 py-0.5 text-[9px] font-medium text-violet-doux">{post.cat}</span>
+                    {post.verified && (
+                      <span className="flex items-center gap-0.5 rounded-full bg-green-50 px-2 py-0.5 text-[9px] font-medium text-green-700">
+                        <CheckCircle2 className="h-2.5 w-2.5" /> Vérifié
+                      </span>
+                    )}
                     <span className="text-[10px] text-muted-foreground ml-auto">{post.time}</span>
                   </div>
                   <h3 className="font-display text-base font-semibold leading-tight">{post.title}</h3>
                   <p className="mt-1.5 text-xs text-foreground/60 line-clamp-2">{post.preview}</p>
                   <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" /> {post.replies} réponses</span>
+                    <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" /> {post.replies.length} réponses</span>
                     <span className="flex items-center gap-1"><Heart className="h-3.5 w-3.5" /> {post.likes}</span>
+                    {post.replies.some(r => r.isExpert) && (
+                      <span className="flex items-center gap-1 text-violet-doux font-medium">
+                        <Shield className="h-3.5 w-3.5" /> Réponse experte
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -87,23 +244,121 @@ function Community() {
               {TRENDING.map((t, i) => (
                 <div key={i} className="flex items-start gap-2 cursor-pointer group">
                   <span className="text-xs font-bold text-rose-vif mt-0.5">#{i + 1}</span>
-                  <span className="text-xs text-foreground/70 group-hover:text-foreground">{t}</span>
+                  <span className="text-xs text-foreground/70 group-hover:text-foreground transition">{t}</span>
                 </div>
               ))}
             </div>
           </div>
 
+          <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom">
+            <h3 className="font-display text-sm font-semibold mb-3">Statistiques</h3>
+            <div className="grid grid-cols-2 gap-3 text-center">
+              <div className="rounded-2xl bg-white/60 p-3">
+                <div className="font-display text-xl font-bold text-rose-vif">12.4k</div>
+                <div className="text-[10px] text-muted-foreground">Membres</div>
+              </div>
+              <div className="rounded-2xl bg-white/60 p-3">
+                <div className="font-display text-xl font-bold text-violet-doux">847</div>
+                <div className="text-[10px] text-muted-foreground">Discussions</div>
+              </div>
+            </div>
+          </div>
+
           <div className="rounded-3xl bg-gradient-to-br from-rose-vif to-violet-doux p-5 text-white shadow-bloom">
-            <div className="text-[10px] uppercase tracking-widest">Règles de la communauté</div>
+            <div className="text-[10px] uppercase tracking-widest">Modération</div>
             <ul className="mt-3 space-y-2 text-xs text-white/85">
-              <li>💜 Bienveillance et respect</li>
-              <li>🚫 Pas de diagnostic médical</li>
-              <li>🔒 Anonymat respecté</li>
-              <li>⚠️ Signaler le contenu inapproprié</li>
+              <li>• Bienveillance et respect mutuel</li>
+              <li>• Réponses vérifiées par des médecins</li>
+              <li>• Anonymat et confidentialité</li>
+              <li>• Contenu inapproprié signalé sous 24h</li>
             </ul>
           </div>
         </aside>
       </div>
     </AppShell>
+  );
+}
+
+function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
+  const [liked, setLiked] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  return (
+    <div>
+      <button onClick={onBack} className="flex items-center gap-1 text-sm text-violet-doux hover:text-rose-vif transition mb-6">
+        <ChevronLeft className="h-4 w-4" /> Retour à la communauté
+      </button>
+
+      <article className="rounded-3xl border border-white/70 glass p-6 shadow-bloom mb-6">
+        <div className="flex items-start gap-4 mb-4">
+          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-rose-vif to-violet-doux flex items-center justify-center text-lg font-bold text-white shrink-0">
+            {post.avatar}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">{post.author}</span>
+              <span className="rounded-full bg-lavande px-2 py-0.5 text-[9px] font-medium text-violet-doux">{post.cat}</span>
+            </div>
+            <span className="text-xs text-muted-foreground">{post.time}</span>
+          </div>
+        </div>
+        <h2 className="font-display text-xl font-bold mb-3">{post.title}</h2>
+        <p className="text-sm text-foreground/80 leading-relaxed">{post.preview}</p>
+        <div className="mt-4 flex items-center gap-4">
+          <button
+            onClick={() => setLiked(!liked)}
+            className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium transition ${liked ? "bg-rose-vif text-white" : "bg-white/70 text-foreground/60 hover:bg-white"}`}
+          >
+            <Heart className={`h-3.5 w-3.5 ${liked ? "fill-white" : ""}`} />
+            {post.likes + (liked ? 1 : 0)}
+          </button>
+          <span className="text-xs text-muted-foreground">{post.replies.length} réponses</span>
+        </div>
+      </article>
+
+      {/* Replies */}
+      <div className="space-y-4 mb-6">
+        {post.replies.map((reply, i) => (
+          <div key={i} className={`rounded-2xl p-5 ${reply.isExpert ? "border-2 border-violet-doux/30 bg-violet-doux/5" : "border border-white/70 glass"}`}>
+            <div className="flex items-start gap-3">
+              <div className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${reply.isExpert ? "bg-violet-doux text-white" : "bg-gradient-to-br from-rose-poudre to-rose-vif/50 text-white"}`}>
+                {reply.avatar}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-semibold">{reply.author}</span>
+                  {reply.isExpert && (
+                    <span className="flex items-center gap-0.5 rounded-full bg-violet-doux/10 px-2 py-0.5 text-[9px] font-bold text-violet-doux">
+                      <Shield className="h-2.5 w-2.5" /> {reply.expertTitle}
+                    </span>
+                  )}
+                  <span className="text-[10px] text-muted-foreground ml-auto">{reply.time}</span>
+                </div>
+                <p className="text-sm text-foreground/80 leading-relaxed">{reply.text}</p>
+                <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                  <Heart className="h-3 w-3" /> {reply.likes}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Reply input */}
+      <div className="rounded-3xl border border-white/70 glass p-4 shadow-bloom">
+        <textarea
+          value={replyText}
+          onChange={(e) => setReplyText(e.target.value)}
+          placeholder="Partagez votre expérience ou posez une question..."
+          className="w-full rounded-2xl border border-border bg-white/80 p-4 text-sm outline-none resize-none h-24 focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+        />
+        <div className="mt-3 flex items-center justify-between">
+          <p className="text-[10px] text-muted-foreground">Soyez bienveillante et respectueuse</p>
+          <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+            <Send className="h-3.5 w-3.5" /> Répondre
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

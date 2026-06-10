@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { CycleRing } from "@/components/CycleRing";
-import { Sparkles, Droplet, Flower, Activity, TrendingUp, Heart } from "lucide-react";
+import { Sparkles, Droplet, Flower, Activity, TrendingUp, Heart, Calendar, Bell, AlertTriangle, Stethoscope } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -22,22 +22,22 @@ function Dashboard() {
       <div className="mb-8 flex items-end justify-between">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-violet-doux">{formatted}</div>
-          <h1 className="font-display text-4xl font-bold sm:text-5xl">Bonjour, Camille ✨</h1>
+          <h1 className="font-display text-4xl font-bold sm:text-5xl">Bonjour, Camille</h1>
         </div>
-        <div className="hidden items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-xs font-semibold text-violet-doux shadow-sm backdrop-blur sm:flex">
+        <Link to="/bloom-ai" className="hidden items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-xs font-semibold text-violet-doux shadow-sm backdrop-blur sm:flex hover:bg-white transition">
           <Sparkles className="h-3.5 w-3.5" /> Confiance IA : 98%
-        </div>
+        </Link>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Cycle ring card */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/70 glass p-8 shadow-bloom lg:col-span-2">
+        <Link to="/calendar" className="relative overflow-hidden rounded-3xl border border-white/70 glass p-8 shadow-bloom lg:col-span-2 hover:-translate-y-0.5 transition cursor-pointer block">
           <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
               <div className="text-xs uppercase tracking-[0.2em] text-violet-doux">Phase actuelle</div>
               <h2 className="mt-2 font-display text-3xl font-bold">Fenêtre fertile</h2>
               <p className="mt-3 max-w-xs text-sm text-foreground/70">
-                Vous êtes au cœur de votre période la plus fertile. Pic d'œstrogènes et d'énergie attendu.
+                Vous êtes au coeur de votre période la plus fertile. Pic d'oestrogènes et d'énergie attendu.
               </p>
               <div className="mt-6 grid grid-cols-2 gap-3 sm:max-w-xs">
                 <MiniStat icon={Droplet} label="Prochaines règles" value="dans 9 j" tint="rose" />
@@ -48,13 +48,10 @@ function Dashboard() {
             </div>
             <CycleRing day={14} cycleLength={28} />
           </div>
-          <p className="mt-6 text-[11px] italic text-muted-foreground">
-            Prédiction basée sur les données enregistrées. Ne constitue pas un diagnostic médical.
-          </p>
-        </div>
+        </Link>
 
         {/* Bloom AI card */}
-        <div className="rounded-3xl bg-gradient-to-br from-rose-vif to-violet-doux p-8 text-white shadow-bloom">
+        <Link to="/bloom-ai" className="rounded-3xl bg-gradient-to-br from-rose-vif to-violet-doux p-8 text-white shadow-bloom hover:-translate-y-0.5 transition block">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
             <span className="text-xs font-semibold uppercase tracking-widest">Bloom AI</span>
@@ -63,46 +60,68 @@ function Dashboard() {
             "Profitez de ce pic d'énergie pour bouger, Camille."
           </h3>
           <p className="mt-3 text-sm text-white/85">
-            Pendant la fenêtre fertile, la testostérone et les œstrogènes augmentent. Idéal pour les entraînements intenses et les projets créatifs.
+            Pendant la fenêtre fertile, la testostérone et les oestrogènes augmentent. Idéal pour les entraînements intenses.
           </p>
-          <button className="mt-6 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-rose-vif transition hover:scale-[1.02]">
+          <span className="mt-6 inline-block rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-rose-vif">
             Discuter avec Bloom →
-          </button>
-        </div>
+          </span>
+        </Link>
 
-        {/* Symptoms quick log */}
-        <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
+        {/* Quick actions */}
+        <Link to="/symptoms" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
           <h3 className="font-display text-lg font-semibold">Comment vous sentez-vous ?</h3>
-          <p className="text-xs text-muted-foreground">Touchez pour enregistrer</p>
+          <p className="text-xs text-muted-foreground">Touchez pour enregistrer vos symptômes</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {["🌸 Bien", "😴 Fatiguée", "🌧 Triste", "🔥 Énergique", "💢 Irritée", "🤕 Maux de tête", "🥴 Crampes", "✨ Motivée"].map((s) => (
-              <button
-                key={s}
-                className="rounded-full border border-border bg-white/80 px-3.5 py-1.5 text-xs font-medium transition hover:border-rose-vif hover:text-rose-vif"
-              >
+              <span key={s} className="rounded-full border border-border bg-white/80 px-3.5 py-1.5 text-xs font-medium">
                 {s}
-              </button>
+              </span>
             ))}
           </div>
-        </div>
+        </Link>
 
         {/* Trend card */}
-        <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
+        <Link to="/insights" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
           <div className="flex items-center justify-between">
             <h3 className="font-display text-lg font-semibold">Tendance 6 mois</h3>
             <TrendingUp className="h-4 w-4 text-violet-doux" />
           </div>
           <Sparkline />
           <div className="mt-3 flex justify-between text-[10px] uppercase tracking-wider text-muted-foreground">
-            <span>Mai</span><span>Juin</span><span>Juil</span><span>Août</span><span>Sept</span><span>Oct</span>
+            <span>Jan</span><span>Fév</span><span>Mar</span><span>Avr</span><span>Mai</span><span>Jun</span>
           </div>
           <p className="mt-4 text-xs text-foreground/70">
-            Cycle stable autour de <span className="font-semibold text-violet-doux">28 jours</span>.
+            Cycle stable autour de <span className="font-semibold text-violet-doux">28 jours</span>. Voir le rapport complet →
           </p>
-        </div>
+        </Link>
+
+        {/* Doctor consultation */}
+        <Link to="/doctors" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
+          <div className="flex items-center gap-2 mb-3">
+            <Stethoscope className="h-5 w-5 text-rose-vif" />
+            <h3 className="font-display text-lg font-semibold">Consulter un médecin</h3>
+          </div>
+          <p className="text-xs text-foreground/70 mb-3">Téléconsultation gynécologique disponible 24h/24 dans votre pays.</p>
+          <span className="rounded-full bg-rose-vif/10 px-3 py-1.5 text-xs font-semibold text-rose-vif">
+            Prendre rendez-vous →
+          </span>
+        </Link>
+
+        {/* Reminders */}
+        <Link to="/reminders" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
+          <div className="flex items-center gap-2 mb-3">
+            <Bell className="h-5 w-5 text-violet-doux" />
+            <h3 className="font-display text-lg font-semibold">Rappels du jour</h3>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs"><span className="h-2 w-2 rounded-full bg-rose-vif" /> Température basale — 06:30</div>
+            <div className="flex items-center gap-2 text-xs"><span className="h-2 w-2 rounded-full bg-violet-doux" /> Suivi symptômes — 21:00</div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground"><span className="h-2 w-2 rounded-full bg-muted" /> Pilule — 08:00 (désactivé)</div>
+          </div>
+        </Link>
 
         {/* Article suggestion */}
-        <div className="overflow-hidden rounded-3xl border border-white/70 glass shadow-bloom">
+        <Link to="/articles" className="overflow-hidden rounded-3xl border border-white/70 glass shadow-bloom hover:-translate-y-0.5 transition block">
           <div className="h-32 bg-gradient-to-br from-rose-poudre to-lavande" />
           <div className="p-6">
             <div className="text-[10px] uppercase tracking-widest text-violet-doux">Magazine · Fertilité</div>
@@ -111,23 +130,13 @@ function Dashboard() {
             </h3>
             <p className="mt-2 text-xs text-muted-foreground">3 min de lecture · Dr. Léa Bernard</p>
           </div>
-        </div>
+        </Link>
       </div>
     </AppShell>
   );
 }
 
-function MiniStat({
-  icon: Icon,
-  label,
-  value,
-  tint,
-}: {
-  icon: typeof Droplet;
-  label: string;
-  value: string;
-  tint: "rose" | "violet";
-}) {
+function MiniStat({ icon: Icon, label, value, tint }: { icon: typeof Droplet; label: string; value: string; tint: "rose" | "violet" }) {
   return (
     <div className="rounded-2xl bg-white/70 p-3">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">

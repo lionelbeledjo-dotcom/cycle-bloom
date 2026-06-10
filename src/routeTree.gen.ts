@@ -20,6 +20,8 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BloomAiRouteImport } from './routes/bloom-ai'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as DoctorsRouteImport } from './routes/doctors'
+import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
@@ -83,6 +85,16 @@ const ArticlesRoute = ArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DoctorsRoute = DoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionRoute = SubscriptionRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -126,11 +138,13 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
   '/reminders': typeof RemindersRoute
+  '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
   '/admin': typeof AdminIndexRoute
   '/admin/users': typeof AdminUsersRoute
@@ -146,11 +160,13 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
   '/reminders': typeof RemindersRoute
+  '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
   '/admin': typeof AdminIndexRoute
   '/admin/users': typeof AdminUsersRoute
@@ -167,11 +183,13 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
   '/reminders': typeof RemindersRoute
+  '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/users': typeof AdminUsersRoute
@@ -189,11 +207,13 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/community'
     | '/dashboard'
+    | '/doctors'
     | '/insights'
     | '/login'
     | '/pregnancy'
     | '/profile'
     | '/reminders'
+    | '/subscription'
     | '/symptoms'
     | '/admin'
     | '/admin/users'
@@ -209,11 +229,13 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/community'
     | '/dashboard'
+    | '/doctors'
     | '/insights'
     | '/login'
     | '/pregnancy'
     | '/profile'
     | '/reminders'
+    | '/subscription'
     | '/symptoms'
     | '/admin'
     | '/admin/users'
@@ -229,11 +251,13 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/community'
     | '/dashboard'
+    | '/doctors'
     | '/insights'
     | '/login'
     | '/pregnancy'
     | '/profile'
     | '/reminders'
+    | '/subscription'
     | '/symptoms'
     | '/admin/'
     | '/admin/users'
@@ -250,11 +274,13 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
+  DoctorsRoute: typeof DoctorsRoute
   InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
   PregnancyRoute: typeof PregnancyRoute
   ProfileRoute: typeof ProfileRoute
   RemindersRoute: typeof RemindersRoute
+  SubscriptionRoute: typeof SubscriptionRoute
   SymptomsRoute: typeof SymptomsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -343,6 +369,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/doctors': {
+      id: '/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof DoctorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscription': {
+      id: '/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -402,11 +442,13 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
+  DoctorsRoute: DoctorsRoute,
   InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
   PregnancyRoute: PregnancyRoute,
   ProfileRoute: ProfileRoute,
   RemindersRoute: RemindersRoute,
+  SubscriptionRoute: SubscriptionRoute,
   SymptomsRoute: SymptomsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminUsersRoute: AdminUsersRoute,
