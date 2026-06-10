@@ -16,6 +16,8 @@ import { Route as CommunityRouteImport } from './routes/community'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as SymptomsRouteImport } from './routes/symptoms'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BloomAiRouteImport } from './routes/bloom-ai'
@@ -23,6 +25,7 @@ import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
@@ -95,9 +98,24 @@ const SubscriptionRoute = SubscriptionRouteImport.update({
   path: '/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -138,15 +156,18 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
   '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/login': typeof AdminLoginRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
@@ -160,15 +181,18 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
   '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/login': typeof AdminLoginRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
@@ -183,15 +207,18 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
   '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/login': typeof AdminLoginRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
@@ -207,15 +234,18 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/community'
     | '/dashboard'
+    | '/demo'
     | '/doctors'
     | '/insights'
     | '/login'
     | '/pregnancy'
     | '/profile'
+    | '/register'
     | '/reminders'
     | '/subscription'
     | '/symptoms'
     | '/admin'
+    | '/admin/login'
     | '/admin/users'
     | '/admin/content'
     | '/admin/subscriptions'
@@ -229,15 +259,18 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/community'
     | '/dashboard'
+    | '/demo'
     | '/doctors'
     | '/insights'
     | '/login'
     | '/pregnancy'
     | '/profile'
+    | '/register'
     | '/reminders'
     | '/subscription'
     | '/symptoms'
     | '/admin'
+    | '/admin/login'
     | '/admin/users'
     | '/admin/content'
     | '/admin/subscriptions'
@@ -251,15 +284,18 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/community'
     | '/dashboard'
+    | '/demo'
     | '/doctors'
     | '/insights'
     | '/login'
     | '/pregnancy'
     | '/profile'
+    | '/register'
     | '/reminders'
     | '/subscription'
     | '/symptoms'
     | '/admin/'
+    | '/admin/login'
     | '/admin/users'
     | '/admin/content'
     | '/admin/subscriptions'
@@ -274,14 +310,17 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
+  DemoRoute: typeof DemoRoute
   DoctorsRoute: typeof DoctorsRoute
   InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
   PregnancyRoute: typeof PregnancyRoute
   ProfileRoute: typeof ProfileRoute
+  RegisterRoute: typeof RegisterRoute
   RemindersRoute: typeof RemindersRoute
   SubscriptionRoute: typeof SubscriptionRoute
   SymptomsRoute: typeof SymptomsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminContentRoute: typeof AdminContentRoute
@@ -383,6 +422,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -395,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
@@ -442,14 +502,17 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
+  DemoRoute: DemoRoute,
   DoctorsRoute: DoctorsRoute,
   InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
   PregnancyRoute: PregnancyRoute,
   ProfileRoute: ProfileRoute,
+  RegisterRoute: RegisterRoute,
   RemindersRoute: RemindersRoute,
   SubscriptionRoute: SubscriptionRoute,
   SymptomsRoute: SymptomsRoute,
+  AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminContentRoute: AdminContentRoute,

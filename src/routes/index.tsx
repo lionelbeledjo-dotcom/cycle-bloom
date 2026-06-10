@@ -1,13 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flower2, Sparkles, Heart, Brain, Calendar, LineChart, ShieldCheck, Star } from "lucide-react";
+import { Flower2, Sparkles, Heart, Brain, Calendar, LineChart, ShieldCheck, Star, Users, Stethoscope, Crown, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "CycleBloom AI — Santé féminine intelligente" },
       { name: "description", content: "Suivi de cycle, fertilité, grossesse et bien-être propulsé par l'IA. Plus complet que les apps classiques." },
-      { property: "og:title", content: "CycleBloom AI" },
-      { property: "og:description", content: "La plateforme de santé féminine la plus complète, propulsée par l'IA." },
     ],
   }),
   component: Landing,
@@ -29,16 +27,17 @@ function Landing() {
             </div>
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium text-foreground/70 md:flex">
-            <a href="#features" className="hover:text-foreground">Fonctionnalités</a>
-            <a href="#magazine" className="hover:text-foreground">Magazine</a>
-            <a href="#pricing" className="hover:text-foreground">Premium</a>
+            <a href="#features" className="hover:text-foreground transition">Fonctionnalités</a>
+            <Link to="/articles" className="hover:text-foreground transition">Magazine</Link>
+            <a href="#pricing" className="hover:text-foreground transition">Premium</a>
+            <Link to="/demo" className="hover:text-foreground transition">Démo Pro</Link>
           </nav>
           <div className="flex items-center gap-3">
-            <Link to="/login" className="hidden text-sm font-medium text-foreground/80 hover:text-foreground sm:inline">
+            <Link to="/login" className="hidden text-sm font-medium text-foreground/80 hover:text-foreground sm:inline transition">
               Connexion
             </Link>
             <Link
-              to="/dashboard"
+              to="/register"
               className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom transition hover:scale-[1.02]"
             >
               Essayer gratuitement
@@ -51,7 +50,7 @@ function Landing() {
       <section className="relative">
         <FloatingBlobs />
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-2 lg:py-24">
-          <div className="relative z-10 animate-fade-in">
+          <div className="relative z-10">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-violet-doux shadow-sm backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" /> Propulsé par l'IA
             </span>
@@ -65,12 +64,12 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                to="/dashboard"
+                to="/register"
                 className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-7 py-3.5 text-base font-semibold text-white shadow-bloom transition hover:scale-[1.03]"
               >
                 Commencer maintenant
               </Link>
-              <a href="#features" className="story-link text-sm font-semibold text-foreground/80">
+              <a href="#features" className="text-sm font-semibold text-foreground/80 hover:text-foreground transition">
                 Découvrir les fonctionnalités →
               </a>
             </div>
@@ -81,10 +80,12 @@ function Landing() {
               <div className="flex items-center gap-1.5">
                 <Star className="h-4 w-4 text-rose-vif" /> 4.9 / 5
               </div>
+              <div className="flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-violet-doux" /> 50k+ utilisatrices
+              </div>
             </div>
           </div>
 
-          {/* Hero visual: phone mockup */}
           <div className="relative z-10 flex justify-center">
             <div className="relative">
               <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-rose-pastel via-rose-poudre to-lavande opacity-70 blur-2xl" />
@@ -99,7 +100,7 @@ function Landing() {
                   <Stat label="Ovulation" value="Demain" tint="violet" />
                 </div>
                 <div className="mt-3 rounded-2xl bg-white/70 p-3 text-xs leading-relaxed text-foreground/70">
-                  💜 Pic d'énergie attendu — c'est le moment idéal pour bouger.
+                  Pic d'énergie attendu — c'est le moment idéal pour bouger.
                 </div>
               </div>
             </div>
@@ -133,8 +134,52 @@ function Landing() {
         </div>
       </section>
 
-      {/* Pricing teaser */}
-      <section id="pricing" className="relative mx-auto max-w-5xl px-6 pb-32">
+      {/* Social proof */}
+      <section className="mx-auto max-w-7xl px-6 py-16">
+        <div className="grid gap-6 md:grid-cols-3">
+          {testimonials.map(t => (
+            <div key={t.name} className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
+              <div className="flex gap-0.5 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <p className="text-sm text-foreground/80 italic leading-relaxed">"{t.text}"</p>
+              <div className="mt-4 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-rose-vif to-violet-doux flex items-center justify-center text-xs font-bold text-white">
+                  {t.name[0]}
+                </div>
+                <div>
+                  <div className="text-xs font-semibold">{t.name}</div>
+                  <div className="text-[10px] text-muted-foreground">{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Demo CTA */}
+      <section className="mx-auto max-w-5xl px-6 py-16">
+        <div className="rounded-[2.5rem] border border-white/70 glass p-10 shadow-bloom sm:p-16 text-center">
+          <Stethoscope className="h-10 w-10 text-violet-doux mx-auto mb-4" />
+          <h2 className="font-display text-3xl font-bold sm:text-4xl">
+            Professionnelle de santé ?
+          </h2>
+          <p className="mt-3 text-foreground/70 max-w-lg mx-auto">
+            Testez CycleBloom AI gratuitement pendant 2 mois. Accès complet à toutes les fonctionnalités Premium pour évaluer la fiabilité de nos algorithmes.
+          </p>
+          <Link
+            to="/demo"
+            className="mt-6 inline-block rounded-full bg-gradient-to-r from-violet-doux to-rose-vif px-7 py-3.5 text-base font-semibold text-white shadow-bloom transition hover:scale-[1.03]"
+          >
+            Demander une démo professionnelle
+          </Link>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="relative mx-auto max-w-5xl px-6 pb-24">
         <div className="overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-rose-vif to-violet-doux p-10 text-white shadow-bloom sm:p-16">
           <div className="max-w-xl">
             <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur">
@@ -144,14 +189,21 @@ function Landing() {
               Allez plus loin avec Bloom AI.
             </h2>
             <p className="mt-3 text-white/85">
-              IA conseillère illimitée, rapports détaillés, prévisions affinées et conseils personnalisés.
+              IA conseillère illimitée, rapports détaillés, prévisions affinées, téléconsultation et conseils personnalisés.
             </p>
+            <div className="mt-6 space-y-2">
+              {["Bloom AI illimité — réponses médicales sourcées", "Téléconsultation gynécologique incluse", "Rapports PDF partageables avec votre médecin", "Prédictions sur 12 mois avec 98% de précision"].map(f => (
+                <div key={f} className="flex items-center gap-2 text-sm text-white/90">
+                  <CheckCircle2 className="h-4 w-4 shrink-0" /> {f}
+                </div>
+              ))}
+            </div>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                to="/dashboard"
+                to="/register"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-rose-vif shadow-lg transition hover:scale-[1.02]"
               >
-                Démarrer l'essai
+                Démarrer l'essai gratuit
               </Link>
               <span className="text-sm text-white/80">7 jours offerts · sans engagement</span>
             </div>
@@ -177,9 +229,18 @@ const features = [
   { icon: Sparkles, title: "IA prédictive", desc: "Algorithme entraîné sur vos cycles, humeur et symptômes. Précision affichée en temps réel." },
   { icon: Heart, title: "Suivi fertilité", desc: "Fenêtre fertile, ovulation et chances de conception sur un calendrier coloré." },
   { icon: Calendar, title: "Calendrier intelligent", desc: "Vue mois, semaine et jour avec règles, symptômes et fertilité." },
-  { icon: Brain, title: "Bloom AI", desc: "Une conseillère IA féminine pour répondre à toutes vos questions, 24/7." },
+  { icon: Brain, title: "Bloom AI", desc: "Une conseillère IA féminine pour répondre à toutes vos questions santé, 24/7." },
   { icon: LineChart, title: "Rapports avancés", desc: "Graphiques détaillés et export PDF pour partager avec votre gynéco." },
+  { icon: Stethoscope, title: "Téléconsultation", desc: "Médecins gynécologues francophones disponibles partout dans le monde." },
+  { icon: Users, title: "Communauté active", desc: "Échangez avec 12 000+ femmes et des experts de santé vérifiés." },
+  { icon: Crown, title: "Premium abordable", desc: "À partir de 4 990 FCFA/mois. Essai gratuit 7 jours sans engagement." },
   { icon: ShieldCheck, title: "Privé et chiffré", desc: "Vos données médicales sont chiffrées de bout en bout. RGPD conforme." },
+];
+
+const testimonials = [
+  { name: "Aminata K.", role: "Douala, Cameroun", text: "Bloom AI m'a aidée à comprendre mon SOPK mieux que n'importe quel article. Les prédictions sont ultra-précises." },
+  { name: "Claire D.", role: "Paris, France", text: "J'ai enfin compris mon cycle après 10 ans de pilule. L'onboarding est clair et les conseils sont personnalisés à MA réalité." },
+  { name: "Fatou N.", role: "Dakar, Sénégal", text: "La téléconsultation incluse c'est incroyable. J'ai pu parler à une gynéco spécialisée depuis chez moi." },
 ];
 
 function Stat({ label, value, tint }: { label: string; value: string; tint: "rose" | "violet" }) {
