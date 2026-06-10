@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
-import { MessageCircle, Heart, TrendingUp, Plus, ChevronLeft, Send, Shield, CheckCircle2 } from "lucide-react";
+import { MessageCircle, Heart, TrendingUp, Plus, ChevronLeft, Send, Shield, CheckCircle2, Crown, Lock } from "lucide-react";
+import { isPremium } from "@/lib/premium-gate";
 
 export const Route = createFileRoute("/community")({
   head: () => ({ meta: [{ title: "Communauté — CycleBloom AI" }] }),
@@ -173,9 +174,15 @@ function Community() {
     <AppShell title="Communauté">
       <div className="flex items-center justify-between -mt-4 mb-6">
         <p className="text-sm text-foreground/70">Espace d'entraide bienveillant entre femmes — modéré par des professionnels de santé</p>
-        <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
-          <Plus className="h-4 w-4" /> Nouveau post
-        </button>
+        {isPremium() ? (
+          <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+            <Plus className="h-4 w-4" /> Nouveau post
+          </button>
+        ) : (
+          <Link to="/subscription" className="flex items-center gap-2 rounded-full bg-foreground/5 border border-border px-5 py-2.5 text-sm font-semibold text-foreground/60 hover:bg-foreground/10 transition">
+            <Lock className="h-3.5 w-3.5" /> Poster <Crown className="h-3.5 w-3.5 text-rose-vif" />
+          </Link>
+        )}
       </div>
 
       <div className="-mx-2 mb-6 flex gap-2 overflow-x-auto px-2 pb-1">
@@ -345,20 +352,31 @@ function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
       </div>
 
       {/* Reply input */}
-      <div className="rounded-3xl border border-white/70 glass p-4 shadow-bloom">
-        <textarea
-          value={replyText}
-          onChange={(e) => setReplyText(e.target.value)}
-          placeholder="Partagez votre expérience ou posez une question..."
-          className="w-full rounded-2xl border border-border bg-white/80 p-4 text-sm outline-none resize-none h-24 focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
-        />
-        <div className="mt-3 flex items-center justify-between">
-          <p className="text-[10px] text-muted-foreground">Soyez bienveillante et respectueuse</p>
-          <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
-            <Send className="h-3.5 w-3.5" /> Répondre
-          </button>
+      {isPremium() ? (
+        <div className="rounded-3xl border border-white/70 glass p-4 shadow-bloom">
+          <textarea
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder="Partagez votre expérience ou posez une question..."
+            className="w-full rounded-2xl border border-border bg-white/80 p-4 text-sm outline-none resize-none h-24 focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+          />
+          <div className="mt-3 flex items-center justify-between">
+            <p className="text-[10px] text-muted-foreground">Soyez bienveillante et respectueuse</p>
+            <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+              <Send className="h-3.5 w-3.5" /> Répondre
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="rounded-3xl border border-rose-vif/20 bg-rose-pastel/20 p-5 text-center">
+          <Lock className="h-5 w-5 text-rose-vif mx-auto mb-2" />
+          <p className="text-sm font-semibold mb-1">Fonctionnalité Premium</p>
+          <p className="text-xs text-foreground/60 mb-3">Passez à Premium pour répondre aux discussions et partager votre expérience.</p>
+          <Link to="/subscription" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+            <Crown className="h-4 w-4" /> Débloquer Premium
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
