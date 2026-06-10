@@ -1,12 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Flower2, LayoutDashboard, Users, FileText, CreditCard, Settings, LogOut, BarChart3 } from "lucide-react";
+import { Flower2, LayoutDashboard, Users, FileText, CreditCard, Settings, LogOut, BarChart3, FlaskConical, Mail } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/users", label: "Utilisatrices", icon: Users },
-  { to: "/admin/content", label: "Contenu", icon: FileText },
   { to: "/admin/subscriptions", label: "Abonnements", icon: CreditCard },
+  { to: "/admin/demos", label: "Demandes Démo", icon: FlaskConical },
+  { to: "/admin/content", label: "Contenu", icon: FileText },
   { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/admin/settings", label: "Paramètres", icon: Settings },
 ] as const;
