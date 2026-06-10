@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /* CycleBloom AI — Premium feminine design system
- * Palette: rose pastel, rose vif, rose poudré, blanc, lavande, violet doux
- * Fonts: Playfair Display (headings) + Inter (body)
+ * Palette inspirée: rose pâle, rose vif/magenta, blanc, crème rosé
+ * Fonts: Quicksand (headings, arrondie féminine) + Nunito (body, douce et lisible)
  */
 
 @theme inline {
@@ -59,99 +59,99 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-display: "Playfair Display", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Quicksand", "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Nunito", "Quicksand", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
   --radius: 1rem;
 
-  /* Brand palette as oklch */
-  --rose-pastel: oklch(0.92 0.05 350);   /* #F9D5E5 */
-  --rose-vif: oklch(0.68 0.21 355);      /* #FF5FA2 */
-  --rose-poudre: oklch(0.85 0.08 350);   /* #F7B6D2 */
-  --lavande: oklch(0.95 0.025 295);      /* #EDE7F6 */
-  --violet-doux: oklch(0.58 0.18 295);   /* #9C6ADE */
+  /* Brand palette — rose doux / magenta / blanc / crème */
+  --rose-pastel: oklch(0.94 0.04 350);    /* fond rose très clair #FDE8F0 */
+  --rose-vif: oklch(0.62 0.24 350);       /* magenta/rose principal #E91E7B */
+  --rose-poudre: oklch(0.88 0.07 350);    /* rose moyen doux #F8B4D0 */
+  --lavande: oklch(0.97 0.015 350);       /* quasi blanc rosé #FFF5F9 */
+  --violet-doux: oklch(0.55 0.2 330);     /* rose foncé / magenta profond #C2185B */
 
-  --background: oklch(0.995 0.005 340);
-  --foreground: oklch(0.22 0.04 320);
+  --background: oklch(0.99 0.008 350);    /* blanc légèrement rosé */
+  --foreground: oklch(0.25 0.03 340);     /* texte sombre */
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.04 320);
+  --card-foreground: oklch(0.25 0.03 340);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.04 320);
+  --popover-foreground: oklch(0.25 0.03 340);
 
-  --primary: oklch(0.68 0.21 355);
+  --primary: oklch(0.62 0.24 350);        /* rose magenta */
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.025 295);
-  --secondary-foreground: oklch(0.32 0.1 300);
-  --muted: oklch(0.97 0.01 340);
-  --muted-foreground: oklch(0.5 0.04 320);
-  --accent: oklch(0.58 0.18 295);
+  --secondary: oklch(0.94 0.04 350);      /* rose pastel */
+  --secondary-foreground: oklch(0.35 0.12 350);
+  --muted: oklch(0.97 0.015 350);
+  --muted-foreground: oklch(0.5 0.04 340);
+  --accent: oklch(0.55 0.2 330);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.62 0.23 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.92 0.02 340);
-  --input: oklch(0.93 0.02 340);
-  --ring: oklch(0.68 0.21 355);
+  --border: oklch(0.93 0.025 350);
+  --input: oklch(0.94 0.02 350);
+  --ring: oklch(0.62 0.24 350);
 
-  --chart-1: oklch(0.68 0.21 355);
-  --chart-2: oklch(0.58 0.18 295);
-  --chart-3: oklch(0.85 0.08 350);
+  --chart-1: oklch(0.62 0.24 350);
+  --chart-2: oklch(0.55 0.2 330);
+  --chart-3: oklch(0.88 0.07 350);
   --chart-4: oklch(0.75 0.12 200);
   --chart-5: oklch(0.78 0.14 140);
 
-  --sidebar: oklch(0.99 0.01 340);
-  --sidebar-foreground: oklch(0.22 0.04 320);
-  --sidebar-primary: oklch(0.68 0.21 355);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.25 0.03 340);
+  --sidebar-primary: oklch(0.62 0.24 350);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0.025 295);
-  --sidebar-accent-foreground: oklch(0.32 0.1 300);
-  --sidebar-border: oklch(0.92 0.02 340);
-  --sidebar-ring: oklch(0.68 0.21 355);
+  --sidebar-accent: oklch(0.94 0.04 350);
+  --sidebar-accent-foreground: oklch(0.35 0.12 350);
+  --sidebar-border: oklch(0.93 0.025 350);
+  --sidebar-ring: oklch(0.62 0.24 350);
 }
 
 .dark {
-  --background: oklch(0.18 0.03 320);
-  --foreground: oklch(0.97 0.01 340);
-  --card: oklch(0.22 0.04 320);
-  --card-foreground: oklch(0.97 0.01 340);
-  --popover: oklch(0.22 0.04 320);
-  --popover-foreground: oklch(0.97 0.01 340);
-  --primary: oklch(0.72 0.21 355);
+  --background: oklch(0.18 0.03 340);
+  --foreground: oklch(0.97 0.01 350);
+  --card: oklch(0.22 0.04 340);
+  --card-foreground: oklch(0.97 0.01 350);
+  --popover: oklch(0.22 0.04 340);
+  --popover-foreground: oklch(0.97 0.01 350);
+  --primary: oklch(0.72 0.22 350);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.3 0.06 300);
-  --secondary-foreground: oklch(0.97 0.01 340);
-  --muted: oklch(0.28 0.04 320);
-  --muted-foreground: oklch(0.75 0.03 320);
-  --accent: oklch(0.62 0.18 295);
+  --secondary: oklch(0.3 0.06 340);
+  --secondary-foreground: oklch(0.97 0.01 350);
+  --muted: oklch(0.28 0.04 340);
+  --muted-foreground: oklch(0.75 0.03 340);
+  --accent: oklch(0.62 0.2 330);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.68 0.22 25);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.72 0.21 355);
+  --ring: oklch(0.72 0.22 350);
 }
 
 @utility glass {
-  background: color-mix(in oklab, white 60%, transparent);
+  background: color-mix(in oklab, white 75%, transparent);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid color-mix(in oklab, white 70%, transparent);
+  border: 1px solid color-mix(in oklab, white 80%, transparent);
 }
 
 @utility glass-dark {
-  background: color-mix(in oklab, var(--rose-pastel) 30%, white 60%);
+  background: color-mix(in oklab, var(--rose-pastel) 40%, white 55%);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid color-mix(in oklab, white 70%, transparent);
+  border: 1px solid color-mix(in oklab, white 80%, transparent);
 }
 
 @utility bg-bloom {
   background:
-    radial-gradient(circle at 15% 10%, color-mix(in oklab, var(--rose-pastel) 70%, transparent) 0%, transparent 45%),
-    radial-gradient(circle at 85% 20%, color-mix(in oklab, var(--lavande) 90%, transparent) 0%, transparent 50%),
-    radial-gradient(circle at 50% 90%, color-mix(in oklab, var(--rose-poudre) 60%, transparent) 0%, transparent 55%),
+    radial-gradient(circle at 15% 10%, color-mix(in oklab, var(--rose-pastel) 80%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, color-mix(in oklab, var(--lavande) 95%, transparent) 0%, transparent 50%),
+    radial-gradient(circle at 50% 90%, color-mix(in oklab, var(--rose-poudre) 50%, transparent) 0%, transparent 55%),
     var(--background);
 }
 
@@ -164,9 +164,9 @@
 
 @utility shadow-bloom {
   box-shadow:
-    0 1px 2px color-mix(in oklab, var(--rose-vif) 8%, transparent),
-    0 12px 32px -8px color-mix(in oklab, var(--rose-vif) 18%, transparent),
-    0 24px 64px -16px color-mix(in oklab, var(--violet-doux) 14%, transparent);
+    0 1px 2px color-mix(in oklab, var(--rose-vif) 6%, transparent),
+    0 12px 32px -8px color-mix(in oklab, var(--rose-vif) 15%, transparent),
+    0 24px 64px -16px color-mix(in oklab, var(--rose-poudre) 20%, transparent);
 }
 
 @keyframes bloom-pulse {
@@ -197,6 +197,7 @@
 
   h1, h2, h3, .font-display {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
   }
 }
