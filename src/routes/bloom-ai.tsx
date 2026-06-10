@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, BookOpen, Lightbulb, Shield } from "lucide-react";
+import { Send, Sparkles, BookOpen, Lightbulb, Shield, Crown, Lock } from "lucide-react";
 import { getBloomResponse, SUGGESTED_TOPICS, type BloomResponse } from "@/lib/bloom-knowledge";
+import { isPremium, getMonthlyUsage, incrementUsage, PREMIUM_FEATURES } from "@/lib/premium-gate";
 
 export const Route = createFileRoute("/bloom-ai")({
   head: () => ({ meta: [{ title: "Bloom AI — CycleBloom AI" }] }),
@@ -37,8 +38,19 @@ function BloomAI() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const freeLimit = PREMIUM_FEATURES.bloomAiUnlimited.freeLimit!;
+  const [usageCount, setUsageCount] = useState(getMonthlyUsage("bloomAi"));
+  const userIsPremium = isPremium();
+  const canAsk = userIsPremium || usageCount < freeLimit;
+
   const sendMessage = (text: string) => {
     if (!text.trim()) return;
+    if (!canAsk) return;
+
+    if (!userIsPremium) {
+      incrementUsage("bloomAi");
+      setUsageCount(prev => prev + 1);
+    }
 
     const userMsg: Message = {
       id: Date.now().toString(),
@@ -148,28 +160,56 @@ function BloomAI() {
           </div>
 
           {/* Input */}
-          <form onSubmit={handleSubmit} className="border-t border-border/30 bg-white/50 p-4">
-            <div className="flex items-center gap-2">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Posez votre question santé..."
-                className="flex-1 rounded-full border border-border bg-white px-5 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || isTyping}
-                className="h-11 w-11 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux flex items-center justify-center text-white shadow-bloom hover:scale-105 transition disabled:opacity-50 disabled:hover:scale-100"
-              >
-                <Send className="h-4 w-4" />
-              </button>
+          {canAsk ? (
+            <form onSubmit={handleSubmit} className="border-t border-border/30 bg-white/50 p-4">
+              <div className="flex items-center gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Posez votre question santé..."
+                  className="flex-1 rounded-full border border-border bg-white px-5 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isTyping}
+                  className="h-11 w-11 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux flex items-center justify-center text-white shadow-bloom hover:scale-105 transition disabled:opacity-50 disabled:hover:scale-100"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-[10px] text-muted-foreground">
+                  Bloom AI ne remplace pas un avis médical. En cas d'urgence, contactez le 15 (SAMU) ou le 112.
+                </p>
+                {!userIsPremium && (
+                  <span className="text-[10px] text-foreground/50 font-medium">
+                    {usageCount}/{freeLimit} questions ce mois
+                  </span>
+                )}
+              </div>
+            </form>
+          ) : (
+            <div className="border-t border-border/30 bg-gradient-to-r from-rose-pastel/50 to-lavande/50 p-5">
+              <div className="text-center">
+                <div className="inline-flex items-center gap-2 rounded-full bg-rose-vif/10 px-4 py-2 mb-3">
+                  <Lock className="h-4 w-4 text-rose-vif" />
+                  <span className="text-sm font-semibold text-rose-vif">Limite atteinte</span>
+                </div>
+                <p className="text-xs text-foreground/70 mb-3">
+                  Vous avez utilisé vos {freeLimit} questions gratuites ce mois-ci.
+                  Passez à Premium pour un accès illimité à Bloom AI.
+                </p>
+                <Link
+                  to="/subscription"
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+                >
+                  <Crown className="h-4 w-4" /> Passer à Premium
+                </Link>
+              </div>
             </div>
-            <p className="mt-2 text-center text-[10px] text-muted-foreground">
-              Bloom AI ne remplace pas un avis médical. En cas d'urgence, contactez le 15 (SAMU) ou le 112.
-            </p>
-          </form>
+          )}
         </div>
 
         {/* Sidebar - suggested topics */}
