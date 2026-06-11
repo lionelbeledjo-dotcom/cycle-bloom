@@ -21,13 +21,13 @@ function AdminSettings() {
 
   return (
     <AdminShell title="Paramètres">
-      <div className="flex gap-2 mb-6 border-b border-white/5 pb-3 overflow-x-auto">
+      <div className="flex gap-2 mb-6 border-b border-slate-200/80 pb-3 overflow-x-auto">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition ${
-              tab === t.id ? "bg-white/10 text-white" : "text-white/40 hover:text-white/70"
+              tab === t.id ? "bg-slate-100 text-slate-800" : "text-slate-400 hover:text-slate-600"
             }`}
           >
             {t.label}
@@ -72,28 +72,28 @@ function PricingTab() {
   return (
     <div className="max-w-2xl space-y-6">
       <Section title="Forfaits actifs (EUR)">
-        <div className="rounded-xl border border-white/10 p-4 mb-3">
+        <div className="rounded-xl border border-slate-200 p-4 mb-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-semibold text-white">Essentiel</span>
-            <span className="text-sm text-white/50">Gratuit</span>
+            <span className="font-semibold text-slate-800">Essentiel</span>
+            <span className="text-sm text-slate-500">Gratuit</span>
           </div>
-          <p className="text-xs text-white/40">Suivi basique, calendrier, 3 questions Bloom AI/mois, communauté lecture seule</p>
+          <p className="text-xs text-slate-400">Suivi basique, calendrier, 3 questions Bloom AI/mois, communauté lecture seule</p>
         </div>
         <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4 mb-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-semibold text-white">Premium Mensuel</span>
+            <span className="font-semibold text-slate-800">Premium Mensuel</span>
             <span className="text-sm text-rose-vif font-bold">9,99 €/mois</span>
           </div>
-          <p className="text-xs text-white/40">Tous modules, Bloom AI illimité, 1 téléconsultation/mois, rapports, communauté complète</p>
-          <div className="mt-2 text-[10px] text-amber-300">Essai gratuit : 7 jours</div>
+          <p className="text-xs text-slate-400">Tous modules, Bloom AI illimité, 1 téléconsultation/mois, rapports, communauté complète</p>
+          <div className="mt-2 text-[10px] text-amber-700">Essai gratuit : 7 jours</div>
         </div>
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 mb-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-semibold text-white">Premium Annuel</span>
-            <span className="text-sm text-emerald-400 font-bold">79,99 €/an <span className="text-white/40 font-normal">(6,67 €/mois)</span></span>
+            <span className="font-semibold text-slate-800">Premium Annuel</span>
+            <span className="text-sm text-emerald-600 font-bold">79,99 €/an <span className="text-slate-400 font-normal">(6,67 €/mois)</span></span>
           </div>
-          <p className="text-xs text-white/40">Tout Premium + 3 téléconsultations/mois, historique illimité, support VIP, rapport annuel</p>
-          <div className="mt-2 text-[10px] text-amber-300">Essai gratuit : 14 jours</div>
+          <p className="text-xs text-slate-400">Tout Premium + 3 téléconsultations/mois, historique illimité, support VIP, rapport annuel</p>
+          <div className="mt-2 text-[10px] text-amber-700">Essai gratuit : 14 jours</div>
         </div>
       </Section>
 
@@ -185,9 +185,9 @@ function IntegrationsTab() {
         <Field label="Clé publique (pk_live_)" defaultValue="pk_live_•••••••••••••••••••••" type="password" />
         <Field label="Clé secrète (sk_live_)" defaultValue="sk_live_•••••••••••••••••••••" type="password" />
         <Field label="Webhook secret (whsec_)" defaultValue="whsec_•••••••••••••••••••••" type="password" />
-        <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 mt-2">
-          <div className="text-xs text-emerald-300">✓ Stripe connecté — Mode production</div>
-          <div className="text-[10px] text-white/40 mt-1">Dernière synchronisation : il y a 5 min</div>
+        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 mt-2">
+          <div className="text-xs text-emerald-700">✓ Stripe connecté — Mode production</div>
+          <div className="text-[10px] text-slate-400 mt-1">Dernière synchronisation : il y a 5 min</div>
         </div>
       </Section>
 
@@ -196,8 +196,8 @@ function IntegrationsTab() {
           <Field label="Clé API" defaultValue="re_•••••••••••••••••••••" type="password" />
           <Field label="Domaine vérifié" defaultValue="cyclebloom.ai" />
         </div>
-        <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 mt-2">
-          <div className="text-xs text-emerald-300">✓ Resend connecté — 29 emails envoyés aujourd'hui</div>
+        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 mt-2">
+          <div className="text-xs text-emerald-700">✓ Resend connecté — 29 emails envoyés aujourd'hui</div>
         </div>
       </Section>
 
@@ -249,8 +249,8 @@ function SecurityTab() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-      <h3 className="text-sm font-semibold text-white mb-4">{title}</h3>
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-6">
+      <h3 className="text-sm font-semibold text-slate-800 mb-4">{title}</h3>
       <div className="space-y-3">{children}</div>
     </div>
   );
@@ -259,11 +259,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, defaultValue, type = "text" }: { label: string; defaultValue: string; type?: string }) {
   return (
     <div>
-      <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1">{label}</label>
+      <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">{label}</label>
       <input
         type={type}
         defaultValue={defaultValue}
-        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/20 outline-none focus:border-rose-vif/50"
+        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-200 outline-none focus:border-rose-vif"
       />
     </div>
   );
@@ -272,14 +272,14 @@ function Field({ label, defaultValue, type = "text" }: { label: string; defaultV
 function Toggle({ label, desc, defaultChecked = false }: { label: string; desc: string; defaultChecked?: boolean }) {
   const [on, setOn] = useState(defaultChecked);
   return (
-    <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+    <div className="flex items-center justify-between py-2 border-b border-slate-200/80 last:border-0">
       <div>
-        <div className="text-sm text-white">{label}</div>
-        <div className="text-[11px] text-white/30">{desc}</div>
+        <div className="text-sm text-slate-800">{label}</div>
+        <div className="text-[11px] text-slate-300">{desc}</div>
       </div>
       <button
         onClick={() => setOn(!on)}
-        className={`relative h-6 w-11 rounded-full transition shrink-0 ${on ? "bg-rose-vif" : "bg-white/10"}`}
+        className={`relative h-6 w-11 rounded-full transition shrink-0 ${on ? "bg-rose-vif" : "bg-slate-100"}`}
       >
         <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform`} style={{ transform: on ? "translateX(20px)" : "translateX(0)" }} />
       </button>
@@ -294,7 +294,7 @@ function SaveButton() {
     setTimeout(() => setSaved(false), 2000);
   };
   return (
-    <button onClick={handleSave} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+    <button onClick={handleSave} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-bloom hover:scale-[1.02] transition">
       <Save className="h-4 w-4" /> {saved ? "✓ Enregistré" : "Enregistrer"}
     </button>
   );

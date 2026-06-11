@@ -27,57 +27,57 @@ function AdminContent() {
     <AdminShell title="Gestion du contenu">
       <div className="flex items-center justify-between mb-6">
         <div className="flex gap-3">
-          <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">{published} publiés</span>
-          <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-400">{drafts} brouillons</span>
-          <span className="rounded-full bg-white/5 px-3 py-1 text-xs font-medium text-white/50">{totalViews.toLocaleString()} vues totales</span>
+          <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">{published} publiés</span>
+          <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600">{drafts} brouillons</span>
+          <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-500">{totalViews.toLocaleString()} vues totales</span>
         </div>
-        <button className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux px-4 py-2.5 text-sm font-semibold text-white shadow-bloom">
+        <button className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-bloom">
           <Plus className="h-4 w-4" /> Nouvel article
         </button>
       </div>
 
-      <div className="rounded-2xl border border-white/5 bg-white/5 overflow-hidden">
+      <div className="rounded-2xl border border-slate-200/80 bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/5">
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Article</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Catégorie</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Auteur</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Statut</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Vues</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Likes</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Date</th>
+            <tr className="border-b border-slate-200/80">
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Article</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Catégorie</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Auteur</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Statut</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Vues</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Likes</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Date</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
           <tbody>
             {ARTICLES.map((a) => (
-              <tr key={a.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+              <tr key={a.id} className="border-b border-slate-200/80 hover:bg-slate-50">
                 <td className="px-4 py-3">
-                  <div className="font-medium text-white max-w-[280px] truncate">{a.title}</div>
+                  <div className="font-medium text-slate-800 max-w-[280px] truncate">{a.title}</div>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="rounded-full bg-violet-500/10 px-2.5 py-1 text-[10px] font-medium text-violet-300">{a.cat}</span>
+                  <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-medium text-violet-700">{a.cat}</span>
                 </td>
-                <td className="px-4 py-3 text-white/60">{a.author}</td>
+                <td className="px-4 py-3 text-slate-500">{a.author}</td>
                 <td className="px-4 py-3">
                   <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${
-                    a.status === "published" ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"
+                    a.status === "published" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"
                   }`}>
                     {a.status === "published" ? "Publié" : "Brouillon"}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-white/60">
+                <td className="px-4 py-3 text-slate-500">
                   <div className="flex items-center gap-1"><Eye className="h-3 w-3" /> {a.views.toLocaleString()}</div>
                 </td>
-                <td className="px-4 py-3 text-white/60">
+                <td className="px-4 py-3 text-slate-500">
                   <div className="flex items-center gap-1"><Heart className="h-3 w-3" /> {a.likes}</div>
                 </td>
-                <td className="px-4 py-3 text-white/40">{new Date(a.date).toLocaleDateString("fr-FR")}</td>
+                <td className="px-4 py-3 text-slate-400">{new Date(a.date).toLocaleDateString("fr-FR")}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
-                    <button className="rounded-lg p-1.5 text-white/30 hover:bg-white/10 hover:text-white"><Edit className="h-3.5 w-3.5" /></button>
-                    <button className="rounded-lg p-1.5 text-white/30 hover:bg-white/10 hover:text-red-400"><Trash2 className="h-3.5 w-3.5" /></button>
+                    <button className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-800"><Edit className="h-3.5 w-3.5" /></button>
+                    <button className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-red-600"><Trash2 className="h-3.5 w-3.5" /></button>
                   </div>
                 </td>
               </tr>

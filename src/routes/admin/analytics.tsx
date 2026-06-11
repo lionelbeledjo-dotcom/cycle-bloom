@@ -45,27 +45,27 @@ function AdminAnalytics() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2 mb-6">
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Utilisatrices actives (7 jours)</h3>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Utilisatrices actives (7 jours)</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={dailyActive}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="day" stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} />
-              <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: "oklch(0.2 0.02 260)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white" }} />
-              <Bar dataKey="users" fill="oklch(0.68 0.21 355)" radius={[6, 6, 0, 0]} name="Actives" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="day" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} />
+              <Tooltip contentStyle={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }} />
+              <Bar dataKey="users" fill="#e91e7b" radius={[6, 6, 0, 0]} name="Actives" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Rétention (cohorte)</h3>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Rétention (cohorte)</h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={retention}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="week" stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} />
-              <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} unit="%" />
-              <Tooltip contentStyle={{ background: "oklch(0.2 0.02 260)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white" }} formatter={(v: number) => `${v}%`} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="week" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} unit="%" />
+              <Tooltip contentStyle={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }} formatter={(v: number) => `${v}%`} />
               <Line type="monotone" dataKey="rate" stroke="oklch(0.58 0.18 295)" strokeWidth={2.5} dot={{ fill: "oklch(0.58 0.18 295)" }} name="Rétention" />
             </LineChart>
           </ResponsiveContainer>
@@ -73,16 +73,16 @@ function AdminAnalytics() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Utilisation des fonctionnalités (%)</h3>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Utilisation des fonctionnalités (%)</h3>
           <div className="space-y-3">
             {featureUsage.map(f => (
               <div key={f.feature}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-white/70">{f.feature}</span>
-                  <span className="text-white/40">{f.usage}%</span>
+                  <span className="text-slate-600">{f.feature}</span>
+                  <span className="text-slate-400">{f.usage}%</span>
                 </div>
-                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                <div className="h-2 rounded-full bg-white overflow-hidden">
                   <div className="h-full rounded-full bg-gradient-to-r from-rose-vif to-violet-doux" style={{ width: `${f.usage}%` }} />
                 </div>
               </div>
@@ -90,8 +90,8 @@ function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Distribution par âge</h3>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Distribution par âge</h3>
           <div className="flex items-center gap-6">
             <ResponsiveContainer width={160} height={160}>
               <PieChart>
@@ -106,8 +106,8 @@ function AdminAnalytics() {
               {ageDistribution.map(a => (
                 <div key={a.name} className="flex items-center gap-3">
                   <div className="h-3 w-3 rounded-full" style={{ background: a.color }} />
-                  <span className="text-xs text-white/70">{a.name} ans</span>
-                  <span className="text-xs font-semibold text-white">{a.value}%</span>
+                  <span className="text-xs text-slate-600">{a.name} ans</span>
+                  <span className="text-xs font-semibold text-slate-800">{a.value}%</span>
                 </div>
               ))}
             </div>
@@ -120,9 +120,9 @@ function AdminAnalytics() {
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-      <div className="text-xs text-white/40">{label}</div>
-      <div className="mt-1 text-xl font-bold text-white">{value}</div>
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4">
+      <div className="text-xs text-slate-400">{label}</div>
+      <div className="mt-1 text-xl font-bold text-slate-800">{value}</div>
     </div>
   );
 }

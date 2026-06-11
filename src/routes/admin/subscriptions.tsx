@@ -67,43 +67,43 @@ function AdminSubscriptions() {
     <AdminShell title="Abonnements & Essais">
       {/* KPI */}
       <div className="grid gap-4 sm:grid-cols-5 mb-6">
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-          <div className="text-xs text-white/40">Abonnées actives</div>
-          <div className="text-2xl font-bold text-white mt-1">{totalActive}</div>
-          <div className="flex items-center gap-1 mt-1 text-xs text-emerald-400"><ArrowUpRight className="h-3 w-3" /> +41%</div>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4">
+          <div className="text-xs text-slate-400">Abonnées actives</div>
+          <div className="text-2xl font-bold text-slate-800 mt-1">{totalActive}</div>
+          <div className="flex items-center gap-1 mt-1 text-xs text-emerald-600"><ArrowUpRight className="h-3 w-3" /> +41%</div>
         </div>
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-          <div className="text-xs text-white/40">En essai gratuit</div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">{totalTrials}</div>
-          <div className="text-[10px] text-white/30 mt-1">dont 1 expirant bientôt</div>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4">
+          <div className="text-xs text-slate-400">En essai gratuit</div>
+          <div className="text-2xl font-bold text-amber-600 mt-1">{totalTrials}</div>
+          <div className="text-[10px] text-slate-300 mt-1">dont 1 expirant bientôt</div>
         </div>
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-          <div className="text-xs text-white/40">MRR</div>
-          <div className="text-2xl font-bold text-white mt-1">2 950 €</div>
-          <div className="flex items-center gap-1 mt-1 text-xs text-emerald-400"><ArrowUpRight className="h-3 w-3" /> +18%</div>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4">
+          <div className="text-xs text-slate-400">MRR</div>
+          <div className="text-2xl font-bold text-slate-800 mt-1">2 950 €</div>
+          <div className="flex items-center gap-1 mt-1 text-xs text-emerald-600"><ArrowUpRight className="h-3 w-3" /> +18%</div>
         </div>
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-          <div className="text-xs text-white/40">ARR (projection)</div>
-          <div className="text-2xl font-bold text-white mt-1">35 400 €</div>
-          <div className="text-[10px] text-white/30 mt-1">Objectif : 50k €</div>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4">
+          <div className="text-xs text-slate-400">ARR (projection)</div>
+          <div className="text-2xl font-bold text-slate-800 mt-1">35 400 €</div>
+          <div className="text-[10px] text-slate-300 mt-1">Objectif : 50k €</div>
         </div>
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-          <div className="text-xs text-white/40">Conversion essai</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1">23%</div>
-          <div className="text-[10px] text-white/30 mt-1">7/30 derniers essais</div>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4">
+          <div className="text-xs text-slate-400">Conversion essai</div>
+          <div className="text-2xl font-bold text-emerald-600 mt-1">23%</div>
+          <div className="text-[10px] text-slate-300 mt-1">7/30 derniers essais</div>
         </div>
       </div>
 
       {/* Revenue chart */}
-      <div className="rounded-2xl border border-white/5 bg-white/5 p-6 mb-6">
-        <h3 className="text-sm font-semibold text-white mb-4">Revenus mensuels (€)</h3>
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 mb-6">
+        <h3 className="text-sm font-semibold text-slate-800 mb-4">Revenus mensuels (€)</h3>
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={revenueByMonth}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-            <XAxis dataKey="month" stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} />
-            <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}€`} />
-            <Tooltip contentStyle={{ background: "oklch(0.2 0.02 260)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white" }} formatter={(v: number) => `${v} €`} />
-            <Bar dataKey="revenue" fill="oklch(0.68 0.21 355)" radius={[6, 6, 0, 0]} name="Revenu" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+            <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+            <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}€`} />
+            <Tooltip contentStyle={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }} formatter={(v: number) => `${v} €`} />
+            <Bar dataKey="revenue" fill="#e91e7b" radius={[6, 6, 0, 0]} name="Revenu" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -120,7 +120,7 @@ function AdminSubscriptions() {
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`rounded-xl px-4 py-2 text-xs font-medium transition ${
-              tab === t.id ? "bg-white/10 text-white" : "text-white/40 hover:text-white/70"
+              tab === t.id ? "bg-slate-100 text-slate-800" : "text-slate-400 hover:text-slate-600"
             }`}
           >
             {t.label} <span className="ml-1 opacity-60">({t.count})</span>
@@ -129,49 +129,49 @@ function AdminSubscriptions() {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl border border-white/5 bg-white/5 overflow-hidden">
+      <div className="rounded-2xl border border-slate-200/80 bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/5">
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Abonnée</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Forfait</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Montant</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Moyen paiement</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Statut</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Fin essai</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Email</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-white/40">Actions</th>
+            <tr className="border-b border-slate-200/80">
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Abonnée</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Forfait</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Montant</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Moyen paiement</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Statut</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Fin essai</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Email</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((s) => (
-              <tr key={s.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+              <tr key={s.id} className="border-b border-slate-200/80 hover:bg-slate-50">
                 <td className="px-4 py-3">
-                  <div className="font-medium text-white">{s.name}</div>
-                  <div className="text-[11px] text-white/40">{s.email}</div>
+                  <div className="font-medium text-slate-800">{s.name}</div>
+                  <div className="text-[11px] text-slate-400">{s.email}</div>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="rounded-full bg-violet-500/10 px-2.5 py-1 text-[10px] font-medium text-violet-300">{s.plan}</span>
+                  <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-medium text-violet-700">{s.plan}</span>
                 </td>
-                <td className="px-4 py-3 font-medium text-white">{s.amount}</td>
-                <td className="px-4 py-3 text-white/60 text-xs">{s.method}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">{s.amount}</td>
+                <td className="px-4 py-3 text-slate-500 text-xs">{s.method}</td>
                 <td className="px-4 py-3">
                   <StatusBadge status={s.status} />
                 </td>
                 <td className="px-4 py-3 text-xs">
                   {s.trialEnd ? (
-                    <span className={`${s.status === "trial_expiring" ? "text-amber-400 font-medium" : "text-white/60"}`}>
+                    <span className={`${s.status === "trial_expiring" ? "text-amber-600 font-medium" : "text-slate-500"}`}>
                       {new Date(s.trialEnd).toLocaleDateString("fr-FR")}
                     </span>
                   ) : (
-                    <span className="text-white/20">—</span>
+                    <span className="text-slate-200">—</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
                   {s.emailSent ? (
-                    <span className="text-emerald-400 text-xs">✓ Envoyé</span>
+                    <span className="text-emerald-600 text-xs">✓ Envoyé</span>
                   ) : (
-                    <span className="text-red-400 text-xs">✗ Échec</span>
+                    <span className="text-red-600 text-xs">✗ Échec</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
@@ -179,7 +179,7 @@ function AdminSubscriptions() {
                     {(s.status === "trial" || s.status === "trial_expiring") && (
                       <button
                         onClick={() => setExtendModal(s)}
-                        className="rounded-lg p-1.5 text-white/30 hover:bg-white/10 hover:text-amber-400 transition"
+                        className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-amber-600 transition"
                         title="Prolonger l'essai"
                       >
                         <CalendarPlus className="h-3.5 w-3.5" />
@@ -187,12 +187,12 @@ function AdminSubscriptions() {
                     )}
                     <button
                       onClick={() => setEmailModal(s)}
-                      className="rounded-lg p-1.5 text-white/30 hover:bg-white/10 hover:text-blue-400 transition"
+                      className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-blue-600 transition"
                       title="Envoyer un email"
                     >
                       <Mail className="h-3.5 w-3.5" />
                     </button>
-                    <button className="rounded-lg p-1.5 text-white/30 hover:bg-white/10 hover:text-white transition" title="Voir le profil">
+                    <button className="rounded-lg p-1.5 text-slate-300 hover:bg-slate-100 hover:text-slate-800 transition" title="Voir le profil">
                       <Eye className="h-3.5 w-3.5" />
                     </button>
                   </div>
@@ -212,11 +212,11 @@ function AdminSubscriptions() {
 
 function StatusBadge({ status }: { status: SubStatus }) {
   const config = {
-    active: { label: "Actif", class: "bg-emerald-500/20 text-emerald-300" },
-    trial: { label: "Essai", class: "bg-amber-500/20 text-amber-300" },
-    trial_expiring: { label: "Essai (expire bientôt)", class: "bg-orange-500/20 text-orange-300" },
-    cancelled: { label: "Résiliée", class: "bg-red-500/20 text-red-300" },
-    past_due: { label: "Impayé", class: "bg-red-500/20 text-red-400" },
+    active: { label: "Actif", class: "bg-emerald-50 text-emerald-700" },
+    trial: { label: "Essai", class: "bg-amber-50 text-amber-700" },
+    trial_expiring: { label: "Essai (expire bientôt)", class: "bg-orange-50 text-orange-700" },
+    cancelled: { label: "Résiliée", class: "bg-red-50 text-red-700" },
+    past_due: { label: "Impayé", class: "bg-red-50 text-red-600" },
   };
   const c = config[status];
   return <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${c.class}`}>{c.label}</span>;
@@ -233,32 +233,32 @@ function ExtendTrialModal({ subscriber, onClose }: { subscriber: Subscriber; onC
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
-      <div className="w-full max-w-md rounded-2xl bg-[oklch(0.18_0.02_260)] border border-white/10 p-6" onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200 shadow-xl p-6" onClick={e => e.stopPropagation()}>
         {!done ? (
           <>
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-10 w-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                <CalendarPlus className="h-5 w-5 text-amber-400" />
+              <div className="h-10 w-10 rounded-full bg-amber-50 flex items-center justify-center">
+                <CalendarPlus className="h-5 w-5 text-amber-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">Prolonger l'essai gratuit</h3>
-                <p className="text-xs text-white/40">{subscriber.name} — {subscriber.email}</p>
+                <h3 className="text-lg font-semibold text-slate-800">Prolonger l'essai gratuit</h3>
+                <p className="text-xs text-slate-400">{subscriber.name} — {subscriber.email}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1.5">Fin d'essai actuelle</label>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/70">
+                <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">Fin d'essai actuelle</label>
+                <div className="rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-sm text-slate-600">
                   {subscriber.trialEnd ? new Date(subscriber.trialEnd).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "—"}
                 </div>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1.5">Nombre de jours à ajouter</label>
+                <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">Nombre de jours à ajouter</label>
                 <select
                   value={days}
                   onChange={e => setDays(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-rose-vif/50"
+                  className="w-full rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-sm text-slate-800 outline-none focus:border-rose-vif"
                 >
                   <option value="3">+3 jours</option>
                   <option value="7">+7 jours</option>
@@ -269,38 +269,38 @@ function ExtendTrialModal({ subscriber, onClose }: { subscriber: Subscriber; onC
                 </select>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1.5">Raison (optionnel)</label>
+                <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">Raison (optionnel)</label>
                 <textarea
                   value={reason}
                   onChange={e => setReason(e.target.value)}
                   placeholder="Ex: Cliente VIP, problème technique, promotion spéciale..."
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/20 outline-none resize-none h-20 focus:border-rose-vif/50"
+                  className="w-full rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-200 outline-none resize-none h-20 focus:border-rose-vif"
                 />
               </div>
-              <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-3">
-                <div className="text-xs text-blue-300">📧 Un email sera automatiquement envoyé à la cliente pour l'informer de la prolongation.</div>
+              <div className="rounded-xl bg-blue-50 border border-blue-200 p-3">
+                <div className="text-xs text-blue-700">📧 Un email sera automatiquement envoyé à la cliente pour l'informer de la prolongation.</div>
               </div>
             </div>
 
             <div className="mt-6 flex gap-3">
-              <button onClick={onClose} className="flex-1 rounded-xl border border-white/10 py-2.5 text-sm text-white/60 hover:bg-white/5">
+              <button onClick={onClose} className="flex-1 rounded-xl border border-slate-200 shadow-xl py-2.5 text-sm text-slate-500 hover:bg-slate-50">
                 Annuler
               </button>
-              <button onClick={handleExtend} className="flex-1 rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux py-2.5 text-sm font-semibold text-white">
+              <button onClick={handleExtend} className="flex-1 rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux py-2.5 text-sm font-semibold text-slate-800">
                 Prolonger de {days} jours
               </button>
             </div>
           </>
         ) : (
           <div className="text-center py-6">
-            <div className="h-14 w-14 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-              <Check className="h-7 w-7 text-emerald-400" />
+            <div className="h-14 w-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+              <Check className="h-7 w-7 text-emerald-600" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Essai prolongé</h3>
-            <p className="mt-2 text-sm text-white/60">
+            <h3 className="text-lg font-semibold text-slate-800">Essai prolongé</h3>
+            <p className="mt-2 text-sm text-slate-500">
               L'essai de {subscriber.name} a été prolongé de {days} jours. Un email de confirmation a été envoyé.
             </p>
-            <button onClick={onClose} className="mt-6 rounded-xl bg-white/10 px-6 py-2.5 text-sm text-white hover:bg-white/15">
+            <button onClick={onClose} className="mt-6 rounded-xl bg-slate-100 px-6 py-2.5 text-sm text-slate-800 hover:bg-slate-200">
               Fermer
             </button>
           </div>
@@ -328,67 +328,67 @@ function SendEmailModal({ subscriber, onClose }: { subscriber: Subscriber; onClo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
-      <div className="w-full max-w-lg rounded-2xl bg-[oklch(0.18_0.02_260)] border border-white/10 p-6" onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-lg rounded-2xl bg-white border border-slate-200 shadow-xl p-6" onClick={e => e.stopPropagation()}>
         {!sent ? (
           <>
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <Mail className="h-5 w-5 text-blue-400" />
+              <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+                <Mail className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">Envoyer un email</h3>
-                <p className="text-xs text-white/40">À : {subscriber.name} ({subscriber.email})</p>
+                <h3 className="text-lg font-semibold text-slate-800">Envoyer un email</h3>
+                <p className="text-xs text-slate-400">À : {subscriber.name} ({subscriber.email})</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1.5">Template</label>
+                <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">Template</label>
                 <select
                   value={template}
                   onChange={e => setTemplate(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-rose-vif/50"
+                  className="w-full rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-sm text-slate-800 outline-none focus:border-rose-vif"
                 >
                   {templates.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1.5">Objet</label>
+                <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">Objet</label>
                 <input
                   value={subject}
                   onChange={e => setSubject(e.target.value)}
                   placeholder="Objet de l'email..."
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/20 outline-none focus:border-rose-vif/50"
+                  className="w-full rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-200 outline-none focus:border-rose-vif"
                 />
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-1.5">Message</label>
+                <label className="text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">Message</label>
                 <textarea
                   value={body}
                   onChange={e => setBody(e.target.value)}
                   placeholder="Contenu de l'email..."
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/20 outline-none resize-none h-32 focus:border-rose-vif/50"
+                  className="w-full rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-200 outline-none resize-none h-32 focus:border-rose-vif"
                 />
               </div>
             </div>
 
             <div className="mt-6 flex gap-3">
-              <button onClick={onClose} className="flex-1 rounded-xl border border-white/10 py-2.5 text-sm text-white/60 hover:bg-white/5">
+              <button onClick={onClose} className="flex-1 rounded-xl border border-slate-200 shadow-xl py-2.5 text-sm text-slate-500 hover:bg-slate-50">
                 Annuler
               </button>
-              <button onClick={handleSend} className="flex-1 rounded-xl bg-gradient-to-r from-blue-500 to-violet-doux py-2.5 text-sm font-semibold text-white">
+              <button onClick={handleSend} className="flex-1 rounded-xl bg-gradient-to-r from-blue-500 to-violet-doux py-2.5 text-sm font-semibold text-slate-800">
                 Envoyer l'email
               </button>
             </div>
           </>
         ) : (
           <div className="text-center py-6">
-            <div className="h-14 w-14 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-7 w-7 text-emerald-400" />
+            <div className="h-14 w-14 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-7 w-7 text-emerald-600" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Email envoyé !</h3>
-            <p className="mt-2 text-sm text-white/60">L'email a été envoyé à {subscriber.email}.</p>
-            <button onClick={onClose} className="mt-6 rounded-xl bg-white/10 px-6 py-2.5 text-sm text-white hover:bg-white/15">
+            <h3 className="text-lg font-semibold text-slate-800">Email envoyé !</h3>
+            <p className="mt-2 text-sm text-slate-500">L'email a été envoyé à {subscriber.email}.</p>
+            <button onClick={onClose} className="mt-6 rounded-xl bg-slate-100 px-6 py-2.5 text-sm text-slate-800 hover:bg-slate-200">
               Fermer
             </button>
           </div>

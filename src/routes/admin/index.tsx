@@ -49,37 +49,37 @@ function AdminDashboard() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Croissance & Revenus (6 mois)</h3>
+        <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Croissance & Revenus (6 mois)</h3>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={growthData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="month" stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} />
-              <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: "oklch(0.2 0.02 260)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white" }} />
-              <Line type="monotone" dataKey="users" stroke="oklch(0.68 0.21 355)" strokeWidth={2.5} dot={{ fill: "oklch(0.68 0.21 355)" }} name="Utilisatrices" />
-              <Line type="monotone" dataKey="premium" stroke="oklch(0.58 0.18 295)" strokeWidth={2.5} dot={{ fill: "oklch(0.58 0.18 295)" }} name="Premium" />
-              <Line type="monotone" dataKey="revenue" stroke="#34d399" strokeWidth={2} dot={{ fill: "#34d399" }} name="Revenus (€)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} />
+              <Tooltip contentStyle={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }} />
+              <Line type="monotone" dataKey="users" stroke="#e91e7b" strokeWidth={2.5} dot={{ fill: "#e91e7b", r: 4 }} name="Utilisatrices" />
+              <Line type="monotone" dataKey="premium" stroke="#8b5cf6" strokeWidth={2.5} dot={{ fill: "#8b5cf6", r: 4 }} name="Premium" />
+              <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} dot={{ fill: "#10b981", r: 3 }} name="Revenus (€)" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Activité récente</h3>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Activité récente</h3>
           <div className="space-y-3 max-h-[240px] overflow-y-auto pr-2">
             {recentActivity.map((a, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span className={`mt-1.5 h-2 w-2 rounded-full shrink-0 ${
-                  a.type === "payment" ? "bg-emerald-400" :
-                  a.type === "signup" ? "bg-blue-400" :
-                  a.type === "trial" ? "bg-amber-400" :
-                  a.type === "demo" ? "bg-violet-400" :
-                  a.type === "churn" ? "bg-red-400" :
-                  "bg-orange-400"
+                  a.type === "payment" ? "bg-emerald-500" :
+                  a.type === "signup" ? "bg-blue-500" :
+                  a.type === "trial" ? "bg-amber-500" :
+                  a.type === "demo" ? "bg-violet-500" :
+                  a.type === "churn" ? "bg-red-500" :
+                  "bg-orange-500"
                 }`} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-white/80 leading-snug">{a.text}</div>
-                  <div className="text-[10px] text-white/30">{a.time}</div>
+                  <div className="text-xs text-slate-700 leading-snug">{a.text}</div>
+                  <div className="text-[10px] text-slate-400">{a.time}</div>
                 </div>
               </div>
             ))}
@@ -89,66 +89,66 @@ function AdminDashboard() {
 
       {/* Emails & Key metrics */}
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Mail className="h-4 w-4 text-white/40" />
-            <h3 className="text-sm font-semibold text-white">Emails envoyés aujourd'hui</h3>
+            <Mail className="h-4 w-4 text-slate-400" />
+            <h3 className="text-sm font-semibold text-slate-800">Emails envoyés aujourd'hui</h3>
           </div>
           <div className="space-y-3">
             {emailsToday.map(e => (
               <div key={e.type} className="flex items-center justify-between">
-                <span className="text-xs text-white/70">{e.icon} {e.type}</span>
-                <span className="text-xs font-bold text-white">{e.count}</span>
+                <span className="text-xs text-slate-600">{e.icon} {e.type}</span>
+                <span className="text-xs font-bold text-slate-800">{e.count}</span>
               </div>
             ))}
-            <div className="pt-2 border-t border-white/5 flex justify-between">
-              <span className="text-xs font-medium text-white/50">Total</span>
-              <span className="text-sm font-bold text-emerald-400">{emailsToday.reduce((s, e) => s + e.count, 0)}</span>
+            <div className="pt-3 border-t border-slate-100 flex justify-between">
+              <span className="text-xs font-medium text-slate-400">Total</span>
+              <span className="text-sm font-bold text-emerald-600">{emailsToday.reduce((s, e) => s + e.count, 0)}</span>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/5 bg-white/5 p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Demandes démo pro</h3>
-          <div className="space-y-2">
-            <div className="flex justify-between"><span className="text-xs text-white/60">En attente</span><span className="text-sm font-bold text-amber-400">4</span></div>
-            <div className="flex justify-between"><span className="text-xs text-white/60">Approuvées ce mois</span><span className="text-sm font-bold text-emerald-400">12</span></div>
-            <div className="flex justify-between"><span className="text-xs text-white/60">Total actives</span><span className="text-sm font-bold text-white">28</span></div>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-800 mb-4">Demandes démo pro</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between"><span className="text-xs text-slate-500">En attente</span><span className="text-sm font-bold text-amber-600">4</span></div>
+            <div className="flex justify-between"><span className="text-xs text-slate-500">Approuvées ce mois</span><span className="text-sm font-bold text-emerald-600">12</span></div>
+            <div className="flex justify-between"><span className="text-xs text-slate-500">Total actives</span><span className="text-sm font-bold text-slate-800">28</span></div>
           </div>
-          <div className="mt-4 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3">
-            <div className="text-[10px] font-medium text-amber-300">⚠️ 4 demandes en attente de validation</div>
+          <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3">
+            <div className="text-[11px] font-medium text-amber-700">4 demandes en attente de validation</div>
           </div>
         </div>
 
         <div className="space-y-4">
-          <MiniStat label="Taux conversion essai → premium" value="23%" desc="Objectif : 25%" />
-          <MiniStat label="Churn mensuel" value="2.1%" desc="En baisse ↓" />
-          <MiniStat label="LTV moyenne" value="89 €" desc="Premium annuel" />
-          <MiniStat label="NPS" value="72" desc="Excellent" />
+          <MiniStat label="Taux conversion essai → premium" value="23%" desc="Objectif : 25%" accent="text-rose-vif" />
+          <MiniStat label="Churn mensuel" value="2.1%" desc="En baisse ↓" accent="text-emerald-600" />
+          <MiniStat label="LTV moyenne" value="89 €" desc="Premium annuel" accent="text-violet-600" />
+          <MiniStat label="NPS" value="72" desc="Excellent" accent="text-blue-600" />
         </div>
       </div>
 
       {/* Alerts */}
-      <div className="mt-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
+      <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
         <div className="flex items-center gap-2 mb-3">
-          <AlertTriangle className="h-4 w-4 text-amber-400" />
-          <h3 className="text-sm font-semibold text-amber-300">Actions requises</h3>
+          <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <h3 className="text-sm font-semibold text-amber-800">Actions requises</h3>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl bg-white/5 p-3">
-            <div className="text-xs text-white/70">Essais expirant sous 48h</div>
-            <div className="text-lg font-bold text-white mt-1">7</div>
-            <div className="text-[10px] text-white/30">Email rappel envoyé automatiquement</div>
+          <div className="rounded-xl bg-white border border-amber-100 p-4 shadow-sm">
+            <div className="text-xs text-slate-600">Essais expirant sous 48h</div>
+            <div className="text-2xl font-bold text-slate-800 mt-1">7</div>
+            <div className="text-[10px] text-slate-400">Email rappel envoyé automatiquement</div>
           </div>
-          <div className="rounded-xl bg-white/5 p-3">
-            <div className="text-xs text-white/70">Paiements échoués</div>
-            <div className="text-lg font-bold text-white mt-1">2</div>
-            <div className="text-[10px] text-white/30">Relance automatique dans 24h</div>
+          <div className="rounded-xl bg-white border border-amber-100 p-4 shadow-sm">
+            <div className="text-xs text-slate-600">Paiements échoués</div>
+            <div className="text-2xl font-bold text-slate-800 mt-1">2</div>
+            <div className="text-[10px] text-slate-400">Relance automatique dans 24h</div>
           </div>
-          <div className="rounded-xl bg-white/5 p-3">
-            <div className="text-xs text-white/70">Signalements communauté</div>
-            <div className="text-lg font-bold text-white mt-1">1</div>
-            <div className="text-[10px] text-white/30">En attente de modération</div>
+          <div className="rounded-xl bg-white border border-amber-100 p-4 shadow-sm">
+            <div className="text-xs text-slate-600">Signalements communauté</div>
+            <div className="text-2xl font-bold text-slate-800 mt-1">1</div>
+            <div className="text-[10px] text-slate-400">En attente de modération</div>
           </div>
         </div>
       </div>
@@ -158,25 +158,27 @@ function AdminDashboard() {
 
 function StatCard({ icon: Icon, label, value, change, up }: { icon: any; label: string; value: string; change: string; up: boolean }) {
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/5 p-5">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-white/40">{label}</span>
-        <Icon className="h-4 w-4 text-white/20" />
+        <span className="text-xs text-slate-500 font-medium">{label}</span>
+        <div className="h-8 w-8 rounded-lg bg-slate-50 flex items-center justify-center">
+          <Icon className="h-4 w-4 text-slate-400" />
+        </div>
       </div>
-      <div className="mt-2 text-2xl font-bold text-white">{value}</div>
-      <div className={`mt-1 flex items-center gap-1 text-xs ${up ? "text-emerald-400" : "text-red-400"}`}>
+      <div className="mt-2 text-2xl font-bold text-slate-800">{value}</div>
+      <div className={`mt-1 flex items-center gap-1 text-xs font-medium ${up ? "text-emerald-600" : "text-red-500"}`}>
         {up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />} {change}
       </div>
     </div>
   );
 }
 
-function MiniStat({ label, value, desc }: { label: string; value: string; desc: string }) {
+function MiniStat({ label, value, desc, accent }: { label: string; value: string; desc: string; accent: string }) {
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
-      <div className="text-xs text-white/40">{label}</div>
-      <div className="mt-1 text-xl font-bold text-white">{value}</div>
-      <div className="text-[10px] text-white/30">{desc}</div>
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+      <div className="text-[11px] text-slate-500 font-medium">{label}</div>
+      <div className={`mt-1 text-xl font-bold ${accent}`}>{value}</div>
+      <div className="text-[10px] text-slate-400">{desc}</div>
     </div>
   );
 }
