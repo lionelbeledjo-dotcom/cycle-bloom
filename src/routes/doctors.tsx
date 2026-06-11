@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
-import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation } from "lucide-react";
-import { CITIES, DOCTORS_DB, searchDoctors, type Doctor } from "@/lib/doctors-database";
+import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2 } from "lucide-react";
+import { CITIES, searchDoctors, findNearestCity, type Doctor } from "@/lib/doctors-database";
 
 export const Route = createFileRoute("/doctors")({
   head: () => ({ meta: [{ title: "Trouver un médecin — CycleBloom AI" }] }),
@@ -27,17 +27,38 @@ function Doctors() {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState("");
   const [detecting, setDetecting] = useState(false);
+  const [geoError, setGeoError] = useState("");
+  const [citySearch, setCitySearch] = useState("");
 
   const doctors = searchDoctors(selectedCity, selectedSpecialty).filter(d =>
     !searchQuery || d.name.toLowerCase().includes(searchQuery.toLowerCase()) || d.specialty.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const filteredCities = citySearch
+    ? CITIES.filter(c => c.name.toLowerCase().includes(citySearch.toLowerCase()))
+    : CITIES;
+
   const detectLocation = () => {
     setDetecting(true);
-    setTimeout(() => {
-      setSelectedCity("paris");
+    setGeoError("");
+    if (!navigator.geolocation) {
+      setGeoError("La géolocalisation n'est pas disponible sur votre appareil.");
       setDetecting(false);
-    }, 1500);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const nearest = findNearestCity(latitude, longitude);
+        setSelectedCity(nearest);
+        setDetecting(false);
+      },
+      (err) => {
+        setGeoError("Impossible de détecter votre position. Veuillez sélectionner votre ville manuellement.");
+        setDetecting(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   if (selectedDoctor) {
@@ -80,7 +101,7 @@ function Doctors() {
       </div>
 
       {/* Search bar */}
-      <div className="mb-6 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+      <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -91,24 +112,60 @@ function Doctors() {
             className="w-full rounded-2xl border border-border bg-white/80 py-3 pl-11 pr-4 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
           />
         </div>
-        <select
-          value={selectedCity}
-          onChange={e => setSelectedCity(e.target.value)}
-          className="rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif"
-        >
-          {CITIES.map(c => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Tapez votre ville..."
+            value={citySearch}
+            onChange={e => setCitySearch(e.target.value)}
+            className="w-full rounded-2xl border border-border bg-white/80 py-3 pl-11 pr-4 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+          />
+          {citySearch && filteredCities.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 z-20 rounded-2xl border border-border bg-white shadow-lg max-h-60 overflow-y-auto">
+              {filteredCities.slice(0, 15).map(c => (
+                <button
+                  key={c.id}
+                  onClick={() => { setSelectedCity(c.id); setCitySearch(""); }}
+                  className="w-full text-left px-4 py-2.5 text-sm hover:bg-rose-pastel/30 transition flex items-center justify-between"
+                >
+                  <span>{c.name}</span>
+                  <span className="text-[10px] text-muted-foreground">{c.region}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           onClick={detectLocation}
           disabled={detecting}
           className="flex items-center gap-2 rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm hover:border-rose-vif transition disabled:opacity-50"
         >
-          <Navigation className="h-4 w-4 text-rose-vif" />
-          {detecting ? "Détection..." : "Ma position"}
+          {detecting ? <Loader2 className="h-4 w-4 text-rose-vif animate-spin" /> : <Navigation className="h-4 w-4 text-rose-vif" />}
+          {detecting ? "Détection..." : "📍 Me localiser"}
         </button>
       </div>
+
+      {/* City selector chips */}
+      {!citySearch && (
+        <div className="mb-4 flex gap-2 overflow-x-auto pb-2">
+          <select
+            value={selectedCity}
+            onChange={e => setSelectedCity(e.target.value)}
+            className="rounded-full border border-border bg-white/80 px-4 py-1.5 text-xs font-medium outline-none focus:border-rose-vif"
+          >
+            {CITIES.map(c => (
+              <option key={c.id} value={c.id}>{c.name} ({c.region})</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {geoError && (
+        <div className="mb-4 rounded-2xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
+          ⚠️ {geoError}
+        </div>
+      )}
 
       {/* Specialty filter */}
       <div className="mb-6 flex gap-2 overflow-x-auto pb-2">

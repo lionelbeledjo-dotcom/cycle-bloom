@@ -1,6 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Flower2, ArrowRight, ArrowLeft, Check, Eye, EyeOff } from "lucide-react";
+import { saveUserProfile } from "@/lib/user-store";
+import { onUserRegistered, onTrialStarted } from "@/lib/email-system";
+import { setUserSubscription } from "@/lib/premium-gate";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Créer un compte — CycleBloom AI" }] }),
@@ -304,7 +307,25 @@ function Register() {
 
             {step === "ready" ? (
               <button
-                onClick={() => navigate({ to: "/dashboard" })}
+                onClick={() => {
+                  saveUserProfile({
+                    firstName: form.firstName,
+                    email: form.email,
+                    birthYear: form.birthYear,
+                    goal: form.goal,
+                    cycleLength: parseInt(form.cycleLength),
+                    periodLength: parseInt(form.periodLength),
+                    lastPeriod: form.lastPeriod,
+                    irregular: form.irregular,
+                    conditions: form.conditions,
+                    contraception: form.contraception,
+                    registeredAt: new Date().toISOString(),
+                  });
+                  setUserSubscription({ plan: "premium_monthly", status: "trial", trialEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
+                  onUserRegistered({ name: form.firstName, email: form.email });
+                  onTrialStarted({ name: form.firstName, email: form.email }, 7, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("fr-FR"));
+                  navigate({ to: "/dashboard" });
+                }}
                 className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-8 py-3.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
               >
                 Accéder à mon espace <ArrowRight className="h-4 w-4" />
