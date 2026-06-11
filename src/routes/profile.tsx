@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
 import { Crown, Shield, Bell, Lock, Download, Trash2, LogOut, ChevronRight, Heart, Droplet, Moon, Dumbbell, Pill, Baby, Activity, Globe, Calendar } from "lucide-react";
+import { getUserProfile, getCycleData } from "@/lib/user-store";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profil — CycleBloom AI" }] }),
@@ -10,6 +11,10 @@ export const Route = createFileRoute("/profile")({
 
 function Profile() {
   const [activeTab, setActiveTab] = useState<"info" | "health" | "cycle" | "goals" | "settings">("info");
+  const profile = getUserProfile();
+  const firstName = profile?.firstName || "Utilisatrice";
+  const email = profile?.email || "email@exemple.com";
+  const initial = firstName.charAt(0).toUpperCase();
 
   return (
     <AppShell title="Mon profil">
@@ -18,10 +23,10 @@ function Profile() {
         <div className="space-y-4">
           <div className="rounded-3xl border border-white/70 glass p-6 text-center shadow-bloom">
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-rose-vif to-violet-doux text-2xl font-bold text-white shadow-bloom">
-              C
+              {initial}
             </div>
-            <h2 className="mt-3 font-display text-lg font-bold">Camille Martin</h2>
-            <p className="text-xs text-muted-foreground">camille@exemple.com</p>
+            <h2 className="mt-3 font-display text-lg font-bold">{firstName}</h2>
+            <p className="text-xs text-muted-foreground">{email}</p>
             <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-rose-pastel px-3 py-1 text-[10px] font-semibold text-rose-vif">
               <Crown className="h-3 w-3" /> Premium
             </div>
@@ -90,20 +95,24 @@ function Profile() {
 }
 
 function PersonalInfo() {
+  const profile = getUserProfile();
+  const firstName = profile?.firstName || "";
+  const email = profile?.email || "";
+  const birthYear = profile?.birthYear || "1995";
+  const age = new Date().getFullYear() - parseInt(birthYear);
+
   return (
     <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
       <h3 className="font-display text-lg font-bold mb-6">Informations personnelles</h3>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Prénom" value="Camille" />
-        <Field label="Nom" value="Martin" />
-        <Field label="Date de naissance" value="12/03/1995" type="date" />
-        <Field label="Âge" value="31 ans" disabled />
+        <Field label="Prénom" value={firstName} />
+        <Field label="Email" value={email} />
+        <Field label="Année de naissance" value={birthYear} />
+        <Field label="Âge" value={`${age} ans`} disabled />
         <Field label="Pays" value="France" />
-        <Field label="Ville" value="Paris" />
+        <Field label="Ville" value="" />
         <Field label="Langue" value="Français" />
         <Field label="Fuseau horaire" value="Europe/Paris (UTC+1)" />
-        <Field label="Téléphone" value="+33 6 12 34 56 78" />
-        <Field label="Contact d'urgence" value="+33 6 98 76 54 32" />
       </div>
       <div className="mt-6 flex gap-3">
         <button className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
@@ -187,15 +196,19 @@ function HealthInfo() {
 }
 
 function CycleInfo() {
+  const { cycleLength, periodLength, lastPeriod } = getCycleData();
+  const profile = getUserProfile();
+  const lastPeriodStr = lastPeriod ? lastPeriod.toLocaleDateString("fr-FR") : "Non renseigné";
+
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
         <h3 className="font-display text-lg font-bold mb-6">Configuration du cycle</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Durée moyenne du cycle" value="28 jours" />
-          <Field label="Durée moyenne des règles" value="5 jours" />
-          <Field label="Régularité" value="Régulier (±2 jours)" disabled />
-          <Field label="Dernières règles" value="28/05/2026" />
+          <Field label="Durée moyenne du cycle" value={`${cycleLength} jours`} />
+          <Field label="Durée moyenne des règles" value={`${periodLength} jours`} />
+          <Field label="Régularité" value={profile?.irregular ? "Irrégulier" : "Régulier (±2 jours)"} disabled />
+          <Field label="Dernières règles" value={lastPeriodStr} />
           <Field label="Flux habituel" value="Moyen" />
           <Field label="Syndrome prémenstruel" value="Modéré" />
         </div>

@@ -185,7 +185,24 @@ function Symptoms() {
       {/* Save */}
       <div className="mt-6 flex justify-center">
         <button
-          onClick={() => setSaved(true)}
+          onClick={() => {
+            const entry = {
+              date: new Date().toISOString().split("T")[0],
+              moods: selectedMoods,
+              physical: selectedPhysical,
+              flow,
+              discharge,
+              temp: temp || null,
+              sleep,
+            };
+            const stored = localStorage.getItem("cyclebloom_symptoms");
+            const history = stored ? JSON.parse(stored) : [];
+            const existing = history.findIndex((h: any) => h.date === entry.date);
+            if (existing >= 0) history[existing] = entry;
+            else history.push(entry);
+            localStorage.setItem("cyclebloom_symptoms", JSON.stringify(history));
+            setSaved(true);
+          }}
           className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-8 py-3.5 text-sm font-semibold text-white shadow-bloom transition hover:scale-[1.02]"
         >
           {saved ? <><Check className="h-4 w-4" /> Enregistré !</> : "Enregistrer le suivi"}

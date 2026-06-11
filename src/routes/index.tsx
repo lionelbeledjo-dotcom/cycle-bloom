@@ -233,7 +233,7 @@ const features = [
   { icon: LineChart, title: "Rapports avancés", desc: "Graphiques détaillés et export PDF pour partager avec votre gynéco." },
   { icon: Stethoscope, title: "Téléconsultation", desc: "Médecins gynécologues francophones disponibles partout dans le monde." },
   { icon: Users, title: "Communauté active", desc: "Échangez avec 12 000+ femmes et des experts de santé vérifiés." },
-  { icon: Crown, title: "Premium abordable", desc: "À partir de 4 990 FCFA/mois. Essai gratuit 7 jours sans engagement." },
+  { icon: Crown, title: "Premium abordable", desc: "À partir de 9,99€/mois. Essai gratuit 7 jours sans engagement." },
   { icon: ShieldCheck, title: "Privé et chiffré", desc: "Vos données médicales sont chiffrées de bout en bout. RGPD conforme." },
 ];
 

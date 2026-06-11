@@ -74,7 +74,7 @@ function Dashboard() {
             <span className="text-xs font-semibold uppercase tracking-widest">Bloom AI</span>
           </div>
           <h3 className="mt-4 font-display text-2xl font-bold leading-tight">
-            "Profitez de ce pic d'énergie pour bouger, Camille."
+            "Profitez de ce pic d'énergie pour bouger, {userName}."
           </h3>
           <p className="mt-3 text-sm text-white/85">
             Pendant la fenêtre fertile, la testostérone et les oestrogènes augmentent. Idéal pour les entraînements intenses.
