@@ -9,31 +9,51 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SymptomsRouteImport } from './routes/symptoms'
+import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PregnancyRouteImport } from './routes/pregnancy'
-import { Route as RemindersRouteImport } from './routes/reminders'
-import { Route as CommunityRouteImport } from './routes/community'
-import { Route as InsightsRouteImport } from './routes/insights'
-import { Route as SymptomsRouteImport } from './routes/symptoms'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as RegisterRouteImport } from './routes/register'
+import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BloomAiRouteImport } from './routes/bloom-ai'
 import { Route as ArticlesRouteImport } from './routes/articles'
-import { Route as DoctorsRouteImport } from './routes/doctors'
-import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
-import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
-import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminDemosRouteImport } from './routes/admin/demos'
+import { Route as AdminContentRouteImport } from './routes/admin/content'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 
+const SymptomsRoute = SymptomsRouteImport.update({
+  id: '/symptoms',
+  path: '/symptoms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionRoute = SubscriptionRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RemindersRoute = RemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -44,14 +64,9 @@ const PregnancyRoute = PregnancyRouteImport.update({
   path: '/pregnancy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RemindersRoute = RemindersRouteImport.update({
-  id: '/reminders',
-  path: '/reminders',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommunityRoute = CommunityRouteImport.update({
-  id: '/community',
-  path: '/community',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsightsRoute = InsightsRouteImport.update({
@@ -59,19 +74,24 @@ const InsightsRoute = InsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SymptomsRoute = SymptomsRouteImport.update({
-  id: '/symptoms',
-  path: '/symptoms',
+const DoctorsRoute = DoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarRoute = CalendarRouteImport.update({
@@ -89,34 +109,9 @@ const ArticlesRoute = ArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DoctorsRoute = DoctorsRouteImport.update({
-  id: '/doctors',
-  path: '/doctors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SubscriptionRoute = SubscriptionRouteImport.update({
-  id: '/subscription',
-  path: '/subscription',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/admin/login',
-  path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -129,19 +124,9 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminContentRoute = AdminContentRouteImport.update({
-  id: '/admin/content',
-  path: '/admin/content',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
   id: '/admin/subscriptions',
   path: '/admin/subscriptions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
-  id: '/admin/analytics',
-  path: '/admin/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
@@ -149,9 +134,24 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/admin/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDemosRoute = AdminDemosRouteImport.update({
   id: '/admin/demos',
   path: '/admin/demos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/admin/content',
+  path: '/admin/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/admin/analytics',
+  path: '/admin/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -172,14 +172,14 @@ export interface FileRoutesByFullPath {
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
-  '/admin': typeof AdminIndexRoute
-  '/admin/login': typeof AdminLoginRoute
-  '/admin/users': typeof AdminUsersRoute
-  '/admin/content': typeof AdminContentRoute
-  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/demos': typeof AdminDemosRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -198,14 +198,14 @@ export interface FileRoutesByTo {
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
-  '/admin': typeof AdminIndexRoute
-  '/admin/login': typeof AdminLoginRoute
-  '/admin/users': typeof AdminUsersRoute
-  '/admin/content': typeof AdminContentRoute
-  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/demos': typeof AdminDemosRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -225,14 +225,14 @@ export interface FileRoutesById {
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
   '/symptoms': typeof SymptomsRoute
-  '/admin/': typeof AdminIndexRoute
-  '/admin/login': typeof AdminLoginRoute
-  '/admin/users': typeof AdminUsersRoute
-  '/admin/content': typeof AdminContentRoute
-  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/demos': typeof AdminDemosRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,14 +253,14 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/subscription'
     | '/symptoms'
-    | '/admin'
-    | '/admin/login'
-    | '/admin/users'
-    | '/admin/content'
-    | '/admin/subscriptions'
     | '/admin/analytics'
-    | '/admin/settings'
+    | '/admin/content'
     | '/admin/demos'
+    | '/admin/login'
+    | '/admin/settings'
+    | '/admin/subscriptions'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -279,14 +279,14 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/subscription'
     | '/symptoms'
-    | '/admin'
-    | '/admin/login'
-    | '/admin/users'
-    | '/admin/content'
-    | '/admin/subscriptions'
     | '/admin/analytics'
-    | '/admin/settings'
+    | '/admin/content'
     | '/admin/demos'
+    | '/admin/login'
+    | '/admin/settings'
+    | '/admin/subscriptions'
+    | '/admin/users'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -305,14 +305,14 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/subscription'
     | '/symptoms'
-    | '/admin/'
-    | '/admin/login'
-    | '/admin/users'
-    | '/admin/content'
-    | '/admin/subscriptions'
     | '/admin/analytics'
-    | '/admin/settings'
+    | '/admin/content'
     | '/admin/demos'
+    | '/admin/login'
+    | '/admin/settings'
+    | '/admin/subscriptions'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -332,18 +332,46 @@ export interface RootRouteChildren {
   RemindersRoute: typeof RemindersRoute
   SubscriptionRoute: typeof SubscriptionRoute
   SymptomsRoute: typeof SymptomsRoute
-  AdminLoginRoute: typeof AdminLoginRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-  AdminUsersRoute: typeof AdminUsersRoute
-  AdminContentRoute: typeof AdminContentRoute
-  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminContentRoute: typeof AdminContentRoute
   AdminDemosRoute: typeof AdminDemosRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/symptoms': {
+      id: '/symptoms'
+      path: '/symptoms'
+      fullPath: '/symptoms'
+      preLoaderRoute: typeof SymptomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscription': {
+      id: '/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reminders': {
+      id: '/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof RemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -358,18 +386,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PregnancyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reminders': {
-      id: '/reminders'
-      path: '/reminders'
-      fullPath: '/reminders'
-      preLoaderRoute: typeof RemindersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/community': {
-      id: '/community'
-      path: '/community'
-      fullPath: '/community'
-      preLoaderRoute: typeof CommunityRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insights': {
@@ -379,18 +400,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/symptoms': {
-      id: '/symptoms'
-      path: '/symptoms'
-      fullPath: '/symptoms'
-      preLoaderRoute: typeof SymptomsRouteImport
+    '/doctors': {
+      id: '/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof DoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -398,6 +419,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar': {
@@ -421,34 +449,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/doctors': {
-      id: '/doctors'
-      path: '/doctors'
-      fullPath: '/doctors'
-      preLoaderRoute: typeof DoctorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/subscription': {
-      id: '/subscription'
-      path: '/subscription'
-      fullPath: '/subscription'
-      preLoaderRoute: typeof SubscriptionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -459,15 +459,8 @@ declare module '@tanstack/react-router' {
     '/admin/': {
       id: '/admin/'
       path: '/admin'
-      fullPath: '/admin'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/admin/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
@@ -477,25 +470,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/content': {
-      id: '/admin/content'
-      path: '/admin/content'
-      fullPath: '/admin/content'
-      preLoaderRoute: typeof AdminContentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/subscriptions': {
       id: '/admin/subscriptions'
       path: '/admin/subscriptions'
       fullPath: '/admin/subscriptions'
       preLoaderRoute: typeof AdminSubscriptionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/analytics': {
-      id: '/admin/analytics'
-      path: '/admin/analytics'
-      fullPath: '/admin/analytics'
-      preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/settings': {
@@ -505,11 +484,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/demos': {
       id: '/admin/demos'
       path: '/admin/demos'
       fullPath: '/admin/demos'
       preLoaderRoute: typeof AdminDemosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/admin/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/admin/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -532,15 +532,25 @@ const rootRouteChildren: RootRouteChildren = {
   RemindersRoute: RemindersRoute,
   SubscriptionRoute: SubscriptionRoute,
   SymptomsRoute: SymptomsRoute,
-  AdminLoginRoute: AdminLoginRoute,
-  AdminIndexRoute: AdminIndexRoute,
-  AdminUsersRoute: AdminUsersRoute,
-  AdminContentRoute: AdminContentRoute,
-  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
+  AdminContentRoute: AdminContentRoute,
   AdminDemosRoute: AdminDemosRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
