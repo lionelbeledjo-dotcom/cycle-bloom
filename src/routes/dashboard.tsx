@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { CycleRing } from "@/components/CycleRing";
-import { Sparkles, Droplet, Flower, Activity, TrendingUp, Heart, Calendar, Bell, AlertTriangle, Stethoscope } from "lucide-react";
+import { Sparkles, Droplet, Heart, Calendar, Activity, Plus, BookOpen, Stethoscope } from "lucide-react";
 import { getUserName, getCycleDay, getCycleData, getNextPeriodDate, getOvulationDay } from "@/lib/user-store";
 
 export const Route = createFileRoute("/dashboard")({
@@ -16,177 +15,221 @@ export const Route = createFileRoute("/dashboard")({
 
 function Dashboard() {
   const today = new Date();
-  const formatted = today.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  const dayNames = ["D", "L", "M", "M", "J", "V", "S"];
   const userName = getUserName();
   const cycleDay = getCycleDay();
-  const { cycleLength } = getCycleData();
-  const nextPeriod = getNextPeriodDate();
+  const { cycleLength, periodLength, lastPeriod } = getCycleData();
   const ovulationDay = getOvulationDay();
+  const daysUntilOvulation = Math.max(0, ovulationDay - cycleDay + 1);
+  const nextPeriod = getNextPeriodDate();
   const daysUntilPeriod = Math.max(0, Math.ceil((nextPeriod.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
-  const daysUntilOvulation = Math.max(0, ovulationDay - cycleDay);
 
-  const phase = cycleDay <= 5 ? "Règles" : cycleDay <= ovulationDay - 3 ? "Phase folliculaire" : cycleDay <= ovulationDay + 1 ? "Fenêtre fertile" : "Phase lutéale";
-  const phaseDesc = cycleDay <= 5
-    ? "Période menstruelle. Reposez-vous et restez hydratée."
-    : cycleDay <= ovulationDay - 3
-    ? "Votre corps se prépare à l'ovulation. Énergie en hausse."
-    : cycleDay <= ovulationDay + 1
-    ? "Vous êtes au coeur de votre période la plus fertile. Pic d'oestrogènes et d'énergie."
-    : "Phase post-ovulation. Progestérone en hausse, préparez-vous au SPM.";
+  const phase = cycleDay <= periodLength ? "period" : cycleDay <= ovulationDay - 2 ? "follicular" : cycleDay <= ovulationDay + 2 ? "fertile" : "luteal";
 
-  const fertility = cycleDay >= ovulationDay - 3 && cycleDay <= ovulationDay + 1 ? "Haute" : cycleDay <= 5 ? "Très basse" : "Basse";
+  const phaseLabel = phase === "period" ? "Règles" : phase === "follicular" ? "Phase folliculaire" : phase === "fertile" ? "Fenêtre fertile" : "Phase lutéale";
+
+  const fertilityText = phase === "fertile"
+    ? "Forte possibilité de tomber enceinte"
+    : phase === "period"
+    ? "Très faible possibilité de tomber enceinte"
+    : phase === "follicular"
+    ? "Faible possibilité de tomber enceinte"
+    : "Très faible possibilité de tomber enceinte";
+
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() - today.getDay() + i + 1);
+    return d;
+  });
+
+  const getDayPhase = (date: Date) => {
+    if (!lastPeriod) return null;
+    const diff = Math.floor((date.getTime() - lastPeriod.getTime()) / (1000 * 60 * 60 * 24));
+    if (diff < 0) return null;
+    const dayInCycle = (diff % cycleLength) + 1;
+    if (dayInCycle <= periodLength) return "period";
+    if (dayInCycle >= ovulationDay - 2 && dayInCycle <= ovulationDay + 2) return "fertile";
+    return null;
+  };
+
+  const monthDay = today.toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
 
   return (
     <AppShell>
-      <div className="mb-8 flex items-end justify-between">
-        <div>
-          <div className="text-xs uppercase tracking-[0.2em] text-violet-doux">{formatted}</div>
-          <h1 className="font-display text-4xl font-bold sm:text-5xl">Bonjour, {userName}</h1>
-        </div>
-        <Link to="/bloom-ai" className="hidden items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-xs font-semibold text-violet-doux shadow-sm backdrop-blur sm:flex hover:bg-white transition">
-          <Sparkles className="h-3.5 w-3.5" /> Confiance IA : 98%
+      {/* Top header like Flo */}
+      <div className="text-center mb-2">
+        <p className="text-sm font-medium text-foreground/60 capitalize">{monthDay}</p>
+      </div>
+
+      {/* Week strip */}
+      <div className="mb-8 flex justify-center gap-2 sm:gap-3">
+        {weekDays.map((d, i) => {
+          const isToday = d.toDateString() === today.toDateString();
+          const dayPhase = getDayPhase(d);
+          return (
+            <div key={i} className="flex flex-col items-center gap-1">
+              <span className="text-[10px] uppercase text-muted-foreground font-medium">
+                {dayNames[d.getDay()]}
+              </span>
+              <div
+                className={`h-10 w-10 sm:h-11 sm:w-11 rounded-full flex items-center justify-center text-sm font-bold transition ${
+                  isToday
+                    ? "bg-white border-2 border-foreground text-foreground shadow-lg"
+                    : dayPhase === "period"
+                    ? "bg-rose-vif text-white"
+                    : dayPhase === "fertile"
+                    ? "bg-rose-poudre text-rose-vif border border-rose-vif/30"
+                    : "text-foreground/60"
+                }`}
+              >
+                {d.getDate()}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Main cycle info - like Flo */}
+      <div className="text-center mb-10">
+        {phase === "period" ? (
+          <>
+            <p className="text-sm text-foreground/60 mb-2">Jour {cycleDay} des règles</p>
+            <p className="font-display text-5xl sm:text-6xl font-bold text-rose-vif mb-3">
+              {periodLength - cycleDay + 1}
+            </p>
+            <p className="text-lg font-medium text-foreground/80">jour{periodLength - cycleDay + 1 > 1 ? "s" : ""} restant{periodLength - cycleDay + 1 > 1 ? "s" : ""}</p>
+          </>
+        ) : phase === "fertile" ? (
+          <>
+            <p className="text-sm text-foreground/60 mb-2">Fenêtre fertile</p>
+            <p className="font-display text-5xl sm:text-6xl font-bold text-violet-doux mb-3">
+              {daysUntilOvulation === 0 ? "Aujourd'hui" : daysUntilOvulation}
+            </p>
+            {daysUntilOvulation > 0 && (
+              <p className="text-lg font-medium text-foreground/80">jour{daysUntilOvulation > 1 ? "s" : ""} avant l'ovulation</p>
+            )}
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-foreground/60 mb-2">Ovulation dans</p>
+            <p className="font-display text-5xl sm:text-6xl font-bold text-foreground mb-3">
+              {daysUntilOvulation}
+            </p>
+            <p className="text-lg font-medium text-foreground/80">jours</p>
+          </>
+        )}
+
+        <p className="mt-4 text-sm text-foreground/50 flex items-center justify-center gap-1">
+          {fertilityText}
+          <span className="h-4 w-4 rounded-full border border-foreground/20 inline-flex items-center justify-center text-[8px]">i</span>
+        </p>
+      </div>
+
+      {/* Quick actions - like Flo */}
+      <div className="flex justify-center gap-8 sm:gap-12 mb-10">
+        <Link to="/calendar" className="flex flex-col items-center gap-2">
+          <div className="h-14 w-14 rounded-full bg-rose-pastel flex items-center justify-center">
+            <Droplet className="h-6 w-6 text-rose-vif" />
+          </div>
+          <span className="text-[11px] font-medium text-foreground/70">Enregistrer les règles</span>
+        </Link>
+        <Link to="/symptoms" className="flex flex-col items-center gap-2">
+          <div className="h-14 w-14 rounded-full bg-white border-2 border-border flex items-center justify-center">
+            <Plus className="h-6 w-6 text-foreground/60" />
+          </div>
+          <span className="text-[11px] font-medium text-foreground/70">Symptômes</span>
+        </Link>
+        <Link to="/insights" className="flex flex-col items-center gap-2">
+          <div className="h-14 w-14 rounded-full bg-white border-2 border-border flex items-center justify-center">
+            <Heart className="h-6 w-6 text-foreground/60" />
+          </div>
+          <span className="text-[11px] font-medium text-foreground/70">Rapports</span>
         </Link>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Cycle ring card */}
-        <Link to="/calendar" className="relative overflow-hidden rounded-3xl border border-white/70 glass p-8 shadow-bloom lg:col-span-2 hover:-translate-y-0.5 transition cursor-pointer block">
-          <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-center">
-            <div>
-              <div className="text-xs uppercase tracking-[0.2em] text-violet-doux">Phase actuelle · Jour {cycleDay}</div>
-              <h2 className="mt-2 font-display text-3xl font-bold">{phase}</h2>
-              <p className="mt-3 max-w-xs text-sm text-foreground/70">{phaseDesc}</p>
-              <div className="mt-6 grid grid-cols-2 gap-3 sm:max-w-xs">
-                <MiniStat icon={Droplet} label="Prochaines règles" value={`dans ${daysUntilPeriod} j`} tint="rose" />
-                <MiniStat icon={Flower} label="Ovulation" value={daysUntilOvulation === 0 ? "Aujourd'hui" : daysUntilOvulation === 1 ? "Demain" : `dans ${daysUntilOvulation} j`} tint="violet" />
-                <MiniStat icon={Activity} label="Cycle moyen" value={`${cycleLength} j`} tint="rose" />
-                <MiniStat icon={Heart} label="Fertilité" value={fertility} tint="violet" />
-              </div>
-            </div>
-            <CycleRing day={cycleDay} cycleLength={cycleLength} />
-          </div>
-        </Link>
+      {/* Daily articles - like Flo */}
+      <div className="mb-8">
+        <h3 className="font-display text-lg font-bold mb-4">Mes articles quotidiens · aujourd'hui</h3>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          <DailyCard
+            bg="bg-rose-pastel"
+            title="Possibilité de grossesse actuelle"
+            subtitle="Mise à jour..."
+            icon={<span className="h-3 w-3 rounded-full bg-rose-vif" />}
+          />
+          <DailyCard
+            bg="bg-gradient-to-br from-slate-700 to-slate-900 text-white"
+            title={`${monthDay} : Symptômes à prévoir`}
+            subtitle=""
+          />
+          <DailyCard
+            bg="bg-violet-doux/10"
+            title="Comprendre votre phase actuelle"
+            subtitle={phaseLabel}
+          />
+          <DailyCard
+            bg="bg-blue-50"
+            title="Type de pertes à observer"
+            subtitle="En savoir plus"
+          />
+        </div>
+      </div>
 
-        {/* Bloom AI card */}
-        <Link to="/bloom-ai" className="rounded-3xl bg-gradient-to-br from-rose-vif to-violet-doux p-8 text-white shadow-bloom hover:-translate-y-0.5 transition block">
-          <div className="flex items-center gap-2">
+      {/* Phase info */}
+      <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom mb-6">
+        <h3 className="font-display text-lg font-bold mb-2">
+          {phase === "period" ? "Au début de votre cycle" :
+           phase === "follicular" ? "Phase de préparation" :
+           phase === "fertile" ? "Période la plus fertile" :
+           "Phase de repos"}
+        </h3>
+        <p className="text-sm text-foreground/70 leading-relaxed">
+          {phase === "period"
+            ? "Votre corps se renouvelle. Repos, hydratation et alimentation riche en fer sont recommandés. Vos niveaux d'énergie vont progressivement augmenter."
+            : phase === "follicular"
+            ? "Vos oestrogènes augmentent. Énergie et créativité en hausse. C'est le moment idéal pour les projets exigeants et le sport intense."
+            : phase === "fertile"
+            ? "Vous êtes au pic de votre fertilité. Libido, énergie et confiance sont au maximum. Si vous souhaitez concevoir, c'est le moment."
+            : "La progestérone augmente. Possible fatigue, ballonnements ou irritabilité. Privilégiez le yoga, la marche et l'alimentation anti-inflammatoire."}
+        </p>
+      </div>
+
+      {/* Bloom AI + Doctor */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Link to="/bloom-ai" className="rounded-3xl bg-gradient-to-br from-rose-vif to-violet-doux p-6 text-white shadow-bloom hover:-translate-y-0.5 transition block">
+          <div className="flex items-center gap-2 mb-3">
             <Sparkles className="h-5 w-5" />
             <span className="text-xs font-semibold uppercase tracking-widest">Bloom AI</span>
           </div>
-          <h3 className="mt-4 font-display text-2xl font-bold leading-tight">
-            "Profitez de ce pic d'énergie pour bouger, {userName}."
-          </h3>
-          <p className="mt-3 text-sm text-white/85">
-            Pendant la fenêtre fertile, la testostérone et les oestrogènes augmentent. Idéal pour les entraînements intenses.
+          <p className="text-sm font-medium leading-relaxed">
+            "{phase === "fertile" ? `Profitez de ce pic d'énergie, ${userName} !` : `Des questions sur votre cycle, ${userName} ?`}"
           </p>
-          <span className="mt-6 inline-block rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-rose-vif">
+          <span className="mt-4 inline-block rounded-full bg-white/20 px-4 py-2 text-xs font-semibold">
             Discuter avec Bloom →
           </span>
         </Link>
 
-        {/* Quick actions */}
-        <Link to="/symptoms" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
-          <h3 className="font-display text-lg font-semibold">Comment vous sentez-vous ?</h3>
-          <p className="text-xs text-muted-foreground">Touchez pour enregistrer vos symptômes</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {["🌸 Bien", "😴 Fatiguée", "🌧 Triste", "🔥 Énergique", "💢 Irritée", "🤕 Maux de tête", "🥴 Crampes", "✨ Motivée"].map((s) => (
-              <span key={s} className="rounded-full border border-border bg-white/80 px-3.5 py-1.5 text-xs font-medium">
-                {s}
-              </span>
-            ))}
-          </div>
-        </Link>
-
-        {/* Trend card */}
-        <Link to="/insights" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
-          <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-semibold">Tendance 6 mois</h3>
-            <TrendingUp className="h-4 w-4 text-violet-doux" />
-          </div>
-          <Sparkline />
-          <div className="mt-3 flex justify-between text-[10px] uppercase tracking-wider text-muted-foreground">
-            <span>Jan</span><span>Fév</span><span>Mar</span><span>Avr</span><span>Mai</span><span>Jun</span>
-          </div>
-          <p className="mt-4 text-xs text-foreground/70">
-            Cycle stable autour de <span className="font-semibold text-violet-doux">28 jours</span>. Voir le rapport complet →
-          </p>
-        </Link>
-
-        {/* Doctor consultation */}
         <Link to="/doctors" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
           <div className="flex items-center gap-2 mb-3">
             <Stethoscope className="h-5 w-5 text-rose-vif" />
-            <h3 className="font-display text-lg font-semibold">Consulter un médecin</h3>
+            <span className="text-xs font-semibold uppercase tracking-widest text-foreground/60">Médecin</span>
           </div>
-          <p className="text-xs text-foreground/70 mb-3">Téléconsultation gynécologique disponible 24h/24 dans votre pays.</p>
+          <p className="text-sm text-foreground/70 mb-3">Trouvez un gynécologue ou une sage-femme près de chez vous.</p>
           <span className="rounded-full bg-rose-vif/10 px-3 py-1.5 text-xs font-semibold text-rose-vif">
             Prendre rendez-vous →
           </span>
-        </Link>
-
-        {/* Reminders */}
-        <Link to="/reminders" className="rounded-3xl border border-white/70 glass p-6 shadow-bloom hover:-translate-y-0.5 transition block">
-          <div className="flex items-center gap-2 mb-3">
-            <Bell className="h-5 w-5 text-violet-doux" />
-            <h3 className="font-display text-lg font-semibold">Rappels du jour</h3>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs"><span className="h-2 w-2 rounded-full bg-rose-vif" /> Température basale — 06:30</div>
-            <div className="flex items-center gap-2 text-xs"><span className="h-2 w-2 rounded-full bg-violet-doux" /> Suivi symptômes — 21:00</div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground"><span className="h-2 w-2 rounded-full bg-muted" /> Pilule — 08:00 (désactivé)</div>
-          </div>
-        </Link>
-
-        {/* Article suggestion */}
-        <Link to="/articles" className="overflow-hidden rounded-3xl border border-white/70 glass shadow-bloom hover:-translate-y-0.5 transition block">
-          <div className="h-32 bg-gradient-to-br from-rose-poudre to-lavande" />
-          <div className="p-6">
-            <div className="text-[10px] uppercase tracking-widest text-violet-doux">Magazine · Fertilité</div>
-            <h3 className="mt-1 font-display text-lg font-semibold leading-tight">
-              5 signes que vous êtes en pleine ovulation
-            </h3>
-            <p className="mt-2 text-xs text-muted-foreground">3 min de lecture · Dr. Léa Bernard</p>
-          </div>
         </Link>
       </div>
     </AppShell>
   );
 }
 
-function MiniStat({ icon: Icon, label, value, tint }: { icon: typeof Droplet; label: string; value: string; tint: "rose" | "violet" }) {
+function DailyCard({ bg, title, subtitle, icon }: { bg: string; title: string; subtitle: string; icon?: React.ReactNode }) {
   return (
-    <div className="rounded-2xl bg-white/70 p-3">
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-        <Icon className={`h-3 w-3 ${tint === "rose" ? "text-rose-vif" : "text-violet-doux"}`} />
-        {label}
-      </div>
-      <div className={`mt-1 font-display text-lg font-bold ${tint === "rose" ? "text-rose-vif" : "text-violet-doux"}`}>
-        {value}
-      </div>
+    <div className={`shrink-0 w-36 rounded-2xl p-4 ${bg}`}>
+      <p className="text-xs font-bold leading-tight mb-2">{title}</p>
+      {subtitle && <p className="text-[10px] opacity-70">{subtitle}</p>}
+      {icon && <div className="mt-2">{icon}</div>}
     </div>
-  );
-}
-
-function Sparkline() {
-  const pts = [28, 29, 27, 28, 30, 28];
-  const max = 32, min = 24;
-  const w = 240, h = 70;
-  const step = w / (pts.length - 1);
-  const y = (v: number) => h - ((v - min) / (max - min)) * h;
-  const d = pts.map((v, i) => `${i === 0 ? "M" : "L"}${i * step},${y(v)}`).join(" ");
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="mt-4 h-20 w-full">
-      <defs>
-        <linearGradient id="grad" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--rose-vif)" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="var(--rose-vif)" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={`${d} L${w},${h} L0,${h} Z`} fill="url(#grad)" />
-      <path d={d} fill="none" stroke="var(--rose-vif)" strokeWidth={2.5} strokeLinecap="round" />
-      {pts.map((v, i) => (
-        <circle key={i} cx={i * step} cy={y(v)} r={3} fill="white" stroke="var(--rose-vif)" strokeWidth={2} />
-      ))}
-    </svg>
   );
 }

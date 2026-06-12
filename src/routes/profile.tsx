@@ -12,6 +12,8 @@ export const Route = createFileRoute("/profile")({
 
 function Profile() {
   const [activeTab, setActiveTab] = useState<"info" | "health" | "cycle" | "goals" | "settings">("info");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const refresh = () => setRefreshKey(k => k + 1);
   const profile = getUserProfile();
   const firstName = profile?.firstName || "Utilisatrice";
   const email = profile?.email || "email@exemple.com";
@@ -100,10 +102,10 @@ function Profile() {
             ))}
           </div>
 
-          {activeTab === "info" && <PersonalInfo />}
-          {activeTab === "health" && <HealthInfo />}
-          {activeTab === "cycle" && <CycleInfo />}
-          {activeTab === "goals" && <GoalsInfo />}
+          {activeTab === "info" && <PersonalInfo onSave={refresh} />}
+          {activeTab === "health" && <HealthInfo onSave={refresh} />}
+          {activeTab === "cycle" && <CycleInfo onSave={refresh} />}
+          {activeTab === "goals" && <GoalsInfo onSave={refresh} />}
           {activeTab === "settings" && <SettingsInfo />}
         </div>
       </div>
@@ -111,7 +113,7 @@ function Profile() {
   );
 }
 
-function PersonalInfo() {
+function PersonalInfo({ onSave }: { onSave: () => void }) {
   const profile = getUserProfile();
   const [firstName, setFirstName] = useState(profile?.firstName || "");
   const [email, setEmail] = useState(profile?.email || "");
@@ -127,6 +129,7 @@ function PersonalInfo() {
     toast.success("Informations personnelles enregistrées !", {
       description: "Vos modifications ont bien été prises en compte.",
     });
+    onSave();
   };
 
   return (
@@ -157,7 +160,7 @@ function PersonalInfo() {
   );
 }
 
-function HealthInfo() {
+function HealthInfo({ onSave }: { onSave: () => void }) {
   const profile = getUserProfile();
   const [height, setHeight] = useState(profile?.height || "");
   const [weight, setWeight] = useState(profile?.weight || "");
@@ -185,6 +188,7 @@ function HealthInfo() {
     toast.success("Profil santé enregistré !", {
       description: "Vos informations de santé ont bien été mises à jour.",
     });
+    onSave();
   };
 
   return (
@@ -269,7 +273,7 @@ function HealthInfo() {
   );
 }
 
-function CycleInfo() {
+function CycleInfo({ onSave }: { onSave: () => void }) {
   const { cycleLength: initCycleLength, periodLength: initPeriodLength, lastPeriod } = getCycleData();
   const profile = getUserProfile();
   const [cycleLength, setCycleLength] = useState(String(initCycleLength));
@@ -289,6 +293,7 @@ function CycleInfo() {
     toast.success("Configuration du cycle enregistrée !", {
       description: `Durée du cycle : ${cycleLength} jours, durée des règles : ${periodLength} jours.`,
     });
+    onSave();
   };
 
   return (
@@ -396,7 +401,7 @@ function CycleInfo() {
   );
 }
 
-function GoalsInfo() {
+function GoalsInfo({ onSave }: { onSave: () => void }) {
   const profile = getUserProfile();
   const [goals, setGoals] = useState<Record<string, boolean>>({
     tracking: profile?.goals?.includes("tracking") ?? true,
@@ -417,6 +422,7 @@ function GoalsInfo() {
     toast.success("Objectifs mis à jour !", {
       description: "Vos préférences et objectifs ont bien été enregistrés.",
     });
+    onSave();
   };
 
   return (
