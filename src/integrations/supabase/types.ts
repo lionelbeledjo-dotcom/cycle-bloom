@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      period_logs: {
+        Row: {
+          created_at: string
+          date: string
+          flow: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          flow?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          flow?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          birth_year: number | null
+          created_at: string
+          cycle_length: number
+          first_name: string | null
+          goal: string | null
+          id: string
+          last_period_date: string | null
+          period_length: number
+          updated_at: string
+        }
+        Insert: {
+          birth_year?: number | null
+          created_at?: string
+          cycle_length?: number
+          first_name?: string | null
+          goal?: string | null
+          id: string
+          last_period_date?: string | null
+          period_length?: number
+          updated_at?: string
+        }
+        Update: {
+          birth_year?: number | null
+          created_at?: string
+          cycle_length?: number
+          first_name?: string | null
+          goal?: string | null
+          id?: string
+          last_period_date?: string | null
+          period_length?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      symptom_logs: {
+        Row: {
+          created_at: string
+          date: string
+          discharge: string | null
+          id: string
+          moods: string[]
+          notes: string | null
+          physical: string[]
+          sleep_quality: number | null
+          temperature: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          discharge?: string | null
+          id?: string
+          moods?: string[]
+          notes?: string | null
+          physical?: string[]
+          sleep_quality?: number | null
+          temperature?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          discharge?: string | null
+          id?: string
+          moods?: string[]
+          notes?: string | null
+          physical?: string[]
+          sleep_quality?: number | null
+          temperature?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
