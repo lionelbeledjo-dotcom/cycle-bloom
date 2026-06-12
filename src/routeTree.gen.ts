@@ -9,21 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SymptomsRouteImport } from './routes/symptoms'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as RemindersRouteImport } from './routes/reminders'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PregnancyRouteImport } from './routes/pregnancy'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as DemoRouteImport } from './routes/demo'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CommunityRouteImport } from './routes/community'
-import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BloomAiRouteImport } from './routes/bloom-ai'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
@@ -33,12 +29,11 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminDemosRouteImport } from './routes/admin/demos'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
+import { Route as AuthenticatedSymptomsRouteImport } from './routes/_authenticated/symptoms'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 
-const SymptomsRoute = SymptomsRouteImport.update({
-  id: '/symptoms',
-  path: '/symptoms',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SubscriptionRoute = SubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
@@ -49,24 +44,9 @@ const RemindersRoute = RemindersRouteImport.update({
   path: '/reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PregnancyRoute = PregnancyRouteImport.update({
   id: '/pregnancy',
   path: '/pregnancy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsightsRoute = InsightsRouteImport.update({
@@ -84,19 +64,9 @@ const DemoRoute = DemoRouteImport.update({
   path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BloomAiRoute = BloomAiRouteImport.update({
@@ -104,9 +74,18 @@ const BloomAiRoute = BloomAiRouteImport.update({
   path: '/bloom-ai',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArticlesRoute = ArticlesRouteImport.update({
   id: '/articles',
   path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -154,24 +133,43 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/admin/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSymptomsRoute = AuthenticatedSymptomsRouteImport.update({
+  id: '/symptoms',
+  path: '/symptoms',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
+  '/auth': typeof AuthRoute
   '/bloom-ai': typeof BloomAiRoute
-  '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
-  '/dashboard': typeof DashboardRoute
   '/demo': typeof DemoRoute
   '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
-  '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
-  '/profile': typeof ProfileRoute
-  '/register': typeof RegisterRoute
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
-  '/symptoms': typeof SymptomsRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/symptoms': typeof AuthenticatedSymptomsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/demos': typeof AdminDemosRoute
@@ -184,20 +182,19 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
+  '/auth': typeof AuthRoute
   '/bloom-ai': typeof BloomAiRoute
-  '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
-  '/dashboard': typeof DashboardRoute
   '/demo': typeof DemoRoute
   '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
-  '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
-  '/profile': typeof ProfileRoute
-  '/register': typeof RegisterRoute
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
-  '/symptoms': typeof SymptomsRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/symptoms': typeof AuthenticatedSymptomsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/demos': typeof AdminDemosRoute
@@ -210,21 +207,21 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/articles': typeof ArticlesRoute
+  '/auth': typeof AuthRoute
   '/bloom-ai': typeof BloomAiRoute
-  '/calendar': typeof CalendarRoute
   '/community': typeof CommunityRoute
-  '/dashboard': typeof DashboardRoute
   '/demo': typeof DemoRoute
   '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
-  '/login': typeof LoginRoute
   '/pregnancy': typeof PregnancyRoute
-  '/profile': typeof ProfileRoute
-  '/register': typeof RegisterRoute
   '/reminders': typeof RemindersRoute
   '/subscription': typeof SubscriptionRoute
-  '/symptoms': typeof SymptomsRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/symptoms': typeof AuthenticatedSymptomsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/demos': typeof AdminDemosRoute
@@ -239,19 +236,18 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/articles'
+    | '/auth'
     | '/bloom-ai'
-    | '/calendar'
     | '/community'
-    | '/dashboard'
     | '/demo'
     | '/doctors'
     | '/insights'
-    | '/login'
     | '/pregnancy'
-    | '/profile'
-    | '/register'
     | '/reminders'
     | '/subscription'
+    | '/calendar'
+    | '/dashboard'
+    | '/profile'
     | '/symptoms'
     | '/admin/analytics'
     | '/admin/content'
@@ -265,19 +261,18 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/articles'
+    | '/auth'
     | '/bloom-ai'
-    | '/calendar'
     | '/community'
-    | '/dashboard'
     | '/demo'
     | '/doctors'
     | '/insights'
-    | '/login'
     | '/pregnancy'
-    | '/profile'
-    | '/register'
     | '/reminders'
     | '/subscription'
+    | '/calendar'
+    | '/dashboard'
+    | '/profile'
     | '/symptoms'
     | '/admin/analytics'
     | '/admin/content'
@@ -290,21 +285,21 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/articles'
+    | '/auth'
     | '/bloom-ai'
-    | '/calendar'
     | '/community'
-    | '/dashboard'
     | '/demo'
     | '/doctors'
     | '/insights'
-    | '/login'
     | '/pregnancy'
-    | '/profile'
-    | '/register'
     | '/reminders'
     | '/subscription'
-    | '/symptoms'
+    | '/_authenticated/calendar'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/profile'
+    | '/_authenticated/symptoms'
     | '/admin/analytics'
     | '/admin/content'
     | '/admin/demos'
@@ -317,21 +312,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ArticlesRoute: typeof ArticlesRoute
+  AuthRoute: typeof AuthRoute
   BloomAiRoute: typeof BloomAiRoute
-  CalendarRoute: typeof CalendarRoute
   CommunityRoute: typeof CommunityRoute
-  DashboardRoute: typeof DashboardRoute
   DemoRoute: typeof DemoRoute
   DoctorsRoute: typeof DoctorsRoute
   InsightsRoute: typeof InsightsRoute
-  LoginRoute: typeof LoginRoute
   PregnancyRoute: typeof PregnancyRoute
-  ProfileRoute: typeof ProfileRoute
-  RegisterRoute: typeof RegisterRoute
   RemindersRoute: typeof RemindersRoute
   SubscriptionRoute: typeof SubscriptionRoute
-  SymptomsRoute: typeof SymptomsRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminContentRoute: typeof AdminContentRoute
   AdminDemosRoute: typeof AdminDemosRoute
@@ -344,13 +335,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/symptoms': {
-      id: '/symptoms'
-      path: '/symptoms'
-      fullPath: '/symptoms'
-      preLoaderRoute: typeof SymptomsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/subscription': {
       id: '/subscription'
       path: '/subscription'
@@ -365,32 +349,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pregnancy': {
       id: '/pregnancy'
       path: '/pregnancy'
       fullPath: '/pregnancy'
       preLoaderRoute: typeof PregnancyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insights': {
@@ -414,25 +377,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/community': {
       id: '/community'
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bloom-ai': {
@@ -442,11 +391,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BloomAiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles': {
       id: '/articles'
       path: '/articles'
       fullPath: '/articles'
       preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -512,26 +475,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/symptoms': {
+      id: '/_authenticated/symptoms'
+      path: '/symptoms'
+      fullPath: '/symptoms'
+      preLoaderRoute: typeof AuthenticatedSymptomsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedSymptomsRoute: typeof AuthenticatedSymptomsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedSymptomsRoute: AuthenticatedSymptomsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ArticlesRoute: ArticlesRoute,
+  AuthRoute: AuthRoute,
   BloomAiRoute: BloomAiRoute,
-  CalendarRoute: CalendarRoute,
   CommunityRoute: CommunityRoute,
-  DashboardRoute: DashboardRoute,
   DemoRoute: DemoRoute,
   DoctorsRoute: DoctorsRoute,
   InsightsRoute: InsightsRoute,
-  LoginRoute: LoginRoute,
   PregnancyRoute: PregnancyRoute,
-  ProfileRoute: ProfileRoute,
-  RegisterRoute: RegisterRoute,
   RemindersRoute: RemindersRoute,
   SubscriptionRoute: SubscriptionRoute,
-  SymptomsRoute: SymptomsRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminContentRoute: AdminContentRoute,
   AdminDemosRoute: AdminDemosRoute,
