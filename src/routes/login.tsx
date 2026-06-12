@@ -32,9 +32,9 @@ function Login() {
   };
 
   return (
-    <div className="bg-bloom flex min-h-screen items-center justify-center px-4 py-10">
+    <div className="bg-bloom flex min-h-screen items-center justify-center px-4 py-8 sm:py-10">
       <div className="w-full max-w-md">
-        <div className="rounded-3xl border border-white/70 glass p-8 shadow-bloom sm:p-10">
+        <div className="rounded-3xl border border-white/70 glass p-5 sm:p-8 shadow-bloom">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-vif to-violet-doux shadow-bloom">
               <Flower2 className="h-5 w-5 text-white" />
@@ -45,7 +45,7 @@ function Login() {
             </div>
           </Link>
 
-          <h1 className="mt-8 font-display text-3xl font-bold">Bon retour</h1>
+          <h1 className="mt-6 sm:mt-8 font-display text-2xl sm:text-3xl font-bold">Bon retour</h1>
           <p className="mt-1 text-sm text-muted-foreground">Connectez-vous pour accéder à votre espace personnel.</p>
 
           {error && (
@@ -54,7 +54,7 @@ function Login() {
             </div>
           )}
 
-          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+          <form className="mt-5 sm:mt-6 space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Email</label>
               <input
@@ -62,7 +62,7 @@ function Login() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="vous@exemple.com"
-                className="mt-1.5 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+                className="mt-1.5 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-base sm:text-sm outline-none transition focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
               />
             </div>
             <div>
@@ -76,7 +76,7 @@ function Login() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 pr-12 text-sm outline-none transition focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+                  className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 pr-12 text-base sm:text-sm outline-none transition focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
                 />
                 <button
                   type="button"
@@ -96,7 +96,7 @@ function Login() {
             </button>
           </form>
 
-          <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <div className="my-5 sm:my-6 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground">
             <span className="h-px flex-1 bg-border" /> ou continuer avec <span className="h-px flex-1 bg-border" />
           </div>
 
@@ -111,7 +111,7 @@ function Login() {
             ))}
           </div>
 
-          <p className="mt-8 text-center text-xs text-muted-foreground">
+          <p className="mt-6 sm:mt-8 text-center text-xs text-muted-foreground">
             Pas encore de compte ?{" "}
             <Link to="/register" className="font-semibold text-rose-vif hover:underline">
               Créer un compte gratuitement

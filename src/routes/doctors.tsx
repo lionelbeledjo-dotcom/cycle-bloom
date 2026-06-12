@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
 import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2 } from "lucide-react";
-import { CITIES, searchDoctors, findNearestCity, type Doctor } from "@/lib/doctors-database";
+import { CITIES, searchDoctors, searchDoctorsByName, findNearestCity, type Doctor } from "@/lib/doctors-database";
 
 export const Route = createFileRoute("/doctors")({
   head: () => ({ meta: [{ title: "Trouver un médecin — CycleBloom AI" }] }),
@@ -30,9 +30,10 @@ function Doctors() {
   const [geoError, setGeoError] = useState("");
   const [citySearch, setCitySearch] = useState("");
 
-  const doctors = searchDoctors(selectedCity, selectedSpecialty).filter(d =>
-    !searchQuery || d.name.toLowerCase().includes(searchQuery.toLowerCase()) || d.specialty.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const globalResults = searchQuery.length >= 2 ? searchDoctorsByName(searchQuery) : null;
+  const doctors = globalResults
+    ? globalResults.filter(d => selectedSpecialty === "Toutes" || d.specialty.toLowerCase().includes(selectedSpecialty.toLowerCase()))
+    : searchDoctors(selectedCity, selectedSpecialty);
 
   const filteredCities = citySearch
     ? CITIES.filter(c => c.name.toLowerCase().includes(citySearch.toLowerCase()))
@@ -185,7 +186,7 @@ function Doctors() {
       {/* Results count */}
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm text-foreground/60">
-          <span className="font-semibold text-foreground">{doctors.length} médecins</span> disponibles à {CITIES.find(c => c.id === selectedCity)?.name}
+          <span className="font-semibold text-foreground">{doctors.length} médecins</span> {globalResults ? `trouvés pour "${searchQuery}"` : `disponibles à ${CITIES.find(c => c.id === selectedCity)?.name}`}
         </p>
         <select className="rounded-xl border border-border bg-white/80 px-3 py-1.5 text-xs outline-none">
           <option>Prochain créneau</option>

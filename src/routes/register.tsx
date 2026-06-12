@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Flower2, ArrowRight, ArrowLeft, Check, Eye, EyeOff } from "lucide-react";
+import { Flower2, ArrowRight, ArrowLeft, Check, Eye, EyeOff, CheckCircle2, Mail } from "lucide-react";
 import { saveUserProfile } from "@/lib/user-store";
 import { onUserRegistered, onTrialStarted } from "@/lib/email-system";
 import { setUserSubscription } from "@/lib/premium-gate";
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/register")({
   component: Register,
 });
 
-type Step = "account" | "goal" | "cycle" | "health" | "ready";
+type Step = "account" | "goal" | "cycle" | "health" | "ready" | "success";
 
 function Register() {
   const [step, setStep] = useState<Step>("account");
@@ -34,9 +34,9 @@ function Register() {
 
   const update = (field: string, value: any) => setForm(prev => ({ ...prev, [field]: value }));
 
-  const steps: Step[] = ["account", "goal", "cycle", "health", "ready"];
+  const steps: Step[] = ["account", "goal", "cycle", "health", "ready", "success"];
   const currentIdx = steps.indexOf(step);
-  const progress = ((currentIdx + 1) / steps.length) * 100;
+  const progress = step === "success" ? 100 : ((currentIdx + 1) / (steps.length - 1)) * 100;
 
   const next = () => {
     const idx = steps.indexOf(step);
@@ -50,20 +50,20 @@ function Register() {
   return (
     <div className="bg-bloom min-h-screen flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-5">
+      <header className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-vif to-violet-doux shadow-bloom">
             <Flower2 className="h-4 w-4 text-white" />
           </div>
-          <span className="font-display text-lg font-bold">CycleBloom</span>
+          <span className="font-display text-base sm:text-lg font-bold">CycleBloom</span>
         </Link>
-        <Link to="/login" className="text-sm font-medium text-foreground/70 hover:text-foreground transition">
-          Déjà un compte ? Se connecter
+        <Link to="/login" className="text-xs sm:text-sm font-medium text-foreground/70 hover:text-foreground transition">
+          Se connecter
         </Link>
       </header>
 
       {/* Progress bar */}
-      <div className="px-6">
+      {step !== "success" && <div className="px-4 sm:px-6">
         <div className="mx-auto max-w-lg h-1.5 rounded-full bg-border/40 overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-rose-vif to-violet-doux transition-all duration-500"
@@ -71,9 +71,9 @@ function Register() {
           />
         </div>
         <p className="text-center text-[10px] text-muted-foreground mt-2">
-          Étape {currentIdx + 1} sur {steps.length}
+          Étape {currentIdx + 1} sur {steps.length - 1}
         </p>
-      </div>
+      </div>}
 
       {/* Content */}
       <div className="flex-1 flex items-center justify-center px-4 py-8">
@@ -297,8 +297,39 @@ function Register() {
             </StepCard>
           )}
 
+          {step === "success" && (
+            <div className="rounded-3xl border border-white/70 glass p-5 sm:p-8 shadow-bloom text-center">
+              <div className="mx-auto mb-5 h-16 w-16 rounded-full bg-green-50 border-2 border-green-200 flex items-center justify-center">
+                <CheckCircle2 className="h-8 w-8 text-green-500" />
+              </div>
+              <h2 className="font-display text-xl sm:text-2xl font-bold">Compte créé avec succès !</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Bienvenue <span className="font-semibold text-foreground">{form.firstName}</span> ! Votre compte CycleBloom AI est prêt.
+              </p>
+              <div className="mt-5 rounded-xl bg-blue-50 border border-blue-200 p-3 sm:p-4">
+                <div className="flex items-center gap-2 justify-center mb-2">
+                  <Mail className="h-4 w-4 text-blue-600 shrink-0" />
+                  <span className="text-sm font-semibold text-blue-800">Vérifiez votre boîte mail</span>
+                </div>
+                <p className="text-xs text-blue-700 leading-relaxed">
+                  Un email de confirmation a été envoyé à <span className="font-semibold break-all">{form.email}</span>. Cliquez sur le lien pour activer votre compte. Pensez à vérifier vos spams.
+                </p>
+              </div>
+              <div className="mt-5 rounded-xl bg-rose-pastel/50 border border-rose-vif/20 p-3 sm:p-4">
+                <p className="text-sm font-medium text-rose-vif">7 jours Premium offerts</p>
+                <p className="text-[10px] text-muted-foreground mt-1">Votre essai gratuit démarre maintenant</p>
+              </div>
+              <button
+                onClick={() => navigate({ to: "/dashboard" })}
+                className="mt-6 w-full flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-3.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+              >
+                Accéder à mon espace <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
           {/* Navigation buttons */}
-          <div className="mt-6 flex items-center justify-between max-w-lg mx-auto">
+          {step !== "success" && <div className="mt-6 flex items-center justify-between max-w-lg mx-auto">
             {currentIdx > 0 ? (
               <button onClick={prev} className="flex items-center gap-1 text-sm text-foreground/60 hover:text-foreground transition">
                 <ArrowLeft className="h-4 w-4" /> Retour
@@ -324,11 +355,11 @@ function Register() {
                   setUserSubscription({ plan: "premium_monthly", status: "trial", trialEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
                   onUserRegistered({ name: form.firstName, email: form.email });
                   onTrialStarted({ name: form.firstName, email: form.email }, 7, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("fr-FR"));
-                  navigate({ to: "/dashboard" });
+                  setStep("success");
                 }}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-8 py-3.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
               >
-                Accéder à mon espace <ArrowRight className="h-4 w-4" />
+                Finaliser mon inscription <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
               <button
@@ -339,7 +370,7 @@ function Register() {
                 Continuer <ArrowRight className="h-4 w-4" />
               </button>
             )}
-          </div>
+          </div>}
         </div>
       </div>
     </div>
@@ -348,9 +379,9 @@ function Register() {
 
 function StepCard({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-3xl border border-white/70 glass p-8 shadow-bloom">
-      <h2 className="font-display text-2xl font-bold">{title}</h2>
-      <p className="mt-1 text-sm text-muted-foreground mb-6">{subtitle}</p>
+    <div className="rounded-3xl border border-white/70 glass p-5 sm:p-8 shadow-bloom">
+      <h2 className="font-display text-xl sm:text-2xl font-bold">{title}</h2>
+      <p className="mt-1 text-sm text-muted-foreground mb-5 sm:mb-6">{subtitle}</p>
       {children}
     </div>
   );
@@ -365,7 +396,7 @@ function Field({ label, value, onChange, placeholder, type = "text" }: { label: 
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+        className="mt-1.5 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-base sm:text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
       />
     </div>
   );

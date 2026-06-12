@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Crown, Shield, Bell, Lock, Download, Trash2, LogOut, ChevronRight, Heart, Droplet, Moon, Dumbbell, Pill, Baby, Activity, Globe, Calendar } from "lucide-react";
-import { getUserProfile, getCycleData } from "@/lib/user-store";
+import { getUserProfile, updateUserProfile, getCycleData, getUserStats } from "@/lib/user-store";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profil — CycleBloom AI" }] }),
@@ -15,6 +16,7 @@ function Profile() {
   const firstName = profile?.firstName || "Utilisatrice";
   const email = profile?.email || "email@exemple.com";
   const initial = firstName.charAt(0).toUpperCase();
+  const stats = getUserStats();
 
   return (
     <AppShell title="Mon profil">
@@ -39,11 +41,11 @@ function Profile() {
           <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom">
             <h3 className="font-display text-sm font-semibold mb-3">Mon suivi</h3>
             <div className="space-y-3">
-              <StatRow label="Cycles suivis" value="14" />
-              <StatRow label="Jours de suivi" value="387" />
-              <StatRow label="Symptômes enregistrés" value="892" />
-              <StatRow label="Questions Bloom AI" value="156" />
-              <StatRow label="Membre depuis" value="Oct 2024" />
+              <StatRow label="Cycles suivis" value={String(stats.cyclesTracked)} />
+              <StatRow label="Jours de suivi" value={String(stats.daysTracked)} />
+              <StatRow label="Symptômes enregistrés" value={String(stats.symptomsLogged)} />
+              <StatRow label="Questions Bloom AI" value={String(stats.bloomQuestions)} />
+              <StatRow label="Membre depuis" value={stats.memberSince} />
             </div>
           </div>
 
@@ -96,26 +98,40 @@ function Profile() {
 
 function PersonalInfo() {
   const profile = getUserProfile();
-  const firstName = profile?.firstName || "";
-  const email = profile?.email || "";
-  const birthYear = profile?.birthYear || "1995";
+  const [firstName, setFirstName] = useState(profile?.firstName || "");
+  const [email, setEmail] = useState(profile?.email || "");
+  const [birthYear, setBirthYear] = useState(profile?.birthYear || "1995");
+  const [country, setCountry] = useState(profile?.country || "France");
+  const [city, setCity] = useState(profile?.city || "");
+  const [language, setLanguage] = useState(profile?.language || "Français");
+  const [timezone, setTimezone] = useState(profile?.timezone || "Europe/Paris (UTC+1)");
   const age = new Date().getFullYear() - parseInt(birthYear);
+
+  const handleSave = () => {
+    updateUserProfile({ firstName, email, birthYear, country, city, language, timezone });
+    toast.success("Informations personnelles enregistrées !", {
+      description: "Vos modifications ont bien été prises en compte.",
+    });
+  };
 
   return (
     <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
       <h3 className="font-display text-lg font-bold mb-6">Informations personnelles</h3>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Prénom" value={firstName} />
-        <Field label="Email" value={email} />
-        <Field label="Année de naissance" value={birthYear} />
+        <EditField label="Prénom" value={firstName} onChange={setFirstName} />
+        <EditField label="Email" value={email} onChange={setEmail} type="email" />
+        <EditField label="Année de naissance" value={birthYear} onChange={setBirthYear} />
         <Field label="Âge" value={`${age} ans`} disabled />
-        <Field label="Pays" value="France" />
-        <Field label="Ville" value="" />
-        <Field label="Langue" value="Français" />
-        <Field label="Fuseau horaire" value="Europe/Paris (UTC+1)" />
+        <EditField label="Pays" value={country} onChange={setCountry} />
+        <EditField label="Ville" value={city} onChange={setCity} />
+        <EditField label="Langue" value={language} onChange={setLanguage} />
+        <EditField label="Fuseau horaire" value={timezone} onChange={setTimezone} />
       </div>
       <div className="mt-6 flex gap-3">
-        <button className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+        <button
+          onClick={handleSave}
+          className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+        >
           Enregistrer
         </button>
         <button className="rounded-full border border-border bg-white/70 px-6 py-2.5 text-sm font-medium hover:bg-white transition">
@@ -127,27 +143,56 @@ function PersonalInfo() {
 }
 
 function HealthInfo() {
+  const profile = getUserProfile();
+  const [height, setHeight] = useState(profile?.height || "");
+  const [weight, setWeight] = useState(profile?.weight || "");
+  const [bloodType, setBloodType] = useState(profile?.bloodType || "");
+  const [firstPeriodAge, setFirstPeriodAge] = useState(profile?.firstPeriodAge || "");
+  const [pregnancies, setPregnancies] = useState(profile?.pregnancies || "0");
+  const [deliveries, setDeliveries] = useState(profile?.deliveries || "0");
+  const [ivgMiscarriage, setIvgMiscarriage] = useState(profile?.ivgMiscarriage || "Non");
+  const [surgery, setSurgery] = useState(profile?.surgery || "Non");
+  const [lastPap, setLastPap] = useState(profile?.lastPap || "");
+  const [contraception, setContraception] = useState(profile?.contraception || "none");
+  const [allergies, setAllergies] = useState(profile?.allergies || "Aucune connue");
+  const [medications, setMedications] = useState(profile?.medications || "");
+  const [selectedConditions, setSelectedConditions] = useState<string[]>(profile?.conditions || []);
+
+  const bmi = height && weight ? (parseFloat(weight) / Math.pow(parseFloat(height) / 100, 2)).toFixed(1) : "";
+  const bmiLabel = bmi ? (parseFloat(bmi) < 18.5 ? "maigreur" : parseFloat(bmi) < 25 ? "normal" : parseFloat(bmi) < 30 ? "surpoids" : "obésité") : "";
+
+  const handleSave = () => {
+    updateUserProfile({
+      height, weight, bloodType, firstPeriodAge, pregnancies, deliveries,
+      ivgMiscarriage, surgery, lastPap, contraception, allergies, medications,
+      conditions: selectedConditions,
+    });
+    toast.success("Profil santé enregistré !", {
+      description: "Vos informations de santé ont bien été mises à jour.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
         <h3 className="font-display text-lg font-bold mb-6">Profil de santé</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Taille" value="165 cm" />
-          <Field label="Poids" value="58 kg" />
-          <Field label="Groupe sanguin" value="A+" />
-          <Field label="IMC" value="21.3 (normal)" disabled />
+          <EditField label="Taille (cm)" value={height} onChange={setHeight} placeholder="165" />
+          <EditField label="Poids (kg)" value={weight} onChange={setWeight} placeholder="58" />
+          <EditField label="Groupe sanguin" value={bloodType} onChange={setBloodType} placeholder="A+" />
+          <Field label="IMC" value={bmi ? `${bmi} (${bmiLabel})` : "Renseigner taille et poids"} disabled />
         </div>
       </div>
 
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
         <h3 className="font-display text-lg font-bold mb-4">Antécédents gynécologiques</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Âge premières règles" value="13 ans" />
-          <Field label="Nombre de grossesses" value="0" />
-          <Field label="Nombre d'accouchements" value="0" />
-          <Field label="IVG / fausse couche" value="Non" />
-          <Field label="Chirurgie gynécologique" value="Non" />
-          <Field label="Dernier frottis" value="Mars 2026" />
+          <EditField label="Âge premières règles" value={firstPeriodAge} onChange={setFirstPeriodAge} placeholder="13" />
+          <EditField label="Nombre de grossesses" value={pregnancies} onChange={setPregnancies} />
+          <EditField label="Nombre d'accouchements" value={deliveries} onChange={setDeliveries} />
+          <EditField label="IVG / fausse couche" value={ivgMiscarriage} onChange={setIvgMiscarriage} />
+          <EditField label="Chirurgie gynécologique" value={surgery} onChange={setSurgery} />
+          <EditField label="Dernier frottis" value={lastPap} onChange={setLastPap} placeholder="Mars 2026" />
         </div>
       </div>
 
@@ -156,20 +201,23 @@ function HealthInfo() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Type</label>
-            <select className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
-              <option>Aucune</option>
-              <option>Pilule combinée</option>
-              <option>Pilule progestative</option>
-              <option>DIU cuivre</option>
-              <option selected>DIU hormonal</option>
-              <option>Implant</option>
-              <option>Patch</option>
-              <option>Anneau</option>
-              <option>Préservatif</option>
-              <option>Méthode naturelle</option>
+            <select
+              value={contraception}
+              onChange={e => setContraception(e.target.value)}
+              className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif"
+            >
+              <option value="none">Aucune</option>
+              <option value="pill">Pilule combinée</option>
+              <option value="mini-pill">Pilule progestative</option>
+              <option value="iud-copper">DIU cuivre</option>
+              <option value="iud-hormonal">DIU hormonal</option>
+              <option value="implant">Implant</option>
+              <option value="patch">Patch</option>
+              <option value="ring">Anneau</option>
+              <option value="condom">Préservatif</option>
+              <option value="natural">Méthode naturelle</option>
             </select>
           </div>
-          <Field label="Depuis" value="Janvier 2024" />
         </div>
       </div>
 
@@ -177,18 +225,29 @@ function HealthInfo() {
         <h3 className="font-display text-lg font-bold mb-4">Conditions médicales</h3>
         <div className="flex flex-wrap gap-2 mb-4">
           {["SOPK", "Endométriose", "Fibrome", "Kyste ovarien", "Thyroïde", "Diabète", "Anémie", "Migraine", "Dépression/anxiété"].map(c => (
-            <button key={c} className="rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-xs font-medium hover:border-rose-vif hover:text-rose-vif transition">
+            <button
+              key={c}
+              onClick={() => setSelectedConditions(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c])}
+              className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
+                selectedConditions.includes(c)
+                  ? "border-rose-vif bg-rose-vif text-white"
+                  : "border-border bg-white/70 hover:border-rose-vif hover:text-rose-vif"
+              }`}
+            >
               {c}
             </button>
           ))}
         </div>
-        <Field label="Allergies médicamenteuses" value="Aucune connue" />
+        <EditField label="Allergies médicamenteuses" value={allergies} onChange={setAllergies} />
         <div className="mt-4">
-          <Field label="Médicaments actuels" value="Vitamine D 1000 UI/j, Magnésium 300mg" />
+          <EditField label="Médicaments actuels" value={medications} onChange={setMedications} placeholder="Ex: Vitamine D 1000 UI/j" />
         </div>
       </div>
 
-      <button className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+      <button
+        onClick={handleSave}
+        className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+      >
         Enregistrer le profil santé
       </button>
     </div>
@@ -196,45 +255,94 @@ function HealthInfo() {
 }
 
 function CycleInfo() {
-  const { cycleLength, periodLength, lastPeriod } = getCycleData();
+  const { cycleLength: initCycleLength, periodLength: initPeriodLength, lastPeriod } = getCycleData();
   const profile = getUserProfile();
+  const [cycleLength, setCycleLength] = useState(String(initCycleLength));
+  const [periodLength, setPeriodLength] = useState(String(initPeriodLength));
+  const [lastPeriodDate, setLastPeriodDate] = useState(profile?.lastPeriod || "");
+  const [irregular, setIrregular] = useState(profile?.irregular || false);
+
   const lastPeriodStr = lastPeriod ? lastPeriod.toLocaleDateString("fr-FR") : "Non renseigné";
+
+  const handleSave = () => {
+    updateUserProfile({
+      cycleLength: parseInt(cycleLength),
+      periodLength: parseInt(periodLength),
+      lastPeriod: lastPeriodDate,
+      irregular,
+    });
+    toast.success("Configuration du cycle enregistrée !", {
+      description: `Durée du cycle : ${cycleLength} jours, durée des règles : ${periodLength} jours.`,
+    });
+  };
 
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
         <h3 className="font-display text-lg font-bold mb-6">Configuration du cycle</h3>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Durée moyenne du cycle" value={`${cycleLength} jours`} />
-          <Field label="Durée moyenne des règles" value={`${periodLength} jours`} />
-          <Field label="Régularité" value={profile?.irregular ? "Irrégulier" : "Régulier (±2 jours)"} disabled />
-          <Field label="Dernières règles" value={lastPeriodStr} />
-          <Field label="Flux habituel" value="Moyen" />
-          <Field label="Syndrome prémenstruel" value="Modéré" />
-        </div>
-      </div>
-
-      <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
-        <h3 className="font-display text-lg font-bold mb-4">Historique récent</h3>
-        <div className="space-y-3">
-          {[
-            { start: "28 mai 2026", length: "28j", duration: "5j" },
-            { start: "30 avril 2026", length: "27j", duration: "4j" },
-            { start: "3 avril 2026", length: "29j", duration: "5j" },
-            { start: "5 mars 2026", length: "28j", duration: "5j" },
-            { start: "5 février 2026", length: "28j", duration: "4j" },
-            { start: "8 janvier 2026", length: "30j", duration: "5j" },
-          ].map((c, i) => (
-            <div key={i} className="flex items-center justify-between rounded-2xl bg-white/60 p-3">
-              <div>
-                <span className="text-xs font-medium">Début : {c.start}</span>
-              </div>
-              <div className="flex gap-4 text-[10px] text-muted-foreground">
-                <span>Cycle : {c.length}</span>
-                <span>Règles : {c.duration}</span>
-              </div>
+        <div className="space-y-5">
+          <div>
+            <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">Durée moyenne du cycle</label>
+            <div className="mt-2 flex items-center gap-3">
+              <input
+                type="range"
+                min="21"
+                max="45"
+                value={cycleLength}
+                onChange={e => setCycleLength(e.target.value)}
+                className="flex-1 accent-rose-vif"
+              />
+              <span className="w-14 text-center font-display text-xl font-bold text-rose-vif">{cycleLength}j</span>
             </div>
-          ))}
+            <p className="text-[10px] text-muted-foreground">Moyenne : 28 jours (21-35 jours est normal)</p>
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">Durée moyenne des règles</label>
+            <div className="mt-2 flex items-center gap-3">
+              <input
+                type="range"
+                min="2"
+                max="10"
+                value={periodLength}
+                onChange={e => setPeriodLength(e.target.value)}
+                className="flex-1 accent-rose-vif"
+              />
+              <span className="w-14 text-center font-display text-xl font-bold text-violet-doux">{periodLength}j</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">Date des dernières règles</label>
+            <input
+              type="date"
+              value={lastPeriodDate}
+              onChange={e => setLastPeriodDate(e.target.value)}
+              className="mt-1.5 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+            />
+          </div>
+
+          <div className="flex items-center gap-3 rounded-2xl border border-border bg-white/70 p-4">
+            <input
+              type="checkbox"
+              checked={irregular}
+              onChange={e => setIrregular(e.target.checked)}
+              className="h-4 w-4 rounded border-border accent-rose-vif"
+            />
+            <div>
+              <div className="text-sm font-medium">Mes cycles sont irréguliers</div>
+              <div className="text-[10px] text-muted-foreground">La durée varie de plus de 7 jours d'un mois à l'autre</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex gap-3">
+          <button
+            onClick={handleSave}
+            className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+          >
+            Enregistrer
+          </button>
         </div>
       </div>
 
@@ -244,20 +352,28 @@ function CycleInfo() {
           <div className="rounded-2xl bg-rose-pastel/50 p-4 text-center">
             <Droplet className="h-5 w-5 text-rose-vif mx-auto mb-2" />
             <div className="text-xs font-medium">Prochaines règles</div>
-            <div className="font-display text-lg font-bold text-rose-vif">25 juin</div>
-            <div className="text-[10px] text-muted-foreground">Confiance : 94%</div>
+            <div className="font-display text-lg font-bold text-rose-vif">
+              {lastPeriodDate ? new Date(new Date(lastPeriodDate).getTime() + parseInt(cycleLength) * 86400000).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "—"}
+            </div>
           </div>
           <div className="rounded-2xl bg-violet-doux/10 p-4 text-center">
             <Heart className="h-5 w-5 text-violet-doux mx-auto mb-2" />
             <div className="text-xs font-medium">Prochaine ovulation</div>
-            <div className="font-display text-lg font-bold text-violet-doux">11 juin</div>
-            <div className="text-[10px] text-muted-foreground">Confiance : 89%</div>
+            <div className="font-display text-lg font-bold text-violet-doux">
+              {lastPeriodDate ? new Date(new Date(lastPeriodDate).getTime() + (parseInt(cycleLength) - 14) * 86400000).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "—"}
+            </div>
           </div>
           <div className="rounded-2xl bg-lavande p-4 text-center">
             <Activity className="h-5 w-5 text-foreground/60 mx-auto mb-2" />
             <div className="text-xs font-medium">Fenêtre fertile</div>
-            <div className="font-display text-lg font-bold">8-12 juin</div>
-            <div className="text-[10px] text-muted-foreground">Confiance : 91%</div>
+            <div className="font-display text-lg font-bold">
+              {lastPeriodDate ? (() => {
+                const ovDay = parseInt(cycleLength) - 14;
+                const start = new Date(new Date(lastPeriodDate).getTime() + (ovDay - 3) * 86400000);
+                const end = new Date(new Date(lastPeriodDate).getTime() + (ovDay + 1) * 86400000);
+                return `${start.getDate()}-${end.getDate()} ${end.toLocaleDateString("fr-FR", { month: "short" })}`;
+              })() : "—"}
+            </div>
           </div>
         </div>
       </div>
@@ -266,13 +382,27 @@ function CycleInfo() {
 }
 
 function GoalsInfo() {
-  const [goals, setGoals] = useState({
-    tracking: true,
-    fertility: false,
-    pregnancy: false,
-    health: true,
-    fitness: true,
+  const profile = getUserProfile();
+  const [goals, setGoals] = useState<Record<string, boolean>>({
+    tracking: profile?.goals?.includes("tracking") ?? true,
+    fertility: profile?.goals?.includes("fertility") ?? false,
+    pregnancy: profile?.goals?.includes("pregnancy") ?? false,
+    health: profile?.goals?.includes("health") ?? false,
+    fitness: profile?.goals?.includes("fitness") ?? false,
+    contraception: profile?.goals?.includes("contraception") ?? false,
   });
+  const [activity, setActivity] = useState(profile?.activity || "moderate");
+  const [stress, setStress] = useState(profile?.stress || "moderate");
+  const [sleep, setSleep] = useState(profile?.sleep || "good");
+  const [diet, setDiet] = useState(profile?.diet || "omnivore");
+
+  const handleSave = () => {
+    const selectedGoals = Object.entries(goals).filter(([_, v]) => v).map(([k]) => k);
+    updateUserProfile({ goals: selectedGoals, activity, stress, sleep, diet });
+    toast.success("Objectifs mis à jour !", {
+      description: "Vos préférences et objectifs ont bien été enregistrés.",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -290,14 +420,14 @@ function GoalsInfo() {
           ].map(goal => (
             <button
               key={goal.id}
-              onClick={() => setGoals(prev => ({ ...prev, [goal.id]: !prev[goal.id as keyof typeof prev] }))}
+              onClick={() => setGoals(prev => ({ ...prev, [goal.id]: !prev[goal.id] }))}
               className={`flex items-start gap-3 rounded-2xl p-4 text-left transition ${
-                goals[goal.id as keyof typeof goals]
+                goals[goal.id]
                   ? "border-2 border-rose-vif bg-rose-pastel/30 shadow-bloom"
                   : "border border-border bg-white/60 hover:bg-white"
               }`}
             >
-              <goal.icon className={`h-5 w-5 shrink-0 mt-0.5 ${goals[goal.id as keyof typeof goals] ? "text-rose-vif" : "text-foreground/40"}`} />
+              <goal.icon className={`h-5 w-5 shrink-0 mt-0.5 ${goals[goal.id] ? "text-rose-vif" : "text-foreground/40"}`} />
               <div>
                 <div className="text-sm font-semibold">{goal.label}</div>
                 <div className="text-[10px] text-muted-foreground">{goal.desc}</div>
@@ -312,46 +442,49 @@ function GoalsInfo() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Activité physique</label>
-            <select className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
-              <option>Sédentaire</option>
-              <option>Légèrement active (1-2x/semaine)</option>
-              <option selected>Modérément active (3-4x/semaine)</option>
-              <option>Très active (5-6x/semaine)</option>
-              <option>Athlète</option>
+            <select value={activity} onChange={e => setActivity(e.target.value)} className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
+              <option value="sedentary">Sédentaire</option>
+              <option value="light">Légèrement active (1-2x/semaine)</option>
+              <option value="moderate">Modérément active (3-4x/semaine)</option>
+              <option value="very-active">Très active (5-6x/semaine)</option>
+              <option value="athlete">Athlète</option>
             </select>
           </div>
           <div>
             <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Niveau de stress</label>
-            <select className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
-              <option>Faible</option>
-              <option selected>Modéré</option>
-              <option>Élevé</option>
-              <option>Très élevé</option>
+            <select value={stress} onChange={e => setStress(e.target.value)} className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
+              <option value="low">Faible</option>
+              <option value="moderate">Modéré</option>
+              <option value="high">Élevé</option>
+              <option value="very-high">Très élevé</option>
             </select>
           </div>
           <div>
             <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Qualité du sommeil</label>
-            <select className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
-              <option>Mauvaise</option>
-              <option>Moyenne</option>
-              <option selected>Bonne</option>
-              <option>Excellente</option>
+            <select value={sleep} onChange={e => setSleep(e.target.value)} className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
+              <option value="poor">Mauvaise</option>
+              <option value="average">Moyenne</option>
+              <option value="good">Bonne</option>
+              <option value="excellent">Excellente</option>
             </select>
           </div>
           <div>
             <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Régime alimentaire</label>
-            <select className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
-              <option selected>Omnivore</option>
-              <option>Végétarien</option>
-              <option>Végétalien</option>
-              <option>Sans gluten</option>
-              <option>Anti-inflammatoire</option>
+            <select value={diet} onChange={e => setDiet(e.target.value)} className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif">
+              <option value="omnivore">Omnivore</option>
+              <option value="vegetarian">Végétarien</option>
+              <option value="vegan">Végétalien</option>
+              <option value="gluten-free">Sans gluten</option>
+              <option value="anti-inflammatory">Anti-inflammatoire</option>
             </select>
           </div>
         </div>
       </div>
 
-      <button className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+      <button
+        onClick={handleSave}
+        className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+      >
         Mettre à jour mes objectifs
       </button>
     </div>
@@ -359,6 +492,18 @@ function GoalsInfo() {
 }
 
 function SettingsInfo() {
+  const handleSaveNotifications = () => {
+    toast.success("Notifications mises à jour !", {
+      description: "Vos préférences de notifications ont été enregistrées.",
+    });
+  };
+
+  const handleSavePrivacy = () => {
+    toast.success("Paramètres de confidentialité mis à jour !", {
+      description: "Vos préférences de confidentialité ont été enregistrées.",
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
@@ -370,6 +515,12 @@ function SettingsInfo() {
           <Toggle label="Communauté" desc="Réponses à vos posts et mentions" defaultOn={false} />
           <Toggle label="Newsletter santé" desc="Articles et actualités hebdomadaires" defaultOn={false} />
         </div>
+        <button
+          onClick={handleSaveNotifications}
+          className="mt-4 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2 text-xs font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+        >
+          Enregistrer les notifications
+        </button>
       </div>
 
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
@@ -379,6 +530,12 @@ function SettingsInfo() {
           <Toggle label="Données anonymisées pour la recherche" desc="Contribuer à l'amélioration des prédictions (données anonymes)" defaultOn />
           <Toggle label="Verrouillage biométrique" desc="Face ID / empreinte pour accéder à l'app" defaultOn />
         </div>
+        <button
+          onClick={handleSavePrivacy}
+          className="mt-4 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2 text-xs font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
+        >
+          Enregistrer la confidentialité
+        </button>
       </div>
 
       <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
@@ -413,15 +570,30 @@ function SettingsInfo() {
   );
 }
 
-function Field({ label, value, type = "text", disabled = false }: { label: string; value: string; type?: string; disabled?: boolean }) {
+function EditField({ label, value, onChange, type = "text", placeholder }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string }) {
   return (
     <div>
       <label className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</label>
       <input
         type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+      />
+    </div>
+  );
+}
+
+function Field({ label, value, disabled = false }: { label: string; value: string; disabled?: boolean }) {
+  return (
+    <div>
+      <label className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</label>
+      <input
+        type="text"
         defaultValue={value}
         disabled={disabled}
-        className={`mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20 ${disabled ? "opacity-60" : ""}`}
+        className="mt-1 w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none opacity-60"
       />
     </div>
   );

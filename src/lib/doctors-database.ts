@@ -241,6 +241,22 @@ export function searchDoctors(city: string, specialty?: string): Doctor[] {
   return docs.filter(d => d.specialty.toLowerCase().includes(specialty.toLowerCase()));
 }
 
+export function searchDoctorsByName(query: string): Doctor[] {
+  if (!query || query.length < 2) return [];
+  const q = query.toLowerCase();
+  const results: Doctor[] = [];
+  for (const city of CITIES) {
+    const docs = getDoctorsForCity(city.id);
+    for (const doc of docs) {
+      if (doc.name.toLowerCase().includes(q) || doc.specialty.toLowerCase().includes(q)) {
+        results.push(doc);
+      }
+    }
+    if (results.length >= 20) break;
+  }
+  return results.slice(0, 20);
+}
+
 export function findNearestCity(lat: number, lon: number): string {
   let minDist = Infinity;
   let nearest = "paris";
