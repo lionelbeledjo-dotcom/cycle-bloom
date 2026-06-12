@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
-import { MessageCircle, Heart, TrendingUp, Plus, ChevronLeft, Send, Shield, CheckCircle2, Crown, Lock } from "lucide-react";
+import { MessageCircle, Heart, TrendingUp, Plus, ChevronLeft, Send, Shield, CheckCircle2, Crown, Lock, X } from "lucide-react";
 import { isPremium } from "@/lib/premium-gate";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/community")({
   head: () => ({ meta: [{ title: "Communauté — CycleBloom AI" }] }),
@@ -146,21 +147,49 @@ const POSTS: Post[] = [
 ];
 
 const TRENDING = [
-  "Comment gérer le SPM naturellement",
-  "Retour de couches : à quoi s'attendre",
-  "Endométriose et alimentation anti-inflammatoire",
-  "SOPK : myo-inositol vs metformine",
-  "Cycle et libido : comprendre les fluctuations",
+  { text: "Comment gérer le SPM naturellement", cat: "Bien-être" },
+  { text: "Retour de couches : à quoi s'attendre", cat: "Grossesse" },
+  { text: "Endométriose et alimentation anti-inflammatoire", cat: "Endométriose" },
+  { text: "SOPK : myo-inositol vs metformine", cat: "SOPK" },
+  { text: "Cycle et libido : comprendre les fluctuations", cat: "Cycles" },
 ];
 
 function Community() {
   const [activeCategory, setActiveCategory] = useState("Tout");
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  const [newReply, setNewReply] = useState("");
+  const [showNewPost, setShowNewPost] = useState(false);
+  const [userPosts, setUserPosts] = useState<Post[]>(() => {
+    const stored = localStorage.getItem("cyclebloom_community_posts");
+    return stored ? JSON.parse(stored) : [];
+  });
 
+  const allPosts = [...userPosts, ...POSTS].sort((a, b) => b.id - a.id);
   const filteredPosts = activeCategory === "Tout"
-    ? POSTS
-    : POSTS.filter(p => p.cat === activeCategory);
+    ? allPosts
+    : allPosts.filter(p => p.cat === activeCategory);
+
+  const handleNewPost = (title: string, content: string, category: string) => {
+    const post: Post = {
+      id: Date.now(),
+      author: "Moi",
+      avatar: "M",
+      cat: category,
+      title,
+      preview: content,
+      replies: [],
+      likes: 0,
+      time: "À l'instant",
+    };
+    const updated = [post, ...userPosts];
+    setUserPosts(updated);
+    localStorage.setItem("cyclebloom_community_posts", JSON.stringify(updated));
+    setShowNewPost(false);
+    toast.success("Post publié !", { description: "Votre discussion est maintenant visible." });
+  };
+
+  const handleTrendingClick = (cat: string) => {
+    setActiveCategory(cat);
+  };
 
   if (selectedPost) {
     return (
@@ -170,12 +199,20 @@ function Community() {
     );
   }
 
+  if (showNewPost) {
+    return (
+      <AppShell title="Communauté">
+        <NewPostForm onSubmit={handleNewPost} onCancel={() => setShowNewPost(false)} />
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell title="Communauté">
       <div className="flex items-center justify-between -mt-4 mb-6">
         <p className="text-sm text-foreground/70">Espace d'entraide bienveillant entre femmes — modéré par des professionnels de santé</p>
         {isPremium() ? (
-          <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+          <button onClick={() => setShowNewPost(true)} className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
             <Plus className="h-4 w-4" /> Nouveau post
           </button>
         ) : (
@@ -249,10 +286,10 @@ function Community() {
             </div>
             <div className="space-y-3">
               {TRENDING.map((t, i) => (
-                <div key={i} className="flex items-start gap-2 cursor-pointer group">
+                <button key={i} onClick={() => handleTrendingClick(t.cat)} className="flex items-start gap-2 cursor-pointer group w-full text-left">
                   <span className="text-xs font-bold text-rose-vif mt-0.5">#{i + 1}</span>
-                  <span className="text-xs text-foreground/70 group-hover:text-foreground transition">{t}</span>
-                </div>
+                  <span className="text-xs text-foreground/70 group-hover:text-foreground transition">{t.text}</span>
+                </button>
               ))}
             </div>
           </div>
@@ -286,9 +323,85 @@ function Community() {
   );
 }
 
+function NewPostForm({ onSubmit, onCancel }: { onSubmit: (title: string, content: string, cat: string) => void; onCancel: () => void }) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("Cycles");
+
+  return (
+    <div>
+      <button onClick={onCancel} className="flex items-center gap-1 text-sm text-violet-doux hover:text-rose-vif transition mb-6">
+        <ChevronLeft className="h-4 w-4" /> Retour
+      </button>
+      <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
+        <h2 className="font-display text-xl font-bold mb-6">Nouvelle discussion</h2>
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-foreground/70 mb-1.5 block">Catégorie</label>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.filter(c => c !== "Tout").map(c => (
+                <button
+                  key={c}
+                  onClick={() => setCategory(c)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${category === c ? "bg-gradient-to-r from-rose-vif to-violet-doux text-white" : "bg-white/70 border border-border text-foreground/60 hover:text-foreground"}`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-foreground/70 mb-1.5 block">Titre</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Résumez votre question ou sujet..."
+              className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-foreground/70 mb-1.5 block">Contenu</label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Décrivez votre situation, posez vos questions..."
+              className="w-full rounded-2xl border border-border bg-white/80 p-4 text-sm outline-none resize-none h-32 focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
+            />
+          </div>
+          <div className="flex items-center justify-between pt-2">
+            <button onClick={onCancel} className="text-sm text-foreground/50 hover:text-foreground">Annuler</button>
+            <button
+              onClick={() => { if (title.trim() && content.trim()) onSubmit(title, content, category); }}
+              disabled={!title.trim() || !content.trim()}
+              className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition disabled:opacity-40 disabled:hover:scale-100"
+            >
+              <Send className="h-3.5 w-3.5" /> Publier
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
   const [liked, setLiked] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [localReplies, setLocalReplies] = useState<Reply[]>(post.replies);
+
+  const sendReply = () => {
+    if (!replyText.trim()) return;
+    const newReply: Reply = {
+      author: "Moi",
+      avatar: "M",
+      text: replyText,
+      likes: 0,
+      time: "À l'instant",
+    };
+    setLocalReplies([...localReplies, newReply]);
+    setReplyText("");
+    toast.success("Réponse publiée !");
+  };
 
   return (
     <div>
@@ -319,13 +432,13 @@ function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
             <Heart className={`h-3.5 w-3.5 ${liked ? "fill-white" : ""}`} />
             {post.likes + (liked ? 1 : 0)}
           </button>
-          <span className="text-xs text-muted-foreground">{post.replies.length} réponses</span>
+          <span className="text-xs text-muted-foreground">{localReplies.length} réponses</span>
         </div>
       </article>
 
       {/* Replies */}
       <div className="space-y-4 mb-6">
-        {post.replies.map((reply, i) => (
+        {localReplies.map((reply, i) => (
           <div key={i} className={`rounded-2xl p-5 ${reply.isExpert ? "border-2 border-violet-doux/30 bg-violet-doux/5" : "border border-white/70 glass"}`}>
             <div className="flex items-start gap-3">
               <div className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${reply.isExpert ? "bg-violet-doux text-white" : "bg-gradient-to-br from-rose-poudre to-rose-vif/50 text-white"}`}>
@@ -362,7 +475,7 @@ function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
           />
           <div className="mt-3 flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">Soyez bienveillante et respectueuse</p>
-            <button className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+            <button onClick={sendReply} className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
               <Send className="h-3.5 w-3.5" /> Répondre
             </button>
           </div>

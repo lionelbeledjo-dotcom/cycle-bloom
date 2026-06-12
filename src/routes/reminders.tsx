@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
 import { Bell, Droplet, Thermometer, Pill, Moon, Dumbbell, Check } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/reminders")({
   head: () => ({ meta: [{ title: "Rappels — CycleBloom AI" }] }),
@@ -18,6 +19,20 @@ const REMINDERS = [
   { id: "exercise", icon: Dumbbell, label: "Activité physique", desc: "Rappel d'exercice adapté à votre phase", defaultOn: false, defaultTime: "18:00" },
 ];
 
+const LS_KEY = "cyclebloom_reminders";
+
+type ReminderState = { on: boolean; time: string };
+
+function loadReminders(): Record<string, ReminderState> {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  const defaults: Record<string, ReminderState> = {};
+  REMINDERS.forEach(r => { defaults[r.id] = { on: r.defaultOn, time: r.defaultTime }; });
+  return defaults;
+}
+
 const HISTORY = [
   { text: "Rappel règles : prochaines dans 2 jours", time: "Aujourd'hui, 09:00", read: true },
   { text: "N'oubliez pas de prendre votre température", time: "Aujourd'hui, 06:30", read: true },
@@ -27,14 +42,37 @@ const HISTORY = [
 ];
 
 function Reminders() {
+  const [states, setStates] = useState<Record<string, ReminderState>>(loadReminders);
+
+  function toggle(id: string) {
+    setStates(prev => ({ ...prev, [id]: { ...prev[id], on: !prev[id].on } }));
+  }
+
+  function setTime(id: string, time: string) {
+    setStates(prev => ({ ...prev, [id]: { ...prev[id], time } }));
+  }
+
+  function save() {
+    localStorage.setItem(LS_KEY, JSON.stringify(states));
+    toast("Rappels enregistrés !");
+  }
+
   return (
     <AppShell title="Rappels">
-      <p className="-mt-4 mb-8 text-sm text-foreground/70">Configurez vos notifications pour ne rien oublier.</p>
+      <div className="flex items-center justify-between -mt-4 mb-8">
+        <p className="text-sm text-foreground/70">Configurez vos notifications pour ne rien oublier.</p>
+        <button
+          onClick={save}
+          className="rounded-2xl bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2 text-sm font-semibold text-white shadow-bloom transition hover:opacity-90"
+        >
+          Enregistrer
+        </button>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
           {REMINDERS.map(r => (
-            <ReminderCard key={r.id} reminder={r} />
+            <ReminderCard key={r.id} reminder={r} on={states[r.id]?.on ?? r.defaultOn} time={states[r.id]?.time ?? r.defaultTime} onToggle={() => toggle(r.id)} onTimeChange={(t) => setTime(r.id, t)} />
           ))}
         </div>
 
@@ -67,9 +105,7 @@ function Reminders() {
   );
 }
 
-function ReminderCard({ reminder }: { reminder: typeof REMINDERS[0] }) {
-  const [on, setOn] = useState(reminder.defaultOn);
-  const [time, setTime] = useState(reminder.defaultTime);
+function ReminderCard({ reminder, on, time, onToggle, onTimeChange }: { reminder: typeof REMINDERS[0]; on: boolean; time: string; onToggle: () => void; onTimeChange: (t: string) => void }) {
   const Icon = reminder.icon;
 
   return (
@@ -87,7 +123,7 @@ function ReminderCard({ reminder }: { reminder: typeof REMINDERS[0] }) {
           </div>
         </div>
         <button
-          onClick={() => setOn(!on)}
+          onClick={onToggle}
           className={`relative h-7 w-12 rounded-full transition ${on ? "bg-rose-vif" : "bg-border"}`}
         >
           <span
@@ -103,7 +139,7 @@ function ReminderCard({ reminder }: { reminder: typeof REMINDERS[0] }) {
             <input
               type="time"
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={(e) => onTimeChange(e.target.value)}
               className="mt-1 block rounded-xl border border-border bg-white/80 px-3 py-2 text-sm outline-none focus:border-rose-vif"
             />
           </div>

@@ -1,14 +1,54 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useState } from "react";
-import { Search, ChevronLeft, BookOpen, Clock, User, Share2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, ChevronLeft, BookOpen, Clock, User, Share2, Heart } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/articles")({
   head: () => ({ meta: [{ title: "Magazine — CycleBloom AI" }] }),
   component: Articles,
 });
 
-const categories = ["Tout", "Menstruation", "Fertilité", "Grossesse", "Hormones", "Bien-être", "SOPK", "Endométriose", "Nutrition"];
+const categories = ["Tout", "Favoris", "Menstruation", "Fertilité", "Grossesse", "Hormones", "Bien-être", "SOPK", "Endométriose", "Nutrition"];
+
+const FAVORITES_KEY = "cyclebloom_favorites";
+
+function getFavorites(): number[] {
+  try {
+    const stored = localStorage.getItem(FAVORITES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+}
+
+function toggleFavorite(id: number): number[] {
+  const current = getFavorites();
+  const updated = current.includes(id) ? current.filter(fid => fid !== id) : [...current, id];
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated));
+  return updated;
+}
+
+async function shareArticle(article: Article) {
+  const shareData = {
+    title: article.title,
+    text: `${article.title} — par ${article.author}`,
+    url: window.location.href,
+  };
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(`${article.title}\n${window.location.href}`);
+      toast.success("Lien copié dans le presse-papier");
+    }
+  } catch (err: any) {
+    if (err?.name !== "AbortError") {
+      await navigator.clipboard.writeText(`${article.title}\n${window.location.href}`);
+      toast.success("Lien copié dans le presse-papier");
+    }
+  }
+}
 
 interface Article {
   id: number;
@@ -271,17 +311,41 @@ function Articles() {
   const [activeCategory, setActiveCategory] = useState("Tout");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [favorites, setFavorites] = useState<number[]>(getFavorites());
+
+  useEffect(() => {
+    setFavorites(getFavorites());
+  }, []);
+
+  const handleToggleFavorite = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    const updated = toggleFavorite(id);
+    setFavorites(updated);
+    const isFav = updated.includes(id);
+    toast.success(isFav ? "Ajouté aux favoris" : "Retiré des favoris");
+  };
 
   const filteredArticles = articles.filter(a => {
-    const matchesCat = activeCategory === "Tout" || a.cat === activeCategory;
+    const matchesCat = (activeCategory === "Tout" || activeCategory === "Favoris") ? true : a.cat === activeCategory;
+    const matchesFav = activeCategory === "Favoris" ? favorites.includes(a.id) : true;
     const matchesSearch = !searchQuery || a.title.toLowerCase().includes(searchQuery.toLowerCase()) || a.cat.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCat && matchesSearch;
+    return matchesCat && matchesFav && matchesSearch;
   });
 
   if (selectedArticle) {
     return (
       <AppShell>
-        <ArticleDetail article={selectedArticle} onBack={() => setSelectedArticle(null)} />
+        <ArticleDetail
+          article={selectedArticle}
+          onBack={() => setSelectedArticle(null)}
+          isFavorite={favorites.includes(selectedArticle.id)}
+          onToggleFavorite={() => {
+            const updated = toggleFavorite(selectedArticle.id);
+            setFavorites(updated);
+            toast.success(updated.includes(selectedArticle.id) ? "Ajouté aux favoris" : "Retiré des favoris");
+          }}
+          onSelectArticle={setSelectedArticle}
+        />
       </AppShell>
     );
   }
@@ -334,6 +398,12 @@ function Articles() {
                   Premium
                 </span>
               )}
+              <button
+                onClick={(e) => handleToggleFavorite(e, a.id)}
+                className="absolute top-3 left-3 rounded-full bg-white/90 p-1.5 shadow-sm hover:scale-110 transition"
+              >
+                <Heart className={`h-4 w-4 ${favorites.includes(a.id) ? "fill-rose-vif text-rose-vif" : "text-foreground/50"}`} />
+              </button>
             </div>
             <div className="p-6">
               <div className="text-[10px] uppercase tracking-widest text-violet-doux">{a.cat}</div>
@@ -349,7 +419,17 @@ function Articles() {
   );
 }
 
-function ArticleDetail({ article, onBack }: { article: Article; onBack: () => void }) {
+function ArticleDetail({ article, onBack, isFavorite, onToggleFavorite, onSelectArticle }: {
+  article: Article;
+  onBack: () => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
+  onSelectArticle: (a: Article) => void;
+}) {
+  const relatedArticles = articles
+    .filter(a => a.cat === article.cat && a.id !== article.id)
+    .slice(0, 3);
+
   return (
     <div className="max-w-3xl mx-auto">
       <button onClick={onBack} className="flex items-center gap-1 text-sm text-violet-doux hover:text-rose-vif transition mb-6">
@@ -387,10 +467,46 @@ function ArticleDetail({ article, onBack }: { article: Article; onBack: () => vo
           <BookOpen className="h-4 w-4 text-violet-doux" />
           <span className="text-xs text-muted-foreground">Article vérifié par un professionnel de santé</span>
         </div>
-        <button className="flex items-center gap-1.5 rounded-full bg-white/70 border border-border px-4 py-2 text-xs font-medium hover:bg-white transition">
-          <Share2 className="h-3.5 w-3.5" /> Partager
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onToggleFavorite}
+            className="flex items-center gap-1.5 rounded-full bg-white/70 border border-border px-4 py-2 text-xs font-medium hover:bg-white transition"
+          >
+            <Heart className={`h-3.5 w-3.5 ${isFavorite ? "fill-rose-vif text-rose-vif" : ""}`} />
+            {isFavorite ? "Favori" : "Favoriser"}
+          </button>
+          <button
+            onClick={() => shareArticle(article)}
+            className="flex items-center gap-1.5 rounded-full bg-white/70 border border-border px-4 py-2 text-xs font-medium hover:bg-white transition"
+          >
+            <Share2 className="h-3.5 w-3.5" /> Partager
+          </button>
+        </div>
       </div>
+
+      {relatedArticles.length > 0 && (
+        <div className="mt-12">
+          <h2 className="font-display text-xl font-bold mb-6">Articles associés</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {relatedArticles.map(a => (
+              <article
+                key={a.id}
+                onClick={() => onSelectArticle(a)}
+                className="group overflow-hidden rounded-2xl border border-white/70 glass shadow-sm transition hover:-translate-y-0.5 cursor-pointer"
+              >
+                <div className={`h-24 bg-gradient-to-br ${a.gradient}`} />
+                <div className="p-4">
+                  <div className="text-[10px] uppercase tracking-widest text-violet-doux">{a.cat}</div>
+                  <h3 className="mt-1 font-display text-sm font-semibold leading-tight group-hover:text-rose-vif transition">
+                    {a.title}
+                  </h3>
+                  <p className="mt-2 text-[11px] text-muted-foreground">{a.time} · {a.author}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
