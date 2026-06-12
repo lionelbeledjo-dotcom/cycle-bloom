@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Calendar } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/symptoms")({
   head: () => ({ meta: [{ title: "Symptômes — CycleBloom AI" }] }),
@@ -34,6 +35,23 @@ const FLOW = [
 
 const DISCHARGE = ["Aucune", "Blanc d'œuf", "Crémeuse", "Aqueuse", "Collante"];
 
+interface SymptomEntry {
+  date: string;
+  moods: string[];
+  physical: string[];
+  flow: string;
+  discharge: string;
+  temp: string | null;
+  sleep: number;
+  notes?: string;
+}
+
+function getHistory(): SymptomEntry[] {
+  const stored = localStorage.getItem("cyclebloom_symptoms");
+  if (!stored) return [];
+  try { return JSON.parse(stored); } catch { return []; }
+}
+
 function Symptoms() {
   const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
   const [selectedPhysical, setSelectedPhysical] = useState<string[]>([]);
@@ -41,12 +59,38 @@ function Symptoms() {
   const [discharge, setDischarge] = useState("Aucune");
   const [temp, setTemp] = useState("");
   const [sleep, setSleep] = useState(3);
+  const [notes, setNotes] = useState("");
   const [saved, setSaved] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<SymptomEntry | null>(null);
 
   const toggleMood = (m: string) => setSelectedMoods(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m]);
   const togglePhysical = (p: string) => setSelectedPhysical(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
 
   const today = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  const history = getHistory().sort((a, b) => b.date.localeCompare(a.date));
+
+  const handleSave = () => {
+    const entry: SymptomEntry = {
+      date: new Date().toISOString().split("T")[0],
+      moods: selectedMoods,
+      physical: selectedPhysical,
+      flow,
+      discharge,
+      temp: temp || null,
+      sleep,
+      notes: notes || undefined,
+    };
+    const existing = history.findIndex(h => h.date === entry.date);
+    const updated = [...history];
+    if (existing >= 0) updated[existing] = entry;
+    else updated.unshift(entry);
+    localStorage.setItem("cyclebloom_symptoms", JSON.stringify(updated));
+    setSaved(true);
+    toast.success("Suivi enregistré !", {
+      description: `Vos symptômes du ${today} ont bien été sauvegardés.`,
+    });
+  };
 
   return (
     <AppShell title="Suivi du jour">
@@ -178,6 +222,8 @@ function Symptoms() {
         <h3 className="font-display text-lg font-semibold mb-4">Notes du jour</h3>
         <textarea
           placeholder="Comment vous sentez-vous aujourd'hui ? Quelque chose à noter..."
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
           className="w-full rounded-2xl border border-border bg-white/80 p-4 text-sm outline-none resize-none h-24 focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20"
         />
       </div>
@@ -185,28 +231,101 @@ function Symptoms() {
       {/* Save */}
       <div className="mt-6 flex justify-center">
         <button
-          onClick={() => {
-            const entry = {
-              date: new Date().toISOString().split("T")[0],
-              moods: selectedMoods,
-              physical: selectedPhysical,
-              flow,
-              discharge,
-              temp: temp || null,
-              sleep,
-            };
-            const stored = localStorage.getItem("cyclebloom_symptoms");
-            const history = stored ? JSON.parse(stored) : [];
-            const existing = history.findIndex((h: any) => h.date === entry.date);
-            if (existing >= 0) history[existing] = entry;
-            else history.push(entry);
-            localStorage.setItem("cyclebloom_symptoms", JSON.stringify(history));
-            setSaved(true);
-          }}
+          onClick={handleSave}
           className="flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-8 py-3.5 text-sm font-semibold text-white shadow-bloom transition hover:scale-[1.02]"
         >
           {saved ? <><Check className="h-4 w-4" /> Enregistré !</> : "Enregistrer le suivi"}
         </button>
+      </div>
+
+      {/* History section */}
+      <div className="mt-8">
+        <button
+          onClick={() => setShowHistory(!showHistory)}
+          className="flex items-center gap-2 text-sm font-semibold text-foreground/80 hover:text-foreground transition"
+        >
+          <Calendar className="h-4 w-4" />
+          Historique de suivi ({history.length} entrées)
+          {showHistory ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        </button>
+
+        {showHistory && (
+          <div className="mt-4 space-y-3">
+            {history.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Aucun suivi enregistré pour le moment.</p>
+            ) : (
+              history.slice(0, 14).map((entry) => (
+                <button
+                  key={entry.date}
+                  onClick={() => setSelectedEntry(selectedEntry?.date === entry.date ? null : entry)}
+                  className="w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-sm font-semibold">
+                        {new Date(entry.date + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
+                      </span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {entry.flow !== "none" && (
+                          <span className="rounded-full bg-rose-vif/10 px-2 py-0.5 text-[10px] font-medium text-rose-vif">
+                            Flux: {FLOW.find(f => f.id === entry.flow)?.label}
+                          </span>
+                        )}
+                        {entry.moods.length > 0 && (
+                          <span className="rounded-full bg-violet-doux/10 px-2 py-0.5 text-[10px] font-medium text-violet-doux">
+                            {entry.moods.length} humeur{entry.moods.length > 1 ? "s" : ""}
+                          </span>
+                        )}
+                        {entry.physical.length > 0 && (
+                          <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-medium text-orange-700">
+                            {entry.physical.length} symptôme{entry.physical.length > 1 ? "s" : ""}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <ChevronDown className={`h-4 w-4 text-foreground/30 transition ${selectedEntry?.date === entry.date ? "rotate-180" : ""}`} />
+                  </div>
+
+                  {selectedEntry?.date === entry.date && (
+                    <div className="mt-3 pt-3 border-t border-border/30 space-y-2">
+                      {entry.moods.length > 0 && (
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Humeur :</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {entry.moods.map(m => {
+                              const mood = MOODS.find(mo => mo.label === m);
+                              return <span key={m} className="text-xs">{mood?.emoji} {m}</span>;
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      {entry.physical.length > 0 && (
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Symptômes :</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {entry.physical.map(p => (
+                              <span key={p} className="rounded-full bg-rose-pastel/50 px-2 py-0.5 text-[10px]">{p}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {entry.discharge !== "Aucune" && (
+                        <div className="text-xs"><span className="text-muted-foreground">Glaire :</span> {entry.discharge}</div>
+                      )}
+                      {entry.temp && (
+                        <div className="text-xs"><span className="text-muted-foreground">Température :</span> {entry.temp}°C</div>
+                      )}
+                      <div className="text-xs"><span className="text-muted-foreground">Sommeil :</span> {"★".repeat(entry.sleep)}{"☆".repeat(5 - entry.sleep)}</div>
+                      {entry.notes && (
+                        <div className="text-xs"><span className="text-muted-foreground">Notes :</span> {entry.notes}</div>
+                      )}
+                    </div>
+                  )}
+                </button>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </AppShell>
   );

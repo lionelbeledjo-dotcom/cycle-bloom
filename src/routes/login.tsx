@@ -114,7 +114,7 @@ function Login() {
           <p className="mt-6 sm:mt-8 text-center text-xs text-muted-foreground">
             Pas encore de compte ?{" "}
             <Link to="/register" className="font-semibold text-rose-vif hover:underline">
-              Créer un compte gratuitement
+              S'inscrire
             </Link>
           </p>
         </div>

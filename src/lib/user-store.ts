@@ -69,10 +69,6 @@ export function getUserName(): string {
 }
 
 export function getUserStats(): UserStats {
-  const stored = localStorage.getItem(STATS_KEY);
-  if (stored) {
-    try { return JSON.parse(stored); } catch {}
-  }
   const profile = getUserProfile();
   const registeredAt = profile?.registeredAt;
   const memberSince = registeredAt
@@ -81,10 +77,23 @@ export function getUserStats(): UserStats {
   const daysSinceRegistration = registeredAt
     ? Math.floor((Date.now() - new Date(registeredAt).getTime()) / (1000 * 60 * 60 * 24))
     : 0;
+
+  let symptomsLogged = 0;
+  let daysTracked = 0;
+  try {
+    const symptomsRaw = localStorage.getItem("cyclebloom_symptoms");
+    if (symptomsRaw) {
+      const symptoms = JSON.parse(symptomsRaw);
+      daysTracked = symptoms.length;
+      symptomsLogged = symptoms.reduce((acc: number, s: any) => acc + (s.physical?.length || 0) + (s.moods?.length || 0), 0);
+    }
+  } catch {}
+
+  const cycleLength = profile?.cycleLength || 28;
   return {
-    cyclesTracked: Math.max(0, Math.floor(daysSinceRegistration / 28)),
-    daysTracked: daysSinceRegistration,
-    symptomsLogged: 0,
+    cyclesTracked: Math.max(0, Math.floor(daysSinceRegistration / cycleLength)),
+    daysTracked: daysTracked || daysSinceRegistration,
+    symptomsLogged,
     bloomQuestions: 0,
     memberSince,
   };

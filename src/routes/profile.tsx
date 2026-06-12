@@ -40,12 +40,27 @@ function Profile() {
           {/* Stats card */}
           <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom">
             <h3 className="font-display text-sm font-semibold mb-3">Mon suivi</h3>
-            <div className="space-y-3">
-              <StatRow label="Cycles suivis" value={String(stats.cyclesTracked)} />
-              <StatRow label="Jours de suivi" value={String(stats.daysTracked)} />
-              <StatRow label="Symptômes enregistrés" value={String(stats.symptomsLogged)} />
-              <StatRow label="Questions Bloom AI" value={String(stats.bloomQuestions)} />
-              <StatRow label="Membre depuis" value={stats.memberSince} />
+            <div className="space-y-1">
+              <Link to="/calendar" className="flex items-center justify-between py-2 px-2 rounded-xl hover:bg-white/80 transition">
+                <span className="text-xs text-foreground/60">Cycles suivis</span>
+                <span className="text-xs font-semibold">{stats.cyclesTracked} →</span>
+              </Link>
+              <Link to="/symptoms" className="flex items-center justify-between py-2 px-2 rounded-xl hover:bg-white/80 transition">
+                <span className="text-xs text-foreground/60">Jours de suivi</span>
+                <span className="text-xs font-semibold">{stats.daysTracked} →</span>
+              </Link>
+              <Link to="/symptoms" className="flex items-center justify-between py-2 px-2 rounded-xl hover:bg-white/80 transition">
+                <span className="text-xs text-foreground/60">Symptômes enregistrés</span>
+                <span className="text-xs font-semibold">{stats.symptomsLogged} →</span>
+              </Link>
+              <Link to="/bloom-ai" className="flex items-center justify-between py-2 px-2 rounded-xl hover:bg-white/80 transition">
+                <span className="text-xs text-foreground/60">Questions Bloom AI</span>
+                <span className="text-xs font-semibold">{stats.bloomQuestions} →</span>
+              </Link>
+              <div className="flex items-center justify-between py-2 px-2">
+                <span className="text-xs text-foreground/60">Membre depuis</span>
+                <span className="text-xs font-semibold">{stats.memberSince}</span>
+              </div>
             </div>
           </div>
 
@@ -599,14 +614,6 @@ function Field({ label, value, disabled = false }: { label: string; value: strin
   );
 }
 
-function StatRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-xs text-foreground/60">{label}</span>
-      <span className="text-xs font-semibold">{value}</span>
-    </div>
-  );
-}
 
 function Toggle({ label, desc, defaultOn = true }: { label: string; desc: string; defaultOn?: boolean }) {
   const [on, setOn] = useState(defaultOn);

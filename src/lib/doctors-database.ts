@@ -230,7 +230,9 @@ function getDoctorsForCity(cityId: string): Doctor[] {
   if (DOCTORS_CACHE[cityId]) return DOCTORS_CACHE[cityId];
   const city = CITIES.find(c => c.id === cityId);
   if (!city) return [];
-  const docs = generateDoctors(cityId, city.name, city.postalPrefix, 50);
+  const bigCities = ["paris", "marseille", "lyon", "toulouse", "nice", "nantes", "montpellier", "strasbourg", "bordeaux", "lille"];
+  const count = bigCities.includes(cityId) ? 80 : 40;
+  const docs = generateDoctors(cityId, city.name, city.postalPrefix, count);
   DOCTORS_CACHE[cityId] = docs;
   return docs;
 }
@@ -243,18 +245,27 @@ export function searchDoctors(city: string, specialty?: string): Doctor[] {
 
 export function searchDoctorsByName(query: string): Doctor[] {
   if (!query || query.length < 2) return [];
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
   const results: Doctor[] = [];
   for (const city of CITIES) {
     const docs = getDoctorsForCity(city.id);
     for (const doc of docs) {
-      if (doc.name.toLowerCase().includes(q) || doc.specialty.toLowerCase().includes(q)) {
+      const matchName = doc.name.toLowerCase().includes(q);
+      const matchSpecialty = doc.specialty.toLowerCase().includes(q);
+      const matchCity = doc.city.toLowerCase().includes(q);
+      const matchService = doc.services.some(s => s.toLowerCase().includes(q));
+      if (matchName || matchSpecialty || matchCity || matchService) {
         results.push(doc);
       }
     }
-    if (results.length >= 20) break;
   }
-  return results.slice(0, 20);
+  results.sort((a, b) => {
+    const aName = a.name.toLowerCase().includes(q) ? 0 : 1;
+    const bName = b.name.toLowerCase().includes(q) ? 0 : 1;
+    if (aName !== bName) return aName - bName;
+    return b.rating - a.rating;
+  });
+  return results.slice(0, 50);
 }
 
 export function findNearestCity(lat: number, lon: number): string {
