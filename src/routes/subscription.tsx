@@ -1,7 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
 import { Check, Crown, Sparkles, Shield, Zap, Star, TrendingUp, Heart, Lock, X, CreditCard } from "lucide-react";
+import { setUserSubscription } from "@/lib/premium-gate";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/subscription")({
   head: () => ({ meta: [{ title: "Abonnement Premium — CycleBloom AI" }] }),
@@ -306,6 +308,7 @@ function Subscription() {
 }
 
 function PaymentModal({ plan, onClose }: { plan: string; onClose: () => void }) {
+  const navigate = useNavigate();
   const [step, setStep] = useState<"card" | "processing" | "success">("card");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
@@ -319,7 +322,12 @@ function PaymentModal({ plan, onClose }: { plan: string; onClose: () => void }) 
   const handlePay = (e: React.FormEvent) => {
     e.preventDefault();
     setStep("processing");
-    setTimeout(() => setStep("success"), 2000);
+    setTimeout(() => {
+      const planType = plan === "premium_monthly" ? "premium_monthly" : "premium_yearly";
+      setUserSubscription({ plan: planType, status: "trial" });
+      setStep("success");
+      toast.success("Bienvenue dans Premium !");
+    }, 2000);
   };
 
   const formatCardNumber = (value: string) => {
@@ -457,7 +465,7 @@ function PaymentModal({ plan, onClose }: { plan: string; onClose: () => void }) 
               ))}
             </div>
             <button
-              onClick={onClose}
+              onClick={() => { onClose(); navigate({ to: "/dashboard" }); }}
               className="mt-6 w-full rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux py-3 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
             >
               Explorer mes nouvelles fonctionnalités

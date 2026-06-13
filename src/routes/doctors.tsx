@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
-import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2 } from "lucide-react";
+import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2, History } from "lucide-react";
 import { CITIES, searchDoctors, searchDoctorsByName, findNearestCity, type Doctor } from "@/lib/doctors-database";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/doctors")({
   head: () => ({ meta: [{ title: "Trouver un médecin — CycleBloom AI" }] }),
@@ -18,6 +19,28 @@ const EMERGENCY_NUMBERS = [
   { label: "Fil Santé Jeunes", number: "0 800 235 236", desc: "Gratuit et anonyme" },
 ];
 
+interface Appointment {
+  id: number;
+  doctorName: string;
+  specialty: string;
+  date: string;
+  time: string;
+  address: string;
+  city: string;
+  status: "upcoming" | "done" | "cancelled";
+}
+
+function getAppointments(): Appointment[] {
+  const stored = localStorage.getItem("cyclebloom_appointments");
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveAppointment(appt: Appointment) {
+  const current = getAppointments();
+  current.unshift(appt);
+  localStorage.setItem("cyclebloom_appointments", JSON.stringify(current));
+}
+
 function Doctors() {
   const [selectedCity, setSelectedCity] = useState("paris");
   const [selectedSpecialty, setSelectedSpecialty] = useState("Toutes");
@@ -29,6 +52,7 @@ function Doctors() {
   const [detecting, setDetecting] = useState(false);
   const [geoError, setGeoError] = useState("");
   const [citySearch, setCitySearch] = useState("");
+  const [showHistory, setShowHistory] = useState(false);
 
   const globalResults = searchQuery.length >= 2 ? searchDoctorsByName(searchQuery) : null;
   const doctors = globalResults
@@ -79,11 +103,27 @@ function Doctors() {
     );
   }
 
+  if (showHistory) {
+    return (
+      <AppShell title="Mes rendez-vous">
+        <button onClick={() => setShowHistory(false)} className="flex items-center gap-1 text-sm text-violet-doux hover:text-rose-vif transition mb-6">
+          <ChevronLeft className="h-4 w-4" /> Retour
+        </button>
+        <AppointmentHistory />
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell title="Trouver un médecin">
-      <p className="-mt-4 mb-6 text-sm text-foreground/70">
-        Prenez rendez-vous avec un gynécologue, une sage-femme ou un spécialiste près de chez vous.
-      </p>
+      <div className="-mt-4 mb-6 flex items-center justify-between">
+        <p className="text-sm text-foreground/70">
+          Prenez rendez-vous avec un gynécologue, une sage-femme ou un spécialiste près de chez vous.
+        </p>
+        <button onClick={() => setShowHistory(true)} className="flex items-center gap-2 rounded-full border border-border bg-white/70 px-4 py-2 text-xs font-medium hover:bg-white transition">
+          <History className="h-3.5 w-3.5 text-violet-doux" /> Mes RDV
+        </button>
+      </div>
 
       {/* Emergency banner */}
       <div className="mb-6 rounded-2xl bg-red-50 border border-red-200 p-4">
@@ -490,7 +530,20 @@ function DoctorProfile({
                   </select>
                 </div>
                 <button
-                  onClick={() => setBookingConfirmed(true)}
+                  onClick={() => {
+                    saveAppointment({
+                      id: Date.now(),
+                      doctorName: doctor.name,
+                      specialty: doctor.specialty,
+                      date: `${dates[selectedDate].label} — ${dates[selectedDate].date}`,
+                      time: selectedSlot,
+                      address: `${doctor.address}, ${doctor.city}`,
+                      city: doctor.city,
+                      status: "upcoming",
+                    });
+                    setBookingConfirmed(true);
+                    toast.success("Rendez-vous confirmé !");
+                  }}
                   className="w-full rounded-xl bg-gradient-to-r from-rose-vif to-violet-doux py-3 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition"
                 >
                   Confirmer le rendez-vous
@@ -509,12 +562,69 @@ function DoctorProfile({
               <h3 className="font-display font-bold text-sm">Téléconsultation</h3>
             </div>
             <p className="text-[10px] text-muted-foreground mb-3">Disponible pour les suivis et renouvellements d'ordonnance.</p>
-            <button className="w-full rounded-xl border border-violet-doux/30 bg-violet-doux/5 py-2.5 text-xs font-semibold text-violet-doux hover:bg-violet-doux/10 transition">
+            <button
+              onClick={() => toast.info("La téléconsultation sera disponible sous peu.")}
+              className="w-full rounded-xl border border-violet-doux/30 bg-violet-doux/5 py-2.5 text-xs font-semibold text-violet-doux hover:bg-violet-doux/10 transition"
+            >
               Prendre un RDV vidéo
             </button>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function AppointmentHistory() {
+  const [appointments, setAppointments] = useState<Appointment[]>(getAppointments);
+
+  const cancelAppointment = (id: number) => {
+    const updated = appointments.map(a => a.id === id ? { ...a, status: "cancelled" as const } : a);
+    setAppointments(updated);
+    localStorage.setItem("cyclebloom_appointments", JSON.stringify(updated));
+    toast.success("Rendez-vous annulé");
+  };
+
+  if (appointments.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Calendar className="h-12 w-12 text-foreground/20 mx-auto mb-4" />
+        <h3 className="font-display text-lg font-bold text-foreground/50">Aucun rendez-vous</h3>
+        <p className="text-sm text-foreground/40 mt-1">Vos rendez-vous pris apparaîtront ici.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {appointments.map(a => (
+        <div key={a.id} className={`rounded-2xl border p-4 ${a.status === "cancelled" ? "border-red-200 bg-red-50/50 opacity-60" : a.status === "done" ? "border-green-200 bg-green-50/50" : "border-white/70 glass shadow-sm"}`}>
+          <div className="flex items-start justify-between">
+            <div>
+              <h4 className="font-display text-sm font-bold">{a.doctorName}</h4>
+              <p className="text-xs text-violet-doux font-medium">{a.specialty}</p>
+              <div className="mt-1.5 space-y-0.5 text-xs text-foreground/60">
+                <p>{a.date} à {a.time}</p>
+                <p>{a.address}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-medium ${
+                a.status === "upcoming" ? "bg-blue-50 text-blue-700 border border-blue-200" :
+                a.status === "done" ? "bg-green-50 text-green-700 border border-green-200" :
+                "bg-red-50 text-red-700 border border-red-200"
+              }`}>
+                {a.status === "upcoming" ? "À venir" : a.status === "done" ? "Terminé" : "Annulé"}
+              </span>
+              {a.status === "upcoming" && (
+                <button onClick={() => cancelAppointment(a.id)} className="mt-2 block text-[10px] text-red-500 hover:text-red-700">
+                  Annuler
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
