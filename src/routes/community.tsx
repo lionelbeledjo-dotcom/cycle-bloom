@@ -6,13 +6,14 @@ import { isPremium } from "@/lib/premium-gate";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/community")({
+  ssr: false,
   head: () => ({ meta: [{ title: "Communauté — CycleBloom AI" }] }),
   component: Community,
 });
 
 const CATEGORIES = ["Tout", "Cycles", "Fertilité", "Grossesse", "Bien-être", "SOPK", "Endométriose", "Contraception"];
 
-interface Post {
+export interface Post {
   id: number;
   author: string;
   avatar: string;
@@ -25,7 +26,7 @@ interface Post {
   verified?: boolean;
 }
 
-interface Reply {
+export interface Reply {
   author: string;
   avatar: string;
   text: string;
@@ -35,7 +36,7 @@ interface Reply {
   expertTitle?: string;
 }
 
-const POSTS: Post[] = [
+export const POSTS: Post[] = [
   {
     id: 1,
     author: "Sophie M.",
@@ -241,9 +242,10 @@ function Community() {
       <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
         <div className="space-y-4">
           {filteredPosts.map(post => (
-            <article
+            <Link
+              to="/discussion/$discussionId"
+              params={{ discussionId: String(post.id) }}
               key={post.id}
-              onClick={() => setSelectedPost(post)}
               className="rounded-3xl border border-white/70 glass p-5 shadow-bloom transition hover:-translate-y-0.5 cursor-pointer"
             >
               <div className="flex items-start gap-4">
@@ -274,7 +276,7 @@ function Community() {
                   </div>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
 
@@ -384,7 +386,7 @@ function NewPostForm({ onSubmit, onCancel }: { onSubmit: (title: string, content
   );
 }
 
-function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
+export function PostDetail({ post, onBack }: { post: Post; onBack: () => void }) {
   const [liked, setLiked] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [localReplies, setLocalReplies] = useState<Reply[]>(post.replies);

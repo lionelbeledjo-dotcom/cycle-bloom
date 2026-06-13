@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as PregnancyRouteImport } from './routes/pregnancy'
 import { Route as InsightsRouteImport } from './routes/insights'
@@ -22,6 +23,8 @@ import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as DoctorDoctorIdRouteImport } from './routes/doctor.$doctorId'
+import { Route as DiscussionDiscussionIdRouteImport } from './routes/discussion.$discussionId'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
@@ -37,6 +40,11 @@ import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticat
 const SubscriptionRoute = SubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RemindersRoute = RemindersRouteImport.update({
@@ -96,6 +104,16 @@ const IndexRoute = IndexRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorDoctorIdRoute = DoctorDoctorIdRouteImport.update({
+  id: '/doctor/$doctorId',
+  path: '/doctor/$doctorId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscussionDiscussionIdRoute = DiscussionDiscussionIdRouteImport.update({
+  id: '/discussion/$discussionId',
+  path: '/discussion/$discussionId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
@@ -165,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -177,6 +196,8 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/discussion/$discussionId': typeof DiscussionDiscussionIdRoute
+  '/doctor/$doctorId': typeof DoctorDoctorIdRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -190,6 +211,7 @@ export interface FileRoutesByTo {
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -202,6 +224,8 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/discussion/$discussionId': typeof DiscussionDiscussionIdRoute
+  '/doctor/$doctorId': typeof DoctorDoctorIdRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -217,6 +241,7 @@ export interface FileRoutesById {
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -229,6 +254,8 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/discussion/$discussionId': typeof DiscussionDiscussionIdRoute
+  '/doctor/$doctorId': typeof DoctorDoctorIdRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -244,6 +271,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pregnancy'
     | '/reminders'
+    | '/reset-password'
     | '/subscription'
     | '/calendar'
     | '/dashboard'
@@ -256,6 +284,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/discussion/$discussionId'
+    | '/doctor/$doctorId'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -269,6 +299,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pregnancy'
     | '/reminders'
+    | '/reset-password'
     | '/subscription'
     | '/calendar'
     | '/dashboard'
@@ -281,6 +312,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/discussion/$discussionId'
+    | '/doctor/$doctorId'
     | '/admin'
   id:
     | '__root__'
@@ -295,6 +328,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pregnancy'
     | '/reminders'
+    | '/reset-password'
     | '/subscription'
     | '/_authenticated/calendar'
     | '/_authenticated/dashboard'
@@ -307,6 +341,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/discussion/$discussionId'
+    | '/doctor/$doctorId'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -322,6 +358,7 @@ export interface RootRouteChildren {
   InsightsRoute: typeof InsightsRoute
   PregnancyRoute: typeof PregnancyRoute
   RemindersRoute: typeof RemindersRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SubscriptionRoute: typeof SubscriptionRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminContentRoute: typeof AdminContentRoute
@@ -330,6 +367,8 @@ export interface RootRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
+  DiscussionDiscussionIdRoute: typeof DiscussionDiscussionIdRoute
+  DoctorDoctorIdRoute: typeof DoctorDoctorIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -340,6 +379,13 @@ declare module '@tanstack/react-router' {
       path: '/subscription'
       fullPath: '/subscription'
       preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reminders': {
@@ -424,6 +470,20 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor/$doctorId': {
+      id: '/doctor/$doctorId'
+      path: '/doctor/$doctorId'
+      fullPath: '/doctor/$doctorId'
+      preLoaderRoute: typeof DoctorDoctorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discussion/$discussionId': {
+      id: '/discussion/$discussionId'
+      path: '/discussion/$discussionId'
+      fullPath: '/discussion/$discussionId'
+      preLoaderRoute: typeof DiscussionDiscussionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
@@ -535,6 +595,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsRoute: InsightsRoute,
   PregnancyRoute: PregnancyRoute,
   RemindersRoute: RemindersRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SubscriptionRoute: SubscriptionRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminContentRoute: AdminContentRoute,
@@ -543,18 +604,10 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminUsersRoute: AdminUsersRoute,
+  DiscussionDiscussionIdRoute: DiscussionDiscussionIdRoute,
+  DoctorDoctorIdRoute: DoctorDoctorIdRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
