@@ -54,7 +54,7 @@ function Demo() {
             <Link to="/" className="rounded-full border border-border bg-white/70 px-6 py-2.5 text-sm font-medium hover:bg-white transition">
               Retour à l'accueil
             </Link>
-            <Link to="/login" className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+            <Link to="/dashboard" className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-6 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
               Se connecter
             </Link>
           </div>
@@ -73,7 +73,7 @@ function Demo() {
           </div>
           <span className="font-display text-lg font-bold">CycleBloom</span>
         </Link>
-        <Link to="/login" className="text-sm font-medium text-foreground/70 hover:text-foreground transition">
+        <Link to="/dashboard" className="text-sm font-medium text-foreground/70 hover:text-foreground transition">
           Connexion
         </Link>
       </header>

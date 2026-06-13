@@ -33,11 +33,11 @@ function Landing() {
             <Link to="/demo" className="hover:text-foreground transition">Démo Pro</Link>
           </nav>
           <div className="flex items-center gap-3">
-            <Link to="/login" className="hidden text-sm font-medium text-foreground/80 hover:text-foreground sm:inline transition">
+            <Link to="/dashboard" className="hidden text-sm font-medium text-foreground/80 hover:text-foreground sm:inline transition">
               Connexion
             </Link>
             <Link
-              to="/register"
+              to="/dashboard"
               className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom transition hover:scale-[1.02]"
             >
               Essayer gratuitement
@@ -64,7 +64,7 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                to="/register"
+                to="/dashboard"
                 className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-7 py-3.5 text-base font-semibold text-white shadow-bloom transition hover:scale-[1.03]"
               >
                 Commencer maintenant
@@ -200,7 +200,7 @@ function Landing() {
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                to="/register"
+                to="/dashboard"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-rose-vif shadow-lg transition hover:scale-[1.02]"
               >
                 Démarrer l'essai gratuit
