@@ -1,9 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
 import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2, History } from "lucide-react";
 import { CITIES, searchDoctors, searchDoctorsByName, findNearestCity, type Doctor } from "@/lib/doctors-database";
 import { toast } from "sonner";
+import { reverseGeocode } from "@/lib/geocoding.functions";
+import doctorPortrait1 from "@/assets/doctor-portrait-1.jpg";
+import doctorPortrait2 from "@/assets/doctor-portrait-2.jpg";
+import doctorPortrait3 from "@/assets/doctor-portrait-3.jpg";
 
 export const Route = createFileRoute("/doctors")({
   head: () => ({ meta: [{ title: "Trouver un médecin — CycleBloom AI" }] }),
@@ -11,6 +16,7 @@ export const Route = createFileRoute("/doctors")({
 });
 
 const SPECIALTIES_FILTER = ["Toutes", "Gynécologie médicale", "Gynécologie-Obstétrique", "Sage-femme", "Endocrinologie", "Reproduction"];
+const DOCTOR_PHOTOS = [doctorPortrait1, doctorPortrait2, doctorPortrait3];
 
 const EMERGENCY_NUMBERS = [
   { label: "SAMU", number: "15", desc: "Urgence médicale" },
@@ -52,7 +58,9 @@ function Doctors() {
   const [detecting, setDetecting] = useState(false);
   const [geoError, setGeoError] = useState("");
   const [citySearch, setCitySearch] = useState("");
+  const [detectedAddress, setDetectedAddress] = useState("");
   const [showHistory, setShowHistory] = useState(false);
+  const geocode = useServerFn(reverseGeocode);
 
   const globalResults = searchQuery.length >= 2 ? searchDoctorsByName(searchQuery) : null;
   const doctors = globalResults
@@ -63,7 +71,7 @@ function Doctors() {
     ? CITIES.filter(c => c.name.toLowerCase().includes(citySearch.toLowerCase()))
     : CITIES;
 
-  const detectLocation = () => {
+  const detectLocation = async () => {
     setDetecting(true);
     setGeoError("");
     if (!navigator.geolocation) {
@@ -72,17 +80,32 @@ function Doctors() {
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
         const nearest = findNearestCity(latitude, longitude);
         setSelectedCity(nearest);
-        setDetecting(false);
+        try {
+          const location = await geocode({ data: { latitude, longitude } });
+          setDetectedAddress(location.formattedAddress);
+          setCitySearch(location.city || CITIES.find((city) => city.id === nearest)?.name || "");
+          toast.success("Position détectée", { description: location.formattedAddress });
+        } catch (error) {
+          setDetectedAddress(CITIES.find((city) => city.id === nearest)?.name || "Position détectée");
+          setGeoError(error instanceof Error ? error.message : "Votre ville la plus proche a été sélectionnée.");
+        } finally {
+          setDetecting(false);
+        }
       },
       (err) => {
-        setGeoError("Impossible de détecter votre position. Veuillez sélectionner votre ville manuellement.");
+        const messages: Record<number, string> = {
+          1: "Autorisation refusée. Activez la localisation dans les réglages de votre navigateur, puis réessayez.",
+          2: "Votre position est indisponible. Vérifiez le GPS ou sélectionnez votre ville manuellement.",
+          3: "La détection a expiré. Rapprochez-vous d’une fenêtre ou sélectionnez votre ville manuellement.",
+        };
+        setGeoError(messages[err.code] || "Impossible de détecter votre position. Sélectionnez votre ville manuellement.");
         setDetecting(false);
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
     );
   };
 
@@ -207,6 +230,7 @@ function Doctors() {
           ⚠️ {geoError}
         </div>
       )}
+      {detectedAddress && !geoError && <p className="mb-4 flex items-center gap-2 text-xs text-foreground/70"><MapPin className="h-3.5 w-3.5 text-rose-vif" /> {detectedAddress}</p>}
 
       {/* Specialty filter */}
       <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
@@ -247,11 +271,9 @@ function Doctors() {
 
 function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
+    <Link to="/doctors/$doctorId" params={{ doctorId: doctor.id }} onClick={onClick} className="block w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
       <div className="flex items-start gap-4">
-        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-rose-vif to-violet-doux flex items-center justify-center text-white font-bold text-sm shrink-0">
-          {doctor.photo}
-        </div>
+        <img src={DOCTOR_PHOTOS[doctor.photoIndex]} alt={`Portrait de ${doctor.name}`} loading="lazy" width={768} height={768} className="h-14 w-14 rounded-2xl object-cover shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -291,7 +313,7 @@ function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => vo
           </div>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 
