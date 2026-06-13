@@ -6,6 +6,7 @@ import { isPremium } from "@/lib/premium-gate";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/community")({
+  ssr: false,
   head: () => ({ meta: [{ title: "Communauté — CycleBloom AI" }] }),
   component: Community,
 });

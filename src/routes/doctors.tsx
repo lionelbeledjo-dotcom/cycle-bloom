@@ -11,6 +11,7 @@ import doctorPortrait2 from "@/assets/doctor-portrait-2.jpg";
 import doctorPortrait3 from "@/assets/doctor-portrait-3.jpg";
 
 export const Route = createFileRoute("/doctors")({
+  ssr: false,
   head: () => ({ meta: [{ title: "Trouver un médecin — CycleBloom AI" }] }),
   component: Doctors,
 });
@@ -60,12 +61,14 @@ function Doctors() {
   const [citySearch, setCitySearch] = useState("");
   const [detectedAddress, setDetectedAddress] = useState("");
   const [showHistory, setShowHistory] = useState(false);
+  const [sortBy, setSortBy] = useState<"slot" | "rating" | "distance">("slot");
   const geocode = useServerFn(reverseGeocode);
 
   const globalResults = searchQuery.length >= 2 ? searchDoctorsByName(searchQuery) : null;
-  const doctors = globalResults
+  const matchedDoctors = globalResults
     ? globalResults.filter(d => selectedSpecialty === "Toutes" || d.specialty.toLowerCase().includes(selectedSpecialty.toLowerCase()))
     : searchDoctors(selectedCity, selectedSpecialty);
+  const doctors = [...matchedDoctors].sort((a, b) => sortBy === "rating" ? b.rating - a.rating : sortBy === "slot" ? a.nextSlot.localeCompare(b.nextSlot) : 0);
 
   const filteredCities = citySearch
     ? CITIES.filter(c => c.name.toLowerCase().includes(citySearch.toLowerCase()))
@@ -252,10 +255,10 @@ function Doctors() {
         <p className="text-sm text-foreground/60">
           <span className="font-semibold text-foreground">{doctors.length} médecins</span> {globalResults ? `trouvés pour "${searchQuery}"` : `disponibles à ${CITIES.find(c => c.id === selectedCity)?.name}`}
         </p>
-        <select className="rounded-xl border border-border bg-white/80 px-3 py-1.5 text-xs outline-none">
-          <option>Prochain créneau</option>
-          <option>Mieux noté</option>
-          <option>Plus proche</option>
+        <select value={sortBy} onChange={(event) => setSortBy(event.target.value as "slot" | "rating" | "distance")} className="rounded-xl border border-border bg-white/80 px-3 py-1.5 text-xs outline-none">
+          <option value="slot">Prochain créneau</option>
+          <option value="rating">Mieux noté</option>
+          <option value="distance">Plus proche</option>
         </select>
       </div>
 
