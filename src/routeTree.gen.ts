@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as PregnancyRouteImport } from './routes/pregnancy'
 import { Route as InsightsRouteImport } from './routes/insights'
@@ -37,6 +38,11 @@ import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticat
 const SubscriptionRoute = SubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RemindersRoute = RemindersRouteImport.update({
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
   '/reminders': typeof RemindersRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pregnancy'
     | '/reminders'
+    | '/reset-password'
     | '/subscription'
     | '/calendar'
     | '/dashboard'
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pregnancy'
     | '/reminders'
+    | '/reset-password'
     | '/subscription'
     | '/calendar'
     | '/dashboard'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pregnancy'
     | '/reminders'
+    | '/reset-password'
     | '/subscription'
     | '/_authenticated/calendar'
     | '/_authenticated/dashboard'
@@ -322,6 +334,7 @@ export interface RootRouteChildren {
   InsightsRoute: typeof InsightsRoute
   PregnancyRoute: typeof PregnancyRoute
   RemindersRoute: typeof RemindersRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SubscriptionRoute: typeof SubscriptionRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminContentRoute: typeof AdminContentRoute
@@ -340,6 +353,13 @@ declare module '@tanstack/react-router' {
       path: '/subscription'
       fullPath: '/subscription'
       preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reminders': {
@@ -535,6 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsRoute: InsightsRoute,
   PregnancyRoute: PregnancyRoute,
   RemindersRoute: RemindersRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SubscriptionRoute: SubscriptionRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminContentRoute: AdminContentRoute,
