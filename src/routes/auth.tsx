@@ -88,6 +88,19 @@ function AuthPage() {
     setForgotMode(false);
   };
 
+  const resendConfirmation = async () => {
+    if (!email) return setInlineError("Saisissez d’abord l’adresse email de votre compte.");
+    setLoading(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: email.trim().toLowerCase(),
+      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+    });
+    setLoading(false);
+    if (error) return setInlineError(getAuthErrorMessage(error));
+    toast.success("Email de confirmation renvoyé", { description: "Vérifiez aussi votre dossier spam." });
+  };
+
   const handleGoogle = async () => {
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
@@ -128,7 +141,7 @@ function AuthPage() {
           {inlineError && <div role="alert" className="mt-5 rounded-2xl border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">{inlineError}</div>}
 
           <form className="mt-6 space-y-4" onSubmit={forgotMode ? handlePasswordReset : handleSubmit}>
-            {mode === "signup" && (
+            {mode === "signup" && !forgotMode && (
               <div>
                 <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Prénom</label>
                 <input
@@ -167,6 +180,7 @@ function AuthPage() {
           </form>
 
           {forgotMode && <button type="button" onClick={() => { setForgotMode(false); setInlineError(""); }} className="mt-4 w-full text-center text-xs font-semibold text-rose-vif hover:underline">Retour à la connexion</button>}
+          {!forgotMode && mode === "signin" && <button type="button" disabled={loading} onClick={resendConfirmation} className="mt-3 w-full text-center text-xs text-muted-foreground hover:text-rose-vif disabled:opacity-50">Renvoyer l’email de confirmation</button>}
 
           {!forgotMode && <><div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground">
             <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
