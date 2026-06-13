@@ -1,6 +1,8 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Flower2, LayoutDashboard, Calendar, BookOpen, Sparkles, User, LogOut, Activity, LineChart, Users, Bell, Baby, Stethoscope, Crown } from "lucide-react";
 import type { ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const nav = [
   { to: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -19,6 +21,15 @@ const nav = [
 
 export function AppShell({ children, title }: { children: ReactNode; title?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
 
   return (
     <div className="bg-bloom min-h-screen">
@@ -54,12 +65,13 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
           })}
         </nav>
         <div className="p-4">
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={signOut}
             className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs text-muted-foreground hover:text-foreground"
           >
             <LogOut className="h-3.5 w-3.5" /> Déconnexion
-          </Link>
+          </button>
         </div>
       </aside>
 

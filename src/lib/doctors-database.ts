@@ -7,6 +7,7 @@ export interface Doctor {
   postalCode: string;
   phone: string;
   photo: string;
+  photoIndex: number;
   rating: number;
   reviews: number;
   languages: string[];
@@ -14,6 +15,8 @@ export interface Doctor {
   acceptsNew: boolean;
   nextSlot: string;
   bio: string;
+  experienceYears: number;
+  reviewQuotes: { author: string; text: string; rating: number; date: string }[];
   education: string[];
   services: string[];
   hours: { day: string; hours: string }[];
@@ -197,6 +200,7 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
       postalCode: postal,
       phone,
       photo: `${firstName[0]}${lastName[0]}`,
+      photoIndex: i % 3,
       rating: Math.min(5, Math.round(rating * 10) / 10),
       reviews,
       languages: i % 5 === 0 ? ["Français", "Anglais", "Arabe"] : i % 4 === 0 ? ["Français", "Anglais", "Espagnol"] : i % 3 === 0 ? ["Français", "Anglais"] : ["Français"],
@@ -204,6 +208,12 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
       acceptsNew: i % 5 !== 4,
       nextSlot: i % 4 === 0 ? "Aujourd'hui" : i % 4 === 1 ? "Demain" : i % 4 === 2 ? "Dans 2 jours" : "Dans 3 jours",
       bio: generateBio(specialty, firstName, i),
+      experienceYears: 5 + (i % 25),
+      reviewQuotes: [
+        { author: "Camille R.", text: "Médecin très à l’écoute, explications claires et consultation sans précipitation.", rating: 5, date: "Il y a 2 semaines" },
+        { author: "Nadia L.", text: "Cabinet agréable et prise en charge rassurante. Je recommande.", rating: 5, date: "Il y a 1 mois" },
+        { author: "Élodie M.", text: "Ponctuelle, professionnelle et bienveillante pendant tout le rendez-vous.", rating: 4, date: "Il y a 2 mois" },
+      ],
       education: edu,
       services,
       hours,
@@ -279,4 +289,9 @@ export function findNearestCity(lat: number, lon: number): string {
     }
   }
   return nearest;
+}
+
+export function getDoctorById(id: string): Doctor | undefined {
+  const cityId = id.replace(/-\d+$/, "");
+  return getDoctorsForCity(cityId).find((doctor) => doctor.id === id);
 }
