@@ -16,7 +16,7 @@ export const Route = createFileRoute("/doctors")({
 });
 
 const SPECIALTIES_FILTER = ["Toutes", "Gynécologie médicale", "Gynécologie-Obstétrique", "Sage-femme", "Endocrinologie", "Reproduction"];
-const DOCTOR_PHOTOS = [doctorPortrait1, doctorPortrait2, doctorPortrait3];
+export const DOCTOR_PHOTOS = [doctorPortrait1, doctorPortrait2, doctorPortrait3];
 
 const EMERGENCY_NUMBERS = [
   { label: "SAMU", number: "15", desc: "Urgence médicale" },
@@ -271,7 +271,7 @@ function Doctors() {
 
 function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => void }) {
   return (
-    <Link to="/doctors/$doctorId" params={{ doctorId: doctor.id }} onClick={onClick} className="block w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
+    <Link to="/doctor/$doctorId" params={{ doctorId: doctor.id }} onClick={onClick} className="block w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
       <div className="flex items-start gap-4">
         <img src={DOCTOR_PHOTOS[doctor.photoIndex]} alt={`Portrait de ${doctor.name}`} loading="lazy" width={768} height={768} className="h-14 w-14 rounded-2xl object-cover shrink-0" />
         <div className="flex-1 min-w-0">
@@ -317,7 +317,7 @@ function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => vo
   );
 }
 
-function DoctorProfile({
+export function DoctorProfile({
   doctor, onBack, showBooking, setShowBooking, bookingConfirmed, setBookingConfirmed, selectedSlot, setSelectedSlot
 }: {
   doctor: Doctor;
@@ -384,9 +384,7 @@ function DoctorProfile({
           {/* Header */}
           <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
             <div className="flex items-start gap-5">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-rose-vif to-violet-doux flex items-center justify-center text-white font-bold text-2xl shrink-0">
-                {doctor.photo}
-              </div>
+              <img src={DOCTOR_PHOTOS[doctor.photoIndex]} alt={`Portrait de ${doctor.name}`} width={768} height={768} className="h-20 w-20 rounded-2xl object-cover shrink-0" />
               <div className="flex-1">
                 <h1 className="font-display text-2xl font-bold">{doctor.name}</h1>
                 <p className="text-sm text-violet-doux font-medium">{doctor.specialty}</p>
@@ -422,6 +420,20 @@ function DoctorProfile({
           <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
             <h3 className="font-display text-lg font-bold mb-3">Présentation</h3>
             <p className="text-sm text-foreground/80 leading-relaxed">{doctor.bio}</p>
+            <p className="mt-3 text-sm font-semibold text-violet-doux">{doctor.experienceYears} ans d’expérience</p>
+          </div>
+
+          <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
+            <h3 className="font-display text-lg font-bold mb-3">Avis de patientes</h3>
+            <div className="space-y-4">
+              {doctor.reviewQuotes.map((review) => (
+                <blockquote key={review.author} className="border-l-2 border-rose-vif/40 pl-4">
+                  <div className="flex items-center gap-1 text-amber-500" aria-label={`${review.rating} étoiles`}>{Array.from({ length: review.rating }).map((_, index) => <Star key={index} className="h-3 w-3 fill-current" />)}</div>
+                  <p className="mt-1 text-sm text-foreground/80">“{review.text}”</p>
+                  <footer className="mt-1 text-xs text-muted-foreground">{review.author} · {review.date}</footer>
+                </blockquote>
+              ))}
+            </div>
           </div>
 
           {/* Services */}
