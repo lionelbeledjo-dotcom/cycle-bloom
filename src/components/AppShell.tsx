@@ -1,9 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Flower2, LayoutDashboard, Calendar, BookOpen, Sparkles, User, LogOut, Activity, LineChart, Users, Bell, Baby, Stethoscope, Crown } from "lucide-react";
+import { Flower2, Circle, Calendar, BookOpen, Sparkles, User, LogOut, Activity, LineChart, Users, Bell, Baby, Stethoscope, Crown } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [
-  { to: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/dashboard", label: "Mon Cycle", icon: Circle },
   { to: "/calendar", label: "Calendrier", icon: Calendar },
   { to: "/symptoms", label: "Symptômes", icon: Activity },
   { to: "/insights", label: "Rapports", icon: LineChart },
@@ -68,6 +68,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         {[nav[0], nav[1], nav[5], nav[7], nav[11]].map((item) => {
           const active = pathname === item.to;
           const Icon = item.icon;
+          const mobileLabel = item.to === "/dashboard" ? "Cycle" : item.label.split(" ")[0];
           return (
             <Link
               key={item.to}
@@ -77,7 +78,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
               }`}
             >
               <Icon className="h-5 w-5" />
-              {item.label.split(" ")[0]}
+              {mobileLabel}
             </Link>
           );
         })}
