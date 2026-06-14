@@ -9,17 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PregnancyRouteImport } from './routes/pregnancy'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DoctorsRouteImport } from './routes/doctors'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as DemoRouteImport } from './routes/demo'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as BloomAiRouteImport } from './routes/bloom-ai'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -37,6 +44,11 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubscriptionRoute = SubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
@@ -52,6 +64,11 @@ const RemindersRoute = RemindersRouteImport.update({
   path: '/reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PregnancyRoute = PregnancyRouteImport.update({
   id: '/pregnancy',
   path: '/pregnancy',
@@ -62,14 +79,34 @@ const InsightsRoute = InsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoctorsRoute = DoctorsRouteImport.update({
   id: '/doctors',
   path: '/doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoRoute = DemoRouteImport.update({
   id: '/demo',
   path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityRoute = CommunityRouteImport.update({
@@ -90,6 +127,11 @@ const AuthRoute = AuthRouteImport.update({
 const ArticlesRoute = ArticlesRouteImport.update({
   id: '/articles',
   path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -174,17 +216,24 @@ const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
   '/bloom-ai': typeof BloomAiRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/doctors': typeof DoctorsRoute
+  '/faq': typeof FaqRoute
+  '/help': typeof HelpRoute
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
+  '/privacy': typeof PrivacyRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
+  '/terms': typeof TermsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -202,17 +251,24 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
   '/bloom-ai': typeof BloomAiRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/doctors': typeof DoctorsRoute
+  '/faq': typeof FaqRoute
+  '/help': typeof HelpRoute
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
+  '/privacy': typeof PrivacyRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
+  '/terms': typeof TermsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -232,17 +288,24 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
   '/bloom-ai': typeof BloomAiRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/doctors': typeof DoctorsRoute
+  '/faq': typeof FaqRoute
+  '/help': typeof HelpRoute
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
+  '/privacy': typeof PrivacyRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/subscription': typeof SubscriptionRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -262,17 +325,24 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/articles'
     | '/auth'
     | '/bloom-ai'
     | '/community'
+    | '/contact'
     | '/demo'
+    | '/disclaimer'
     | '/doctors'
+    | '/faq'
+    | '/help'
     | '/insights'
     | '/pregnancy'
+    | '/privacy'
     | '/reminders'
     | '/reset-password'
     | '/subscription'
+    | '/terms'
     | '/calendar'
     | '/dashboard'
     | '/profile'
@@ -290,17 +360,24 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/articles'
     | '/auth'
     | '/bloom-ai'
     | '/community'
+    | '/contact'
     | '/demo'
+    | '/disclaimer'
     | '/doctors'
+    | '/faq'
+    | '/help'
     | '/insights'
     | '/pregnancy'
+    | '/privacy'
     | '/reminders'
     | '/reset-password'
     | '/subscription'
+    | '/terms'
     | '/calendar'
     | '/dashboard'
     | '/profile'
@@ -319,17 +396,24 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/articles'
     | '/auth'
     | '/bloom-ai'
     | '/community'
+    | '/contact'
     | '/demo'
+    | '/disclaimer'
     | '/doctors'
+    | '/faq'
+    | '/help'
     | '/insights'
     | '/pregnancy'
+    | '/privacy'
     | '/reminders'
     | '/reset-password'
     | '/subscription'
+    | '/terms'
     | '/_authenticated/calendar'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
@@ -349,17 +433,24 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   ArticlesRoute: typeof ArticlesRoute
   AuthRoute: typeof AuthRoute
   BloomAiRoute: typeof BloomAiRoute
   CommunityRoute: typeof CommunityRoute
+  ContactRoute: typeof ContactRoute
   DemoRoute: typeof DemoRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   DoctorsRoute: typeof DoctorsRoute
+  FaqRoute: typeof FaqRoute
+  HelpRoute: typeof HelpRoute
   InsightsRoute: typeof InsightsRoute
   PregnancyRoute: typeof PregnancyRoute
+  PrivacyRoute: typeof PrivacyRoute
   RemindersRoute: typeof RemindersRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SubscriptionRoute: typeof SubscriptionRoute
+  TermsRoute: typeof TermsRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminContentRoute: typeof AdminContentRoute
   AdminDemosRoute: typeof AdminDemosRoute
@@ -374,6 +465,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/subscription': {
       id: '/subscription'
       path: '/subscription'
@@ -395,6 +493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pregnancy': {
       id: '/pregnancy'
       path: '/pregnancy'
@@ -409,6 +514,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/doctors': {
       id: '/doctors'
       path: '/doctors'
@@ -416,11 +535,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo': {
       id: '/demo'
       path: '/demo'
       fullPath: '/demo'
       preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/community': {
@@ -449,6 +582,13 @@ declare module '@tanstack/react-router' {
       path: '/articles'
       fullPath: '/articles'
       preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -586,17 +726,24 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   ArticlesRoute: ArticlesRoute,
   AuthRoute: AuthRoute,
   BloomAiRoute: BloomAiRoute,
   CommunityRoute: CommunityRoute,
+  ContactRoute: ContactRoute,
   DemoRoute: DemoRoute,
+  DisclaimerRoute: DisclaimerRoute,
   DoctorsRoute: DoctorsRoute,
+  FaqRoute: FaqRoute,
+  HelpRoute: HelpRoute,
   InsightsRoute: InsightsRoute,
   PregnancyRoute: PregnancyRoute,
+  PrivacyRoute: PrivacyRoute,
   RemindersRoute: RemindersRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SubscriptionRoute: SubscriptionRoute,
+  TermsRoute: TermsRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminContentRoute: AdminContentRoute,
   AdminDemosRoute: AdminDemosRoute,
