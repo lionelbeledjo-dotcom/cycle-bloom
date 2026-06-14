@@ -6,9 +6,6 @@ import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, 
 import { CITIES, searchDoctors, searchDoctorsByName, findNearestCity, type Doctor } from "@/lib/doctors-database";
 import { toast } from "sonner";
 import { reverseGeocode } from "@/lib/geocoding.functions";
-import doctorPortrait1 from "@/assets/doctor-portrait-1.jpg";
-import doctorPortrait2 from "@/assets/doctor-portrait-2.jpg";
-import doctorPortrait3 from "@/assets/doctor-portrait-3.jpg";
 
 export const Route = createFileRoute("/doctors")({
   ssr: false,
@@ -17,7 +14,12 @@ export const Route = createFileRoute("/doctors")({
 });
 
 const SPECIALTIES_FILTER = ["Toutes", "Gynécologie médicale", "Gynécologie-Obstétrique", "Sage-femme", "Endocrinologie", "Reproduction"];
-export const DOCTOR_PHOTOS = [doctorPortrait1, doctorPortrait2, doctorPortrait3];
+
+function getDoctorPhoto(doctor: Doctor): string {
+  const seed = doctor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const gender = "female";
+  return `https://i.pravatar.cc/150?u=${doctor.id}-${seed}-${gender}`;
+}
 
 const EMERGENCY_NUMBERS = [
   { label: "SAMU", number: "15", desc: "Urgence médicale" },
@@ -293,7 +295,7 @@ function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => vo
   return (
     <Link to="/doctor/$doctorId" params={{ doctorId: doctor.id }} onClick={onClick} className="block w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
       <div className="flex items-start gap-4">
-        <img src={DOCTOR_PHOTOS[doctor.photoIndex]} alt={`Portrait de ${doctor.name}`} loading="lazy" width={768} height={768} className="h-14 w-14 rounded-2xl object-cover shrink-0" />
+        <img src={getDoctorPhoto(doctor)} alt={`Portrait de ${doctor.name}`} loading="lazy" width={768} height={768} className="h-14 w-14 rounded-2xl object-cover shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -404,7 +406,7 @@ export function DoctorProfile({
           {/* Header */}
           <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
             <div className="flex items-start gap-5">
-              <img src={DOCTOR_PHOTOS[doctor.photoIndex]} alt={`Portrait de ${doctor.name}`} width={768} height={768} className="h-20 w-20 rounded-2xl object-cover shrink-0" />
+              <img src={getDoctorPhoto(doctor)} alt={`Portrait de ${doctor.name}`} width={768} height={768} className="h-20 w-20 rounded-2xl object-cover shrink-0" />
               <div className="flex-1">
                 <h1 className="font-display text-2xl font-bold">{doctor.name}</h1>
                 <p className="text-sm text-violet-doux font-medium">{doctor.specialty}</p>

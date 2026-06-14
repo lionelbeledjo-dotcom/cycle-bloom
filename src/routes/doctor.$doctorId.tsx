@@ -2,11 +2,10 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Calendar, CheckCircle2, Clock, Globe, MapPin, Phone, Star } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { getDoctorById, type Doctor } from "@/lib/doctors-database";
-import doctorPortrait1 from "@/assets/doctor-portrait-1.jpg";
-import doctorPortrait2 from "@/assets/doctor-portrait-2.jpg";
-import doctorPortrait3 from "@/assets/doctor-portrait-3.jpg";
-
-const photos = [doctorPortrait1, doctorPortrait2, doctorPortrait3];
+function getDoctorPhoto(doctor: Doctor): string {
+  const seed = doctor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  return `https://i.pravatar.cc/150?u=${doctor.id}-${seed}-female`;
+}
 
 export const Route = createFileRoute("/doctor/$doctorId")({
   loader: ({ params }) => {
@@ -27,7 +26,7 @@ function DoctorDetailPage() {
         <div className="space-y-6">
           <section className="glass rounded-3xl border border-white/70 p-6 shadow-bloom">
             <div className="flex flex-col gap-5 sm:flex-row">
-              <img src={photos[doctor.photoIndex]} alt={`Portrait de ${doctor.name}`} width={768} height={768} className="h-32 w-32 rounded-3xl object-cover" />
+              <img src={getDoctorPhoto(doctor)} alt={`Portrait de ${doctor.name}`} width={150} height={150} className="h-32 w-32 rounded-3xl object-cover" />
               <div><h1 className="font-display text-3xl font-bold">{doctor.name}</h1><p className="font-semibold text-violet-doux">{doctor.specialty}</p>
                 <div className="mt-3 flex flex-wrap gap-3 text-sm text-muted-foreground"><span className="flex items-center gap-1"><Star className="h-4 w-4 text-amber-500" /> {doctor.rating} ({doctor.reviews} avis)</span><span className="flex items-center gap-1"><Globe className="h-4 w-4" /> {doctor.languages.join(", ")}</span></div>
                 <p className="mt-3 flex items-center gap-1 text-sm"><MapPin className="h-4 w-4 text-rose-vif" /> {doctor.address}, {doctor.postalCode} {doctor.city}</p>
