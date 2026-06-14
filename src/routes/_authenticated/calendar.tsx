@@ -174,22 +174,40 @@ function CalendarPage() {
                   <div className="text-xs text-foreground/60 mt-1">Jour {selectedDayInfo.cycleDay} sur {info.cycleLength}</div>
                 )}
               </div>
+              {selectedDayInfo.phase && (
+                <div className="mt-4 rounded-2xl border border-gray-100 bg-gray-50/50 p-4">
+                  <p className="text-xs font-medium text-gray-700 mb-1">Conseil du jour</p>
+                  <p className="text-xs text-gray-500">{phaseAdvice(selectedDayInfo.phase)}</p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom text-center text-muted-foreground text-sm py-8">
               <CalendarIcon className="h-8 w-8 mx-auto mb-3 opacity-30" />
               <p className="font-medium">Cliquez sur un jour</p>
-              <p className="text-xs mt-1">pour voir le détail.</p>
+              <p className="text-xs mt-1">pour voir le détail de chaque phase.</p>
             </div>
           )}
 
           <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom">
-            <h3 className="font-display text-sm font-bold mb-3">Mon cycle</h3>
-            <div className="space-y-2 text-xs">
+            <h3 className="font-display text-sm font-bold mb-3">Résumé du cycle</h3>
+            <div className="space-y-3 text-xs">
               <Row label="Longueur du cycle" value={`${info.cycleLength} jours`} />
               <Row label="Durée des règles" value={`${info.periodLength} jours`} />
               <Row label="Jours enregistrés" value={`${periods.length}`} />
               {info.cycleDay && <Row label="Jour actuel" value={`J${info.cycleDay}`} />}
+              {info.ovulationOffset && <Row label="Ovulation estimée" value={`J${info.ovulationOffset + 1}`} />}
+              {info.cycleDay && <Row label="Prochaines règles" value={`dans ${info.cycleLength - info.cycleDay} jours`} />}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom">
+            <h3 className="font-display text-sm font-bold mb-3">Phases ce mois</h3>
+            <div className="space-y-2">
+              <PhaseBar label="Règles" color="bg-rose-vif" days={info.periodLength} total={info.cycleLength} />
+              <PhaseBar label="Folliculaire" color="bg-emerald-400" days={info.ovulationOffset - info.periodLength - 2} total={info.cycleLength} />
+              <PhaseBar label="Fertile" color="bg-orange-400" days={5} total={info.cycleLength} />
+              <PhaseBar label="Lutéale" color="bg-indigo-400" days={info.cycleLength - info.ovulationOffset - 2} total={info.cycleLength} />
             </div>
           </div>
         </div>
@@ -224,4 +242,26 @@ function phaseBg(phase: Phase) {
     case "luteal": return "bg-indigo-50 text-indigo-700";
     default: return "bg-white/60 text-muted-foreground";
   }
+}
+function phaseAdvice(phase: Phase) {
+  switch (phase) {
+    case "period": return "Privilégiez le repos, l'hydratation et les aliments riches en fer. Le yoga doux peut soulager les crampes.";
+    case "ovulation": return "Pic d'énergie et de fertilité. Moment idéal pour les activités sociales et les exercices intenses.";
+    case "fertile": return "Fenêtre de fertilité active. Si vous essayez de concevoir, c'est le moment optimal.";
+    case "follicular": return "Énergie montante ! Parfait pour commencer de nouveaux projets et des entraînements plus intenses.";
+    case "luteal": return "Préparez-vous à ralentir. Favorisez les aliments riches en magnésium et le sommeil réparateur.";
+    default: return "";
+  }
+}
+function PhaseBar({ label, color, days, total }: { label: string; color: string; days: number; total: number }) {
+  const pct = Math.max(5, Math.round((days / total) * 100));
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[10px] text-muted-foreground w-20 shrink-0">{label}</span>
+      <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+      </div>
+      <span className="text-[10px] text-muted-foreground w-8 text-right">{days}j</span>
+    </div>
+  );
 }
