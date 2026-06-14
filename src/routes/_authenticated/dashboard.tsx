@@ -154,7 +154,7 @@ function Dashboard() {
           {/* Phase-specific goal cards (Flo-style) */}
           <div className="grid gap-4 sm:grid-cols-3">
             <GoalCard
-              to="/calendar"
+              to="/guide-cycle"
               active={info.phase === "period" || info.phase === "follicular" || info.phase === "luteal"}
               gradient="from-rose-400 to-pink-500"
               emoji="🩸"
@@ -162,7 +162,7 @@ function Dashboard() {
               subtitle="Suivi du cycle menstruel"
             />
             <GoalCard
-              to="/calendar"
+              to="/guide-fertilite"
               active={info.phase === "fertile" || info.phase === "ovulation"}
               gradient="from-violet-400 to-purple-500"
               emoji="🥚"
@@ -170,7 +170,7 @@ function Dashboard() {
               subtitle="Pour tomber enceinte"
             />
             <GoalCard
-              to="/pregnancy"
+              to="/guide-grossesse"
               active={false}
               gradient="from-orange-400 to-amber-500"
               emoji="🤰"
@@ -217,24 +217,21 @@ function OnboardingState() {
 
       {/* Feature Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <OnboardFeature
-          gradient="from-rose-400 to-pink-500"
-          emoji="🩸"
-          title="Suivi du cycle"
-          desc="Prédictions de règles et d'ovulation basées sur l'IA"
-        />
-        <OnboardFeature
-          gradient="from-violet-400 to-purple-500"
-          emoji="🥚"
-          title="Fenêtre de fertilité"
-          desc="Identifiez vos jours les plus fertiles avec précision"
-        />
-        <OnboardFeature
-          gradient="from-orange-400 to-amber-500"
-          emoji="🤰"
-          title="Suivi de grossesse"
-          desc="40 semaines de suivi personnalisé et conseils"
-        />
+        <Link to="/guide-cycle" className="rounded-2xl bg-gradient-to-br from-rose-400 to-pink-500 p-5 text-white shadow-bloom hover:scale-[1.02] transition block">
+          <div className="text-2xl mb-2">🩸</div>
+          <p className="text-sm font-bold">Suivi du cycle</p>
+          <p className="text-xs text-white/80 mt-1">Prédictions de règles et d'ovulation basées sur l'IA</p>
+        </Link>
+        <Link to="/guide-fertilite" className="rounded-2xl bg-gradient-to-br from-violet-400 to-purple-500 p-5 text-white shadow-bloom hover:scale-[1.02] transition block">
+          <div className="text-2xl mb-2">🥚</div>
+          <p className="text-sm font-bold">Fenêtre de fertilité</p>
+          <p className="text-xs text-white/80 mt-1">Découvrez vos jours les plus fertiles avec précision</p>
+        </Link>
+        <Link to="/guide-grossesse" className="rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 p-5 text-white shadow-bloom hover:scale-[1.02] transition block">
+          <div className="text-2xl mb-2">🤰</div>
+          <p className="text-sm font-bold">Suivi de grossesse</p>
+          <p className="text-xs text-white/80 mt-1">40 semaines de suivi personnalisé et conseils</p>
+        </Link>
       </div>
 
       {/* Daily Tips (static for onboarding) */}
@@ -305,15 +302,6 @@ function OnboardingState() {
   );
 }
 
-function OnboardFeature({ gradient, emoji, title, desc }: { gradient: string; emoji: string; title: string; desc: string }) {
-  return (
-    <div className={`rounded-2xl bg-gradient-to-br ${gradient} p-5 text-white shadow-bloom`}>
-      <div className="text-2xl mb-2">{emoji}</div>
-      <p className="text-sm font-bold">{title}</p>
-      <p className="text-xs text-white/80 mt-1">{desc}</p>
-    </div>
-  );
-}
 
 function QuickAction({ to, icon, label, bg }: { to: string; icon: React.ReactNode; label: string; bg: string }) {
   return (

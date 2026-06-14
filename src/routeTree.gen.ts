@@ -17,6 +17,9 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PregnancyRouteImport } from './routes/pregnancy'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as GuideGrossesseRouteImport } from './routes/guide-grossesse'
+import { Route as GuideFertiliteRouteImport } from './routes/guide-fertilite'
+import { Route as GuideCycleRouteImport } from './routes/guide-cycle'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
@@ -82,6 +85,21 @@ const InsightsRoute = InsightsRouteImport.update({
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideGrossesseRoute = GuideGrossesseRouteImport.update({
+  id: '/guide-grossesse',
+  path: '/guide-grossesse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideFertiliteRoute = GuideFertiliteRouteImport.update({
+  id: '/guide-fertilite',
+  path: '/guide-fertilite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideCycleRoute = GuideCycleRouteImport.update({
+  id: '/guide-cycle',
+  path: '/guide-cycle',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -226,6 +244,9 @@ export interface FileRoutesByFullPath {
   '/disclaimer': typeof DisclaimerRoute
   '/doctors': typeof DoctorsRoute
   '/faq': typeof FaqRoute
+  '/guide-cycle': typeof GuideCycleRoute
+  '/guide-fertilite': typeof GuideFertiliteRoute
+  '/guide-grossesse': typeof GuideGrossesseRoute
   '/help': typeof HelpRoute
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
@@ -261,6 +282,9 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/doctors': typeof DoctorsRoute
   '/faq': typeof FaqRoute
+  '/guide-cycle': typeof GuideCycleRoute
+  '/guide-fertilite': typeof GuideFertiliteRoute
+  '/guide-grossesse': typeof GuideGrossesseRoute
   '/help': typeof HelpRoute
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
@@ -298,6 +322,9 @@ export interface FileRoutesById {
   '/disclaimer': typeof DisclaimerRoute
   '/doctors': typeof DoctorsRoute
   '/faq': typeof FaqRoute
+  '/guide-cycle': typeof GuideCycleRoute
+  '/guide-fertilite': typeof GuideFertiliteRoute
+  '/guide-grossesse': typeof GuideGrossesseRoute
   '/help': typeof HelpRoute
   '/insights': typeof InsightsRoute
   '/pregnancy': typeof PregnancyRoute
@@ -335,6 +362,9 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/doctors'
     | '/faq'
+    | '/guide-cycle'
+    | '/guide-fertilite'
+    | '/guide-grossesse'
     | '/help'
     | '/insights'
     | '/pregnancy'
@@ -370,6 +400,9 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/doctors'
     | '/faq'
+    | '/guide-cycle'
+    | '/guide-fertilite'
+    | '/guide-grossesse'
     | '/help'
     | '/insights'
     | '/pregnancy'
@@ -406,6 +439,9 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/doctors'
     | '/faq'
+    | '/guide-cycle'
+    | '/guide-fertilite'
+    | '/guide-grossesse'
     | '/help'
     | '/insights'
     | '/pregnancy'
@@ -443,6 +479,9 @@ export interface RootRouteChildren {
   DisclaimerRoute: typeof DisclaimerRoute
   DoctorsRoute: typeof DoctorsRoute
   FaqRoute: typeof FaqRoute
+  GuideCycleRoute: typeof GuideCycleRoute
+  GuideFertiliteRoute: typeof GuideFertiliteRoute
+  GuideGrossesseRoute: typeof GuideGrossesseRoute
   HelpRoute: typeof HelpRoute
   InsightsRoute: typeof InsightsRoute
   PregnancyRoute: typeof PregnancyRoute
@@ -519,6 +558,27 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide-grossesse': {
+      id: '/guide-grossesse'
+      path: '/guide-grossesse'
+      fullPath: '/guide-grossesse'
+      preLoaderRoute: typeof GuideGrossesseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide-fertilite': {
+      id: '/guide-fertilite'
+      path: '/guide-fertilite'
+      fullPath: '/guide-fertilite'
+      preLoaderRoute: typeof GuideFertiliteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide-cycle': {
+      id: '/guide-cycle'
+      path: '/guide-cycle'
+      fullPath: '/guide-cycle'
+      preLoaderRoute: typeof GuideCycleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -736,6 +796,9 @@ const rootRouteChildren: RootRouteChildren = {
   DisclaimerRoute: DisclaimerRoute,
   DoctorsRoute: DoctorsRoute,
   FaqRoute: FaqRoute,
+  GuideCycleRoute: GuideCycleRoute,
+  GuideFertiliteRoute: GuideFertiliteRoute,
+  GuideGrossesseRoute: GuideGrossesseRoute,
   HelpRoute: HelpRoute,
   InsightsRoute: InsightsRoute,
   PregnancyRoute: PregnancyRoute,
