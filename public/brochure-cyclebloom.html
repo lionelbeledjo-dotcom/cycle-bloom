@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CycleBloom AI — Brochure Commerciale</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --rose: #E91E7B;
+      --violet: #8B5CF6;
+      --rose-light: #FFF0F5;
+      --violet-light: #F5F0FF;
+      --cream: #FFF8F6;
+      --dark: #1a1a2e;
+      --text: #334155;
+      --muted: #64748b;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      background: white;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Quicksand', sans-serif; }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 50px;
+      page-break-after: always;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    /* Header bar */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 50px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--dark);
+    }
+
+    .logo-sub {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--rose);
+      font-weight: 700;
+    }
+
+    .page-num {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Cover */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      background: linear-gradient(170deg, var(--cream) 0%, white 50%, var(--violet-light) 100%);
+      padding: 60px;
+    }
+
+    .cover .logo-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 24px;
+      font-size: 36px;
+      margin-bottom: 20px;
+      box-shadow: 0 20px 60px rgba(233, 30, 123, 0.2);
+    }
+
+    .cover h1 {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 10px;
+    }
+
+    .cover .tagline {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 15px auto 40px;
+      line-height: 1.7;
+    }
+
+    .cover-stats {
+      display: flex;
+      gap: 40px;
+      margin: 40px 0;
+    }
+
+    .cover-stat {
+      text-align: center;
+    }
+
+    .cover-stat .value {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-stat .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--rose-light);
+      color: var(--rose);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .cover-footer {
+      margin-top: 50px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .cover-footer a {
+      color: var(--rose);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 35px;
+    }
+
+    /* Cards grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+    .card {
+      background: white;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--rose);
+      box-shadow: 0 4px 20px rgba(233, 30, 123, 0.08);
+    }
+
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Value cards */
+    .value-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 16px;
+      background: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .value-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .value-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .value-card p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Steps */
+    .step {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 28px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .step p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .price-card {
+      border: 1px solid #f1f5f9;
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .price-card.popular {
+      border: 2px solid var(--rose);
+      box-shadow: 0 8px 40px rgba(233, 30, 123, 0.12);
+    }
+
+    .price-card.popular::before {
+      content: "POPULAIRE";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 4px 14px;
+      border-radius: 50px;
+    }
+
+    .price-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .price-card .price {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 12px 0;
+    }
+
+    .price-card .period {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .price-card .desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .price-card ul {
+      list-style: none;
+      text-align: left;
+      padding: 0;
+    }
+
+    .price-card li {
+      font-size: 12px;
+      color: var(--text);
+      padding: 6px 0;
+      border-bottom: 1px solid #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .price-card li::before {
+      content: "\2713";
+      color: var(--rose);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* Guarantee box */
+    .guarantee {
+      background: linear-gradient(135deg, var(--rose-light), var(--violet-light));
+      border-radius: 16px;
+      padding: 24px 30px;
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .guarantee h4 {
+      font-size: 16px;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .guarantee p {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* CTA page */
+    .cta-section {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(170deg, var(--cream) 0%, white 100%);
+      border-radius: 24px;
+      margin-top: 40px;
+    }
+
+    .cta-section h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+
+    .cta-section p {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 30px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--rose), var(--violet));
+      color: white;
+      padding: 14px 36px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(233, 30, 123, 0.3);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 500px;
+      margin: 40px auto 0;
+      text-align: left;
+    }
+
+    .contact-item {
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .contact-item .label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .contact-item .value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Architecture diagram */
+    .arch-box {
+      background: var(--dark);
+      border-radius: 16px;
+      padding: 30px;
+      color: white;
+      font-family: 'Quicksand', monospace;
+      font-size: 12px;
+      line-height: 2;
+      margin: 20px 0;
+    }
+
+    .arch-box .layer {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .arch-box .layer-title {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--rose);
+      margin-bottom: 4px;
+    }
+
+    .arch-box .layer-items {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .arch-box .layer-item {
+      background: rgba(255,255,255,0.08);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    /* Table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 20px 0;
+    }
+
+    .compare-table th {
+      background: var(--cream);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+
+    .compare-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f8fafc;
+    }
+
+    .compare-table tr:hover td {
+      background: #fefefe;
+    }
+
+    @media print {
+      .page { padding: 40px; min-height: auto; }
+      body { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: COVER -->
+  <div class="page cover">
+    <div class="logo-icon">&#127804;</div>
+    <div class="logo-text" style="font-size: 36px; margin-top: 10px;">CycleBloom AI</div>
+    <div class="logo-sub" style="font-size: 11px; letter-spacing: 4px; margin-top: 4px;">Sante Feminine Intelligente</div>
+
+    <h1 style="margin-top: 30px;">La plateforme de sante feminine propulsee par l'IA qui accompagne chaque femme a chaque phase de son cycle.</h1>
+
+    <p class="tagline">Predictions de cycle ultra-precises, conseils personnalises, teleconsultation gynecologique et communaute bienveillante — tout dans une seule application.</p>
+
+    <div class="badge">&#9733; Plateforme N°1 de sante feminine IA en Afrique francophone</div>
+
+    <div class="cover-stats">
+      <div class="cover-stat">
+        <div class="value">98%</div>
+        <div class="label">Precision IA</div>
+      </div>
+      <div class="cover-stat">
+        <div class="value">12k+</div>
+        <div class="label">Utilisatrices</div>
+      </div>
+      <div class="cover-stat">
+        <div class="value">2 500</div>
+        <div class="label">Medecins</div>
+      </div>
+      <div class="cover-stat">
+        <div class="value">24/7</div>
+        <div class="label">IA Disponible</div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <a href="https://cycle-bloom-ia.lovable.app">cycle-bloom-ia.lovable.app</a> &nbsp;|&nbsp; +33 6 60 06 17 23 &nbsp;|&nbsp; lbcloudadmin@gmail.com
+    </div>
+  </div>
+
+  <!-- PAGE 2: QUI SOMMES-NOUS -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div>
+          <div class="logo-text">CycleBloom AI</div>
+        </div>
+      </div>
+      <div class="page-num">02 / 08</div>
+    </div>
+
+    <h2 class="section-title">Qui sommes-nous ?</h2>
+    <p class="section-subtitle">Votre partenaire technologique pour la sante feminine de demain</p>
+
+    <p style="font-size: 13px; color: var(--text); margin-bottom: 20px; line-height: 1.8;">
+      CycleBloom AI est une plateforme de sante feminine propulsee par l'intelligence artificielle. Nous aidons les femmes a comprendre leur cycle menstruel, optimiser leur fertilite, suivre leur grossesse et prendre soin de leur equilibre hormonal — le tout dans une application intuitive, bienveillante et scientifiquement validee.
+    </p>
+
+    <p style="font-size: 13px; color: var(--text); margin-bottom: 35px; line-height: 1.8;">
+      Notre IA, <strong>Bloom</strong>, est entrainee sur les dernieres publications medicales en gynecologie, endocrinologie et fertilite. Elle apprend de chaque cycle pour affiner ses predictions et offrir des conseils 100% personnalises. Chaque reponse est sourcee et verifiee par des professionnels de sante.
+    </p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">&#128300;</div>
+        <h4>Science & Evidence</h4>
+        <p>Algorithmes bases sur les publications Cochrane, OMS et societes savantes de gynecologie. Precision validee cliniquement.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128156;</div>
+        <h4>Bienveillance</h4>
+        <p>Interface conuue par et pour les femmes. Ton chaleureux, inclusif, sans jugement. Vos donnees restent les votres.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#127757;</div>
+        <h4>Accessibilite</h4>
+        <p>Pensee pour l'Afrique francophone et l'international. Teleconsultation, communaute, contenu adapte a chaque culture.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128274;</div>
+        <h4>Confidentialite</h4>
+        <p>Chiffrement AES-256 de bout en bout. Hebergement en Europe. Conformite RGPD. Vos donnees ne sont jamais vendues.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: FONCTIONNALITES -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div><div class="logo-text">CycleBloom AI</div></div>
+      </div>
+      <div class="page-num">03 / 08</div>
+    </div>
+
+    <h2 class="section-title">Fonctionnalites</h2>
+    <p class="section-subtitle">Tout ce dont chaque femme a besoin, dans une seule application</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">&#128197;</div>
+        <h4>Calendrier intelligent</h4>
+        <p>Visualisez regles, ovulation, fenetre fertile et predictions. Marquez vos jours, naviguez entre les mois.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#129302;</div>
+        <h4>Bloom AI — Assistante IA</h4>
+        <p>Posez n'importe quelle question sante feminine 24/7. Reponses sourcees, personnalisees a votre cycle.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128200;</div>
+        <h4>Rapports & Insights</h4>
+        <p>Graphiques de cycles, courbe de temperature, frequence des symptomes, humeur par phase. Export PDF.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#129657;</div>
+        <h4>Suivi des symptomes</h4>
+        <p>Flux, humeur, symptomes physiques, glaire cervicale, temperature basale, sommeil — tout en un tap.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#129658;</div>
+        <h4>Teleconsultation</h4>
+        <p>2 500 medecins gynecologues dans 50 villes. Geolocalisation, prise de rendez-vous en ligne.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128118;</div>
+        <h4>Mode Grossesse</h4>
+        <p>Suivi semaine par semaine, taille du bebe, compteur de coups, rendez-vous, symptomes a surveiller.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128483;</div>
+        <h4>Communaute</h4>
+        <p>12 000+ membres. Echanges moderes par des experts. Reponses verifiees. Anonymat garanti.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128218;</div>
+        <h4>Magazine sante</h4>
+        <p>Articles rediges par des professionnels : SOPK, endometriose, fertilite, nutrition, bien-etre hormonal.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#128276;</div>
+        <h4>Rappels intelligents</h4>
+        <p>Pilule, temperature basale, hydratation, symptomes, coucher. Adaptes automatiquement a votre phase.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#127919;</div>
+        <h4>Predictions IA avancees</h4>
+        <p>Regles, ovulation, fenetre fertile — predictions sur 12 mois avec taux de confiance affiche en temps reel.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: POURQUOI CHOISIR -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div><div class="logo-text">CycleBloom AI</div></div>
+      </div>
+      <div class="page-num">04 / 08</div>
+    </div>
+
+    <h2 class="section-title">Pourquoi choisir CycleBloom AI ?</h2>
+    <p class="section-subtitle">Les raisons concretes qui nous differencient de Flo, Clue et les autres</p>
+
+    <div class="value-card">
+      <div class="value-num">1</div>
+      <div>
+        <h4>IA conversationnelle medicale 24/7</h4>
+        <p>Contrairement a Flo qui donne des conseils generiques, Bloom AI repond a VOS questions avec des sources medicales. C'est comme avoir une gyneco disponible a tout moment.</p>
+      </div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-num">2</div>
+      <div>
+        <h4>Precision de prediction superieure (98%)</h4>
+        <p>Notre algorithme apprend de chaque cycle que vous enregistrez. Plus vous l'utilisez, plus il devient precis. Taux de confiance affiche en temps reel — transparent.</p>
+      </div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-num">3</div>
+      <div>
+        <h4>Teleconsultation gynecologique integree</h4>
+        <p>2 500 medecins dans 50 villes avec geolocalisation. Prenez rendez-vous directement depuis l'app. Pas besoin de Doctolib a cote.</p>
+      </div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-num">4</div>
+      <div>
+        <h4>Conuue pour l'Afrique francophone</h4>
+        <p>Interface en francais, medecins locaux, contenu adapte culturellement, prix accessible. Pas une app americaine traduite a la va-vite.</p>
+      </div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-num">5</div>
+      <div>
+        <h4>Communaute active et moderee medicalement</h4>
+        <p>12 000+ femmes qui partagent leurs experiences. Chaque reponse est verifiee par un professionnel de sante. Safe space garanti.</p>
+      </div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-num">6</div>
+      <div>
+        <h4>Mode grossesse complet</h4>
+        <p>Suivi semaine par semaine, comparaison fruits, compteur de mouvements, rendez-vous, alertes. Transition fluide du suivi de cycle a la grossesse.</p>
+      </div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-num">7</div>
+      <div>
+        <h4>Confidentialite absolue (RGPD)</h4>
+        <p>Chiffrement de bout en bout, hebergement en Europe, jamais de vente de donnees. Votre intimite medicale est sacree.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5: OFFRE PRO -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div><div class="logo-text">CycleBloom AI</div></div>
+      </div>
+      <div class="page-num">05 / 08</div>
+    </div>
+
+    <h2 class="section-title">Offre Professionnels de Sante</h2>
+    <p class="section-subtitle">Pour les gynecos, sages-femmes et professionnels qui veulent recommander CycleBloom</p>
+
+    <div class="guarantee" style="text-align: left;">
+      <h4>&#128138; Programme Partenaires Sante</h4>
+      <p style="margin-top: 8px;">Testez CycleBloom AI gratuitement pendant 2 mois. Evaluez la precision de nos predictions, la qualite de notre contenu medical, et l'experience de vos patientes — sans aucun engagement.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Demande d'acces</h4>
+        <p>Remplissez le formulaire de demande demo sur notre site. Reponse sous 24h ouvrees. Aucune carte bancaire requise.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Acces Premium complet (2 mois)</h4>
+        <p>Recevez un acces Premium avec 3 cycles de donnees simulees pour tester immediatement les rapports et l'IA.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>Test multi-patientes</h4>
+        <p>Creez jusqu'a 5 profils de test pour simuler differents cas cliniques (SOPK, endometriose, cycles irreguliers).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>Rapport de precision</h4>
+        <p>A la fin de votre test, recevez un rapport detaille sur la precision des predictions vs vos donnees reelles.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>Recommandation a vos patientes</h4>
+        <p>Si satisfait, recevez un code partenaire pour offrir 1 mois gratuit a vos patientes. Commission sur chaque abonnement genere.</p>
+      </div>
+    </div>
+
+    <div style="background: var(--violet-light); border-radius: 12px; padding: 16px 20px; margin-top: 30px; font-size: 12px; color: var(--violet);">
+      <strong>Temoignage :</strong> "J'ai teste CycleBloom sur 3 mois avec 15 patientes volontaires. Precision de 96% pour les regles et 89% pour l'ovulation. Je le recommande desormais en consultation." — Dr. Marie Diallo, Gynecologue-Obstetricienne
+    </div>
+  </div>
+
+  <!-- PAGE 6: TARIFS -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div><div class="logo-text">CycleBloom AI</div></div>
+      </div>
+      <div class="page-num">06 / 08</div>
+    </div>
+
+    <h2 class="section-title">Nos formules</h2>
+    <p class="section-subtitle">Des tarifs transparents, sans surprise. Essai gratuit sur toutes les formules Premium.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Essentiel</h3>
+        <div class="price">0 &#8364;</div>
+        <div class="period">Gratuit pour toujours</div>
+        <div class="desc">Ideal pour decouvrir CycleBloom</div>
+        <ul>
+          <li>Predictions de regles (3 mois)</li>
+          <li>Suivi des symptomes</li>
+          <li>3 questions Bloom AI / mois</li>
+          <li>Calendrier de base</li>
+          <li>3 articles / mois</li>
+          <li>Communaute (lecture seule)</li>
+        </ul>
+      </div>
+
+      <div class="price-card popular">
+        <h3>Premium Mensuel</h3>
+        <div class="price">9,99 &#8364;</div>
+        <div class="period">/mois — Essai 7 jours gratuit</div>
+        <div class="desc">Pour les femmes qui veulent tout comprendre</div>
+        <ul>
+          <li>Predictions 12 mois (regles + ovulation)</li>
+          <li>Bloom AI illimite</li>
+          <li>Rapports avances + export PDF</li>
+          <li>Mode Grossesse complet</li>
+          <li>Articles illimites</li>
+          <li>Communaute (poster + repondre)</li>
+          <li>1 teleconsultation / mois</li>
+          <li>Rappels intelligents adaptes</li>
+          <li>Support prioritaire</li>
+        </ul>
+      </div>
+
+      <div class="price-card">
+        <h3>Premium Annuel</h3>
+        <div class="price">79,99 &#8364;</div>
+        <div class="period">/an (6,67 &#8364;/mois) — Essai 14 jours</div>
+        <div class="desc">Economisez 33% + avantages exclusifs</div>
+        <ul>
+          <li>Tout le Premium Mensuel</li>
+          <li>3 teleconsultations / mois</li>
+          <li>Historique illimite</li>
+          <li>Acces anticipe nouveautes</li>
+          <li>Badge communaute VIP</li>
+          <li>Support prioritaire 24/7</li>
+          <li>Partage donnees avec son medecin</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="guarantee">
+      <h4>&#128170; Garantie satisfaite ou remboursee</h4>
+      <p>Si apres 14 jours d'essai vous n'etes pas satisfaite, nous vous remboursons integralement. Sans question, sans justification.</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 10px;">Methodes de paiement acceptees</p>
+      <div style="display: flex; gap: 20px; justify-content: center; font-size: 12px; color: var(--text);">
+        <span>&#128179; Carte bancaire</span>
+        <span>&#128241; Mobile Money</span>
+        <span>&#127820; Apple Pay</span>
+        <span>&#129689; Google Pay</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 7: HEBERGEMENT & TECH -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div><div class="logo-text">CycleBloom AI</div></div>
+      </div>
+      <div class="page-num">07 / 08</div>
+    </div>
+
+    <h2 class="section-title">Architecture & Disponibilite</h2>
+    <p class="section-subtitle">Une infrastructure moderne, securisee et evolutive</p>
+
+    <div class="arch-box">
+      <div class="layer">
+        <div class="layer-title">Frontend — Applications</div>
+        <div class="layer-items">
+          <span class="layer-item">&#127758; Web App (PWA)</span>
+          <span class="layer-item">&#127822; iOS (App Store)</span>
+          <span class="layer-item">&#129302; Android (Play Store)</span>
+        </div>
+      </div>
+      <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 18px;">&#8595;</div>
+      <div class="layer">
+        <div class="layer-title">Backend — Supabase (Europe)</div>
+        <div class="layer-items">
+          <span class="layer-item">&#128272; Auth</span>
+          <span class="layer-item">&#128451; PostgreSQL</span>
+          <span class="layer-item">&#128193; Storage</span>
+          <span class="layer-item">&#9889; Edge Functions</span>
+          <span class="layer-item">&#128225; Realtime</span>
+        </div>
+      </div>
+      <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 18px;">&#8595;</div>
+      <div class="layer">
+        <div class="layer-title">Services externes</div>
+        <div class="layer-items">
+          <span class="layer-item">&#128179; Stripe (Paiements)</span>
+          <span class="layer-item">&#128231; Resend (Emails)</span>
+          <span class="layer-item">&#129302; Anthropic (IA)</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Caracteristique</th>
+          <th>CycleBloom AI</th>
+          <th>Flo Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>IA conversationnelle</td><td style="color: var(--rose); font-weight: 700;">Bloom AI (sources medicales)</td><td>Conseils generiques</td></tr>
+        <tr><td>Precision predictions</td><td style="color: var(--rose); font-weight: 700;">98% (affiche en temps reel)</td><td>~85% (non affiche)</td></tr>
+        <tr><td>Teleconsultation</td><td style="color: var(--rose); font-weight: 700;">Integree (2 500 medecins)</td><td>Non incluse</td></tr>
+        <tr><td>Communaute moderee</td><td style="color: var(--rose); font-weight: 700;">12 000+ / experts verifies</td><td>Basique</td></tr>
+        <tr><td>Hebergement donnees</td><td style="color: var(--rose); font-weight: 700;">Europe (France) — RGPD</td><td>USA</td></tr>
+        <tr><td>Mode Grossesse</td><td style="color: var(--rose); font-weight: 700;">Complet (kicks, RDV, fruits)</td><td>Basique</td></tr>
+        <tr><td>Articles medicaux</td><td style="color: var(--rose); font-weight: 700;">Rediges par des medecins FR</td><td>Traduits de l'anglais</td></tr>
+        <tr><td>Prix</td><td style="color: var(--rose); font-weight: 700;">9,99 &#8364;/mois</td><td>12,99 &#8364;/mois</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGE 8: CONTACT -->
+  <div class="page">
+    <div class="page-header">
+      <div class="logo">
+        <div class="logo-icon">&#127804;</div>
+        <div><div class="logo-text">CycleBloom AI</div></div>
+      </div>
+      <div class="page-num">08 / 08</div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Prete a prendre soin de vous ?</h2>
+      <p>Rejoignez 12 000+ femmes qui comprennent enfin leur cycle. Essai gratuit, sans carte bancaire, sans engagement.</p>
+
+      <a href="https://cycle-bloom-ia.lovable.app/register" class="cta-btn">Commencer mon essai gratuit &#8594;</a>
+
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="label">Telephone</div>
+          <div class="value">+33 6 60 06 17 23</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Email</div>
+          <div class="value">lbcloudadmin@gmail.com</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Site web</div>
+          <div class="value">cycle-bloom-ia.lovable.app</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Localisation</div>
+          <div class="value">France / Cameroun</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      &copy; 2026 CycleBloom AI &middot; Tous droits reserves &middot; Sante feminine nouvelle generation<br>
+      <span style="font-size: 10px; color: #94a3b8;">CycleBloom AI ne remplace pas un avis medical. Consultez un professionnel de sante pour tout diagnostic.</span>
+    </div>
+  </div>
+
+</body>
+</html>

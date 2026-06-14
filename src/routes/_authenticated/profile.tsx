@@ -5,6 +5,7 @@ import { Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { useProfile, useUpdateProfile } from "@/lib/cycle-store";
 import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Profil — CycleBloom AI" }] }),
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/profile")({
 
 function ProfilePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: profile, isLoading } = useProfile();
   const update = useUpdateProfile();
 
@@ -47,6 +49,8 @@ function ProfilePage() {
   };
 
   const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   };
