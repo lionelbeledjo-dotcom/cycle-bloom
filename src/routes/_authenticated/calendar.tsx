@@ -116,10 +116,10 @@ function CalendarPage() {
 
       <div className="mb-4 flex flex-wrap items-center gap-4 text-xs">
         <Legend color="bg-rose-vif" label="Règles" />
-        <Legend color="bg-orange-400" label="Fertile" />
-        <Legend color="bg-violet-doux" label="Ovulation" />
-        <Legend color="bg-emerald-200" label="Folliculaire" />
-        <Legend color="bg-indigo-200" label="Lutéale" />
+        <Legend color="bg-orange-300" label="Fertile" />
+        <Legend color="bg-purple-500" label="Ovulation" />
+        <Legend color="bg-emerald-300" label="Folliculaire" />
+        <Legend color="bg-blue-200" label="Lutéale" />
       </div>
 
       {logMode && (
@@ -223,14 +223,14 @@ function Row({ label, value }: { label: string; value: string }) {
   return <div className="flex justify-between"><span className="text-muted-foreground">{label}</span><span className="font-medium">{value}</span></div>;
 }
 function cellClass(phase: Phase, isLogged: boolean) {
-  if (isLogged) return "bg-rose-vif text-white shadow-bloom hover:scale-105";
+  if (isLogged) return "bg-rose-vif text-white shadow-lg shadow-rose-vif/30 hover:scale-110 font-bold";
   switch (phase) {
-    case "period": return "bg-rose-vif/20 text-rose-vif border border-dashed border-rose-vif/40 hover:bg-rose-vif/30";
-    case "ovulation": return "bg-violet-doux text-white hover:scale-105";
-    case "fertile": return "bg-orange-100 text-orange-700 hover:bg-orange-200";
-    case "follicular": return "bg-emerald-100 text-emerald-700 hover:bg-emerald-200";
-    case "luteal": return "bg-indigo-100 text-indigo-700 hover:bg-indigo-200";
-    default: return "bg-white/60 text-foreground/60 hover:bg-white";
+    case "period": return "bg-pink-200 text-rose-700 border-2 border-rose-vif/50 font-semibold hover:bg-pink-300 hover:scale-105";
+    case "ovulation": return "bg-purple-500 text-white shadow-lg shadow-purple-500/30 hover:scale-110 font-bold";
+    case "fertile": return "bg-orange-300 text-orange-900 font-semibold hover:bg-orange-400 hover:scale-105";
+    case "follicular": return "bg-emerald-300 text-emerald-900 font-medium hover:bg-emerald-400 hover:scale-105";
+    case "luteal": return "bg-blue-200 text-blue-800 font-medium hover:bg-blue-300 hover:scale-105";
+    default: return "bg-gray-50 text-foreground/70 hover:bg-white hover:shadow-sm";
   }
 }
 function phaseBg(phase: Phase) {

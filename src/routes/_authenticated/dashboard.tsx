@@ -200,17 +200,117 @@ function Dashboard() {
 
 function OnboardingState() {
   return (
-    <div className="text-center py-12">
-      <div className="mx-auto w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-gradient-to-br from-rose-100 to-pink-50 flex items-center justify-center mb-8 shadow-bloom">
-        <Flower2 className="h-20 w-20 text-rose-vif opacity-40" />
+    <div className="space-y-8">
+      {/* Hero CTA */}
+      <div className="text-center">
+        <div className="mx-auto w-40 h-40 rounded-full bg-gradient-to-br from-rose-100 to-pink-50 flex items-center justify-center mb-6 shadow-bloom">
+          <Flower2 className="h-16 w-16 text-rose-vif opacity-50" />
+        </div>
+        <p className="font-display text-2xl font-bold mb-2">Commencez votre suivi</p>
+        <p className="text-sm text-foreground/60 max-w-md mx-auto mb-5">
+          Marquez le premier jour de vos dernières règles pour activer toutes les prédictions, recommandations personnalisées et le suivi intelligent de votre cycle.
+        </p>
+        <Link to="/calendar" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-8 py-4 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
+          <Droplet className="h-4 w-4" /> Marquer mes règles
+        </Link>
       </div>
-      <p className="font-display text-2xl font-bold mb-3">Commencez votre suivi</p>
-      <p className="text-sm text-foreground/70 max-w-md mx-auto mb-6 leading-relaxed">
-        Marquez le premier jour de vos dernières règles pour activer toutes les prédictions, recommandations personnalisées et le suivi intelligent de votre cycle.
-      </p>
-      <Link to="/calendar" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-8 py-4 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
-        <Droplet className="h-4 w-4" /> Marquer mes règles
-      </Link>
+
+      {/* Feature Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <OnboardFeature
+          gradient="from-rose-400 to-pink-500"
+          emoji="🩸"
+          title="Suivi du cycle"
+          desc="Prédictions de règles et d'ovulation basées sur l'IA"
+        />
+        <OnboardFeature
+          gradient="from-violet-400 to-purple-500"
+          emoji="🥚"
+          title="Fenêtre de fertilité"
+          desc="Identifiez vos jours les plus fertiles avec précision"
+        />
+        <OnboardFeature
+          gradient="from-orange-400 to-amber-500"
+          emoji="🤰"
+          title="Suivi de grossesse"
+          desc="40 semaines de suivi personnalisé et conseils"
+        />
+      </div>
+
+      {/* Daily Tips (static for onboarding) */}
+      <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
+        <h2 className="font-display text-lg font-bold flex items-center gap-2 mb-4">
+          <Sparkles className="h-4 w-4 text-rose-vif" />
+          Ce que CycleBloom vous offre
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex items-start gap-3 rounded-2xl bg-white/60 p-4 border border-white/80">
+            <div className="h-10 w-10 rounded-xl bg-rose-50 flex items-center justify-center shrink-0">
+              <Calendar className="h-5 w-5 text-rose-vif" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Calendrier intelligent</p>
+              <p className="text-xs text-foreground/60 mt-0.5">Visualisez votre cycle et planifiez en un coup d'œil</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-2xl bg-white/60 p-4 border border-white/80">
+            <div className="h-10 w-10 rounded-xl bg-violet-50 flex items-center justify-center shrink-0">
+              <Activity className="h-5 w-5 text-violet-doux" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Suivi des symptômes</p>
+              <p className="text-xs text-foreground/60 mt-0.5">Enregistrez humeur, douleurs, énergie au quotidien</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-2xl bg-white/60 p-4 border border-white/80">
+            <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+              <Sparkles className="h-5 w-5 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">IA personnalisée</p>
+              <p className="text-xs text-foreground/60 mt-0.5">Conseils adaptés à chaque phase de votre cycle</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-2xl bg-white/60 p-4 border border-white/80">
+            <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+              <Heart className="h-5 w-5 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Communauté bienveillante</p>
+              <p className="text-xs text-foreground/60 mt-0.5">Échangez avec des femmes et des experts santé</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick start guide */}
+      <div className="rounded-3xl bg-gradient-to-br from-rose-vif/5 via-violet-doux/5 to-lavande/5 border border-white/70 p-6">
+        <h3 className="font-display text-base font-bold mb-4">Comment démarrer ?</h3>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-rose-vif text-white text-xs font-bold">1</span>
+            <p className="text-sm">Marquez la date de vos dernières règles dans le calendrier</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-violet-doux text-white text-xs font-bold">2</span>
+            <p className="text-sm">L'IA calcule automatiquement vos prédictions</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-lavande text-white text-xs font-bold">3</span>
+            <p className="text-sm">Recevez des conseils personnalisés chaque jour</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OnboardFeature({ gradient, emoji, title, desc }: { gradient: string; emoji: string; title: string; desc: string }) {
+  return (
+    <div className={`rounded-2xl bg-gradient-to-br ${gradient} p-5 text-white shadow-bloom`}>
+      <div className="text-2xl mb-2">{emoji}</div>
+      <p className="text-sm font-bold">{title}</p>
+      <p className="text-xs text-white/80 mt-1">{desc}</p>
     </div>
   );
 }

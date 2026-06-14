@@ -65,9 +65,20 @@ function Doctors() {
   const geocode = useServerFn(reverseGeocode);
 
   const globalResults = searchQuery.length >= 2 ? searchDoctorsByName(searchQuery) : null;
+
+  const effectiveCity = (() => {
+    if (citySearch.length >= 2) {
+      const match = CITIES.find(c => c.name.toLowerCase() === citySearch.toLowerCase());
+      if (match) return match.id;
+      const partial = CITIES.find(c => c.name.toLowerCase().includes(citySearch.toLowerCase()));
+      if (partial) return partial.id;
+    }
+    return selectedCity;
+  })();
+
   const matchedDoctors = globalResults
     ? globalResults.filter(d => selectedSpecialty === "Toutes" || d.specialty.toLowerCase().includes(selectedSpecialty.toLowerCase()))
-    : searchDoctors(selectedCity, selectedSpecialty);
+    : searchDoctors(effectiveCity, selectedSpecialty);
   const doctors = [...matchedDoctors].sort((a, b) => sortBy === "rating" ? b.rating - a.rating : sortBy === "slot" ? a.nextSlot.localeCompare(b.nextSlot) : 0);
 
   const filteredCities = citySearch
@@ -83,36 +94,39 @@ function Doctors() {
       setDetecting(false);
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        const nearest = findNearestCity(latitude, longitude);
-        setSelectedCity(nearest);
-        const cityName = CITIES.find((city) => city.id === nearest)?.name || "Ville détectée";
-        try {
-          const location = await geocode({ data: { latitude, longitude } });
-          setDetectedAddress(location.formattedAddress);
-          setCitySearch(location.city || cityName);
-          toast.success("Position détectée", { description: location.formattedAddress });
-        } catch {
-          setDetectedAddress(cityName);
-          setCitySearch(cityName);
-          toast.success("Position détectée", { description: `Ville la plus proche : ${cityName}` });
-        } finally {
-          setDetecting(false);
-        }
-      },
-      (err) => {
-        const messages: Record<number, string> = {
-          1: "Autorisation refusée. Activez la localisation dans les réglages de votre navigateur, puis réessayez.",
-          2: "Votre position est indisponible. Vérifiez le GPS ou sélectionnez votre ville manuellement.",
-          3: "La détection a expiré. Rapprochez-vous d’une fenêtre ou sélectionnez votre ville manuellement.",
-        };
-        setGeoError(messages[err.code] || "Impossible de détecter votre position. Sélectionnez votre ville manuellement.");
-        setDetecting(false);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-    );
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000,
+        });
+      });
+      const { latitude, longitude } = position.coords;
+      const nearest = findNearestCity(latitude, longitude);
+      setSelectedCity(nearest);
+      const cityName = CITIES.find((city) => city.id === nearest)?.name || "Ville détectée";
+      try {
+        const location = await geocode({ data: { latitude, longitude } });
+        setDetectedAddress(location.formattedAddress);
+        setCitySearch(location.city || cityName);
+        toast.success("Position détectée", { description: location.formattedAddress });
+      } catch {
+        setDetectedAddress(cityName);
+        setCitySearch(cityName);
+        toast.success("Position détectée", { description: `Ville la plus proche : ${cityName}` });
+      }
+    } catch (err: unknown) {
+      const geoErr = err as GeolocationPositionError;
+      const messages: Record<number, string> = {
+        1: "Autorisation refusée. Activez la localisation dans les réglages de votre navigateur, puis réessayez.",
+        2: "Votre position est indisponible. Vérifiez le GPS ou sélectionnez votre ville manuellement.",
+        3: "La détection a expiré. Rapprochez-vous d’une fenêtre ou sélectionnez votre ville manuellement.",
+      };
+      setGeoError(geoErr?.code ? messages[geoErr.code] : "Impossible de détecter votre position. Sélectionnez votre ville manuellement.");
+    } finally {
+      setDetecting(false);
+    }
   };
 
   if (selectedDoctor) {
@@ -256,7 +270,7 @@ function Doctors() {
       {/* Results count */}
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm text-foreground/60">
-          <span className="font-semibold text-foreground">{doctors.length} médecins</span> {globalResults ? `trouvés pour "${searchQuery}"` : `disponibles à ${CITIES.find(c => c.id === selectedCity)?.name}`}
+          <span className="font-semibold text-foreground">{doctors.length} médecins</span> {globalResults ? `trouvés pour "${searchQuery}"` : `disponibles à ${CITIES.find(c => c.id === effectiveCity)?.name || CITIES.find(c => c.id === selectedCity)?.name}`}
         </p>
         <select value={sortBy} onChange={(event) => setSortBy(event.target.value as "slot" | "rating" | "distance")} className="rounded-xl border border-border bg-white/80 px-3 py-1.5 text-xs outline-none">
           <option value="slot">Prochain créneau</option>
