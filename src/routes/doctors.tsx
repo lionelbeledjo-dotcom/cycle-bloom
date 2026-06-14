@@ -77,8 +77,9 @@ function Doctors() {
   const detectLocation = async () => {
     setDetecting(true);
     setGeoError("");
+    setDetectedAddress("");
     if (!navigator.geolocation) {
-      setGeoError("La géolocalisation n'est pas disponible sur votre appareil.");
+      setGeoError("La géolocalisation n’est pas disponible sur votre appareil.");
       setDetecting(false);
       return;
     }
@@ -87,14 +88,16 @@ function Doctors() {
         const { latitude, longitude } = position.coords;
         const nearest = findNearestCity(latitude, longitude);
         setSelectedCity(nearest);
+        const cityName = CITIES.find((city) => city.id === nearest)?.name || "Ville détectée";
         try {
           const location = await geocode({ data: { latitude, longitude } });
           setDetectedAddress(location.formattedAddress);
-          setCitySearch(location.city || CITIES.find((city) => city.id === nearest)?.name || "");
+          setCitySearch(location.city || cityName);
           toast.success("Position détectée", { description: location.formattedAddress });
-        } catch (error) {
-          setDetectedAddress(CITIES.find((city) => city.id === nearest)?.name || "Position détectée");
-          setGeoError(error instanceof Error ? error.message : "Votre ville la plus proche a été sélectionnée.");
+        } catch {
+          setDetectedAddress(cityName);
+          setCitySearch(cityName);
+          toast.success("Position détectée", { description: `Ville la plus proche : ${cityName}` });
         } finally {
           setDetecting(false);
         }
@@ -108,7 +111,7 @@ function Doctors() {
         setGeoError(messages[err.code] || "Impossible de détecter votre position. Sélectionnez votre ville manuellement.");
         setDetecting(false);
       },
-      { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   };
 

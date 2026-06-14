@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 type PasswordFieldProps = Omit<React.ComponentProps<"input">, "type"> & {
-  label: string;
+  label?: string;
 };
 
 export function PasswordField({ label, className = "", ...props }: PasswordFieldProps) {
@@ -11,10 +11,12 @@ export function PasswordField({ label, className = "", ...props }: PasswordField
 
   return (
     <div>
-      <label htmlFor={id} className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-        {label}
-      </label>
-      <div className="relative mt-1.5">
+      {label && (
+        <label htmlFor={id} className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          {label}
+        </label>
+      )}
+      <div className={`relative ${label ? "mt-1.5" : ""}`}>
         <input
           {...props}
           id={id}
@@ -25,10 +27,10 @@ export function PasswordField({ label, className = "", ...props }: PasswordField
           type="button"
           aria-label={visible ? "Masquer le mot de passe" : "Afficher le mot de passe"}
           aria-pressed={visible}
-          onClick={() => setVisible((value) => !value)}
-          className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          onClick={() => setVisible((v) => !v)}
+          className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-90"
         >
-          {visible ? <EyeOff aria-hidden="true" className="h-4 w-4" /> : <Eye aria-hidden="true" className="h-4 w-4" />}
+          {visible ? <EyeOff aria-hidden="true" className="h-5 w-5" /> : <Eye aria-hidden="true" className="h-5 w-5" />}
         </button>
       </div>
     </div>

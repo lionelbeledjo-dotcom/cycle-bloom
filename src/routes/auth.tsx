@@ -22,11 +22,17 @@ function AuthPage() {
   const [forgotMode, setForgotMode] = useState(false);
   const [inlineError, setInlineError] = useState("");
 
-  // Redirect if already logged in
+  // Redirect if already logged in + listen for auth changes (OAuth redirect, email confirm)
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/dashboard", replace: true });
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate({ to: "/dashboard", replace: true });
     });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        navigate({ to: "/dashboard", replace: true });
+      }
+    });
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {

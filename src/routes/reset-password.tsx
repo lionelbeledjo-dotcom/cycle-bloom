@@ -19,8 +19,14 @@ function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const recovery = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
-    supabase.auth.getSession().then(({ data }) => setReady(recovery || Boolean(data.session)));
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const queryParams = new URLSearchParams(window.location.search);
+    const isRecovery = hashParams.get("type") === "recovery" || queryParams.get("type") === "recovery";
+    supabase.auth.getSession().then(({ data }) => setReady(isRecovery || Boolean(data.session)));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") setReady(true);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const submit = async (event: React.FormEvent) => {
