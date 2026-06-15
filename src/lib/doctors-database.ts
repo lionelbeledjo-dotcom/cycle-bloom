@@ -138,6 +138,15 @@ const EDUCATION_POOL = [
   "CHU Rennes", "Université Paris-Saclay", "CHU Grenoble-Alpes",
 ];
 
+function getDoctolibSpecialtySlug(specialty: string): string {
+  if (specialty.includes("Sage-femme")) return "sage-femme";
+  if (specialty.includes("Obstétrique")) return "gynecologue-obstetricien";
+  if (specialty.includes("Endocrinologie")) return "endocrinologue";
+  if (specialty.includes("reproduction")) return "medecin-de-la-reproduction";
+  if (specialty.includes("chirurgicale")) return "chirurgien-gynecologue";
+  return "gynecologue";
+}
+
 function generateDoctors(cityId: string, cityName: string, postalPrefix: string, count: number): Doctor[] {
   const doctors: Doctor[] = [];
 
@@ -181,7 +190,8 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
     const rating = 4.2 + (((i * 17 + cityId.charCodeAt(0)) % 8) / 10);
     const reviews = 30 + ((i * 23 + cityId.length * 5) % 400);
 
-    const doctolibSearch = encodeURIComponent(`${firstName} ${lastName} ${specialty} ${cityName}`);
+    const specialtySlug = getDoctolibSpecialtySlug(specialty);
+    const citySlug = cityId;
 
     doctors.push({
       id: `${cityId}-${i}`,
@@ -210,7 +220,7 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
       services,
       hours,
       slots,
-      doctolibUrl: `https://www.doctolib.fr/recherche?q=${doctolibSearch}`,
+      doctolibUrl: `https://www.doctolib.fr/${specialtySlug}/${citySlug}`,
     });
   }
 
