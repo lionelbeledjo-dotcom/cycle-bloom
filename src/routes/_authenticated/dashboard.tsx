@@ -153,27 +153,27 @@ function Dashboard() {
 
           {/* Phase-specific goal cards (Flo-style) */}
           <div className="grid gap-4 sm:grid-cols-3">
-            <GoalCard
+            <LifecycleCard
               to="/guide-cycle"
-              active={info.phase === "period" || info.phase === "follicular" || info.phase === "luteal"}
-              gradient="from-rose-400 to-pink-500"
-              emoji="🩸"
+              bgColor="bg-rose-50"
+              iconBg="bg-rose-vif"
+              icon={<Droplet className="h-6 w-6 text-white" />}
               title="Suivre mes règles"
               subtitle="Suivi du cycle menstruel"
             />
-            <GoalCard
+            <LifecycleCard
               to="/guide-fertilite"
-              active={info.phase === "fertile" || info.phase === "ovulation"}
-              gradient="from-violet-400 to-purple-500"
-              emoji="🥚"
+              bgColor="bg-blue-50"
+              iconBg="bg-blue-500"
+              icon={<Sun className="h-6 w-6 text-white" />}
               title="Suivi de l'ovulation"
               subtitle="Pour tomber enceinte"
             />
-            <GoalCard
+            <LifecycleCard
               to="/guide-grossesse"
-              active={false}
-              gradient="from-orange-400 to-amber-500"
-              emoji="🤰"
+              bgColor="bg-orange-50"
+              iconBg="bg-orange-500"
+              icon={<Baby className="h-6 w-6 text-white" />}
               title="Suivi de grossesse"
               subtitle="40 semaines de suivi"
             />
@@ -217,20 +217,32 @@ function OnboardingState() {
 
       {/* Feature Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Link to="/guide-cycle" className="rounded-2xl bg-gradient-to-br from-rose-400 to-pink-500 p-5 text-white shadow-bloom hover:scale-[1.02] transition block">
-          <div className="text-2xl mb-2">🩸</div>
-          <p className="text-sm font-bold">Suivi du cycle</p>
-          <p className="text-xs text-white/80 mt-1">Prédictions de règles et d'ovulation basées sur l'IA</p>
+        <Link to="/guide-cycle" className="rounded-3xl bg-rose-50 p-6 hover:scale-[1.02] hover:shadow-lg transition block group">
+          <div className="flex flex-col items-center text-center">
+            <div className="h-14 w-14 rounded-full bg-rose-vif flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 transition">
+              <Droplet className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm font-bold text-foreground">Suivi du cycle</p>
+            <p className="text-xs text-foreground/50 mt-1">Prédictions de règles et d'ovulation basées sur l'IA</p>
+          </div>
         </Link>
-        <Link to="/guide-fertilite" className="rounded-2xl bg-gradient-to-br from-violet-400 to-purple-500 p-5 text-white shadow-bloom hover:scale-[1.02] transition block">
-          <div className="text-2xl mb-2">🥚</div>
-          <p className="text-sm font-bold">Fenêtre de fertilité</p>
-          <p className="text-xs text-white/80 mt-1">Découvrez vos jours les plus fertiles avec précision</p>
+        <Link to="/guide-fertilite" className="rounded-3xl bg-blue-50 p-6 hover:scale-[1.02] hover:shadow-lg transition block group">
+          <div className="flex flex-col items-center text-center">
+            <div className="h-14 w-14 rounded-full bg-blue-500 flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 transition">
+              <Sun className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm font-bold text-foreground">Fenêtre de fertilité</p>
+            <p className="text-xs text-foreground/50 mt-1">Découvrez vos jours les plus fertiles avec précision</p>
+          </div>
         </Link>
-        <Link to="/guide-grossesse" className="rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 p-5 text-white shadow-bloom hover:scale-[1.02] transition block">
-          <div className="text-2xl mb-2">🤰</div>
-          <p className="text-sm font-bold">Suivi de grossesse</p>
-          <p className="text-xs text-white/80 mt-1">40 semaines de suivi personnalisé et conseils</p>
+        <Link to="/guide-grossesse" className="rounded-3xl bg-orange-50 p-6 hover:scale-[1.02] hover:shadow-lg transition block group">
+          <div className="flex flex-col items-center text-center">
+            <div className="h-14 w-14 rounded-full bg-orange-500 flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 transition">
+              <Baby className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm font-bold text-foreground">Suivi de grossesse</p>
+            <p className="text-xs text-foreground/50 mt-1">40 semaines de suivi personnalisé et conseils</p>
+          </div>
         </Link>
       </div>
 
@@ -330,12 +342,16 @@ function PredictionCard({ to, icon, iconBg, title, value, subtitle }: { to: stri
   );
 }
 
-function GoalCard({ to, active, gradient, emoji, title, subtitle }: { to: string; active: boolean; gradient: string; emoji: string; title: string; subtitle: string }) {
+function LifecycleCard({ to, bgColor, iconBg, icon, title, subtitle }: { to: string; bgColor: string; iconBg: string; icon: React.ReactNode; title: string; subtitle: string }) {
   return (
-    <Link to={to} className={`rounded-2xl p-5 transition hover:scale-[1.02] ${active ? `bg-gradient-to-br ${gradient} text-white shadow-bloom` : "border border-white/70 glass shadow-sm"}`}>
-      <div className="text-2xl mb-2">{emoji}</div>
-      <p className={`text-sm font-bold ${active ? "text-white" : "text-foreground"}`}>{title}</p>
-      <p className={`text-[11px] mt-0.5 ${active ? "text-white/80" : "text-foreground/50"}`}>{subtitle}</p>
+    <Link to={to} className={`rounded-3xl ${bgColor} p-6 transition hover:scale-[1.02] hover:shadow-lg group`}>
+      <div className="flex flex-col items-center text-center">
+        <div className={`h-14 w-14 rounded-full ${iconBg} flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 transition`}>
+          {icon}
+        </div>
+        <p className="text-sm font-bold text-foreground">{title}</p>
+        <p className="text-[11px] mt-0.5 text-foreground/50">{subtitle}</p>
+      </div>
     </Link>
   );
 }

@@ -181,7 +181,7 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
     const rating = 4.2 + (((i * 17 + cityId.charCodeAt(0)) % 8) / 10);
     const reviews = 30 + ((i * 23 + cityId.length * 5) % 400);
 
-    const doctolibSearch = encodeURIComponent(`${specialty} ${cityName}`);
+    const doctolibSearch = encodeURIComponent(`${firstName} ${lastName} ${specialty} ${cityName}`);
 
     doctors.push({
       id: `${cityId}-${i}`,
