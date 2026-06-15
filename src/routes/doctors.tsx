@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
 import { useState } from "react";
-import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2, History } from "lucide-react";
+import { Phone, Video, MapPin, Clock, Star, Shield, Globe, Search, ChevronLeft, Calendar, CheckCircle2, AlertTriangle, Navigation, Loader2, History, BadgeCheck } from "lucide-react";
 import { CITIES, searchDoctors, searchDoctorsByName, findNearestCity, type Doctor } from "@/lib/doctors-database";
 import { toast } from "sonner";
 import { reverseGeocode } from "@/lib/geocoding.functions";
@@ -178,10 +178,15 @@ function Doctors() {
   return (
     <AppShell title="Trouver un médecin">
       <div className="-mt-4 mb-6 flex items-center justify-between">
-        <p className="text-sm text-foreground/70">
-          Prenez rendez-vous avec un gynécologue, une sage-femme ou un spécialiste près de chez vous.
-        </p>
-        <button onClick={() => setShowHistory(true)} className="flex items-center gap-2 rounded-full border border-border bg-white/70 px-4 py-2 text-xs font-medium hover:bg-white transition">
+        <div>
+          <p className="text-sm text-foreground/70">
+            Prenez rendez-vous avec un gynécologue, une sage-femme ou un spécialiste près de chez vous.
+          </p>
+          <p className="mt-1 flex items-center gap-1.5 text-[10px] text-green-700 font-medium">
+            <BadgeCheck className="h-3.5 w-3.5" /> Données officielles — Annuaire Santé (RPPS / Ameli)
+          </p>
+        </div>
+        <button onClick={() => setShowHistory(true)} className="flex items-center gap-2 rounded-full border border-border bg-white/70 px-4 py-2 text-xs font-medium hover:bg-white transition shrink-0">
           <History className="h-3.5 w-3.5 text-violet-doux" /> Mes RDV
         </button>
       </div>
@@ -327,6 +332,11 @@ function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => vo
           </div>
           <div className="mt-1.5 flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {doctor.address}, {doctor.city}</span>
+            {doctor.phone && (
+              <a href={`tel:${doctor.phone}`} className="flex items-center gap-1 text-rose-vif hover:underline" onClick={e => e.stopPropagation()}>
+                <Phone className="h-3 w-3" /> {doctor.phone.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5")}
+              </a>
+            )}
           </div>
           <div className="mt-1 flex items-center gap-3 text-xs">
             <span className="flex items-center gap-1">
@@ -334,6 +344,11 @@ function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => vo
               <span className="font-medium">{doctor.rating}</span>
               <span className="text-muted-foreground">({doctor.reviews} avis)</span>
             </span>
+            {doctor.sector && (
+              <span className="flex items-center gap-1 text-muted-foreground">
+                <Shield className="h-3 w-3" /> {doctor.sector}
+              </span>
+            )}
             <span className="flex items-center gap-1 text-muted-foreground">
               <Globe className="h-3 w-3" /> {doctor.languages.join(", ")}
             </span>

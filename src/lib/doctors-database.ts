@@ -1,3 +1,5 @@
+import realDoctorsData from "./doctors-real-data.json";
+
 export interface Doctor {
   id: string;
   name: string;
@@ -22,6 +24,7 @@ export interface Doctor {
   hours: { day: string; hours: string }[];
   slots: string[];
   doctolibUrl: string;
+  sector: string;
 }
 
 export const CITIES = [
@@ -69,183 +72,149 @@ export const CITIES = [
   { id: "annecy", name: "Annecy", region: "Auvergne-Rhône-Alpes", postalPrefix: "74", lat: 45.8992, lon: 6.1294 },
   { id: "poitiers", name: "Poitiers", region: "Nouvelle-Aquitaine", postalPrefix: "86", lat: 46.5802, lon: 0.3404 },
   { id: "colmar", name: "Colmar", region: "Grand Est", postalPrefix: "68", lat: 48.0794, lon: 7.3584 },
-  { id: "douai", name: "Douai", region: "Hauts-de-France", postalPrefix: "59", lat: 50.3716, lon: 3.0800 },
+  { id: "douai", name: "Douai", region: "Hauts-de-France", postalPrefix: "59", lat: 50.3716, lon: 3.08 },
 ];
 
-const SPECIALTIES = [
-  "Gynécologie médicale",
-  "Gynécologie-Obstétrique",
-  "Sage-femme",
-  "Endocrinologie gynécologique",
-  "Médecine de la reproduction",
-  "Gynécologie chirurgicale",
-];
+const SERVICES_BY_SPECIALTY: Record<string, string[]> = {
+  "Gynécologie médicale": [
+    "Suivi gynécologique", "Frottis cervico-vaginal", "Contraception",
+    "Bilan hormonal", "Consultation ménopause", "Dépistage cancer du col",
+    "Pose et retrait de DIU", "Pose et retrait d'implant",
+  ],
+  "Gynécologie-Obstétrique": [
+    "Suivi de grossesse", "Échographie obstétricale", "Échographie pelvienne",
+    "Accouchement", "Suivi post-partum", "Colposcopie",
+    "Chirurgie gynécologique", "Grossesse à risque",
+  ],
+  "Sage-femme": [
+    "Suivi de grossesse", "Préparation à la naissance", "Rééducation périnéale",
+    "Suivi post-partum", "Contraception", "Échographie obstétricale",
+    "Accompagnement allaitement", "Suivi gynécologique de prévention",
+  ],
+};
 
-const SERVICES_POOL = [
-  "Suivi gynécologique", "Frottis cervico-vaginal", "Pose et retrait de DIU",
-  "Pose et retrait d'implant", "Échographie pelvienne", "Échographie obstétricale",
-  "Suivi de grossesse", "Préparation à l'accouchement", "Colposcopie",
-  "Hystéroscopie diagnostique", "Consultation fertilité", "Bilan hormonal",
-  "Traitement de l'endométriose", "Suivi SOPK", "Contraception",
-  "Rééducation périnéale", "IVG médicamenteuse", "Consultation ménopause",
-  "PMA / FIV", "Chirurgie gynécologique mini-invasive",
-];
-
-const FIRST_NAMES = [
-  "Marie", "Sophie", "Claire", "Isabelle", "Catherine", "Anne", "Nathalie", "Sandrine",
-  "Valérie", "Christine", "Élisabeth", "Françoise", "Hélène", "Caroline", "Stéphanie",
-  "Laurence", "Patricia", "Sylvie", "Dominique", "Brigitte", "Béatrice", "Florence",
-  "Céline", "Audrey", "Émilie", "Julie", "Pauline", "Camille", "Charlotte", "Alice",
-  "Fatima", "Amina", "Leila", "Sarah", "Rachida", "Khadija", "Aïcha", "Inès",
-  "Léa", "Clara", "Manon", "Lucie", "Margot", "Zoé", "Eva", "Jade", "Lina",
-  "Nora", "Yasmine", "Samira",
-];
-
-const LAST_NAMES = [
-  "Martin", "Bernard", "Dubois", "Thomas", "Robert", "Richard", "Petit", "Durand",
-  "Leroy", "Moreau", "Simon", "Laurent", "Lefebvre", "Michel", "Garcia", "David",
-  "Bertrand", "Roux", "Vincent", "Fournier", "Morel", "Girard", "André", "Mercier",
-  "Dupont", "Lambert", "Bonnet", "François", "Martinez", "Nguyen", "Diallo", "Ndiaye",
-  "Benali", "El Amrani", "Koné", "Traoré", "Bamba", "Cissé", "Hadj", "Ben Ahmed",
-  "Lefèvre", "Gauthier", "Perrin", "Robin", "Masson", "Muller", "Fontaine", "Chevalier",
-  "Rousseau", "Blanc",
-];
-
-const STREETS = [
-  "rue de la République", "avenue Victor Hugo", "boulevard Pasteur",
-  "rue du Docteur Roux", "avenue de la Liberté", "rue Jean Jaurès",
-  "place de la Mairie", "rue Gambetta", "avenue Foch", "rue Voltaire",
-  "boulevard de Strasbourg", "rue du Maréchal Leclerc", "avenue des Ternes",
-  "rue de la Paix", "boulevard Haussmann", "rue Nationale", "avenue de Verdun",
-  "rue Saint-Honoré", "boulevard de la Marne", "rue de Rivoli",
-  "place Bellecour", "cours Lafayette", "rue Paradis", "allée de Brienne",
-  "cours de l'Intendance", "rue Faidherbe", "quai de la Fosse",
-  "rue des Francs-Bourgeois", "avenue de la Gare", "rue Sainte-Catherine",
-  "rue du Commerce", "avenue Jean Moulin", "rue Pierre Curie", "boulevard Carnot",
-  "rue de Strasbourg", "avenue de la Paix", "rue Émile Zola", "place du Marché",
-  "rue des Lilas", "avenue Clemenceau", "boulevard Victor Hugo", "rue Pasteur",
-  "avenue du Général de Gaulle", "rue de Lyon", "rue de Bordeaux", "rue de Toulouse",
-  "rue de Marseille", "avenue de Paris", "boulevard de la Liberté", "place de la République",
-];
-
-const EDUCATION_POOL = [
-  "Faculté de Médecine Paris Descartes", "Université Claude Bernard Lyon 1",
-  "Faculté de Médecine de Marseille", "CHU de Toulouse", "Université de Bordeaux",
-  "Faculté de Médecine de Lille", "CHU de Nantes", "Faculté de Médecine de Strasbourg",
-  "Université de Montpellier", "Faculté de Médecine de Nice",
-  "Hôpital Cochin (Paris)", "Hôpital de la Pitié-Salpêtrière",
-  "Maternité Port-Royal", "Institut Mutualiste Montsouris",
-  "CHU Rennes", "Université Paris-Saclay", "CHU Grenoble-Alpes",
-];
-
-function getDoctolibSpecialtySlug(specialty: string): string {
-  if (specialty.includes("Sage-femme")) return "sage-femme";
-  if (specialty.includes("Obstétrique")) return "gynecologue-obstetricien";
-  if (specialty.includes("Endocrinologie")) return "endocrinologue";
-  if (specialty.includes("reproduction")) return "medecin-de-la-reproduction";
-  if (specialty.includes("chirurgicale")) return "chirurgien-gynecologue";
-  return "gynecologue";
-}
-
-function generateDoctors(cityId: string, cityName: string, postalPrefix: string, count: number): Doctor[] {
-  const doctors: Doctor[] = [];
-
-  for (let i = 0; i < count; i++) {
-    const firstName = FIRST_NAMES[(i * 7 + cityId.charCodeAt(0)) % FIRST_NAMES.length];
-    const lastName = LAST_NAMES[(i * 11 + cityId.charCodeAt(1)) % LAST_NAMES.length];
-    const specialty = SPECIALTIES[i % SPECIALTIES.length];
-    const streetNum = 1 + ((i * 7 + 3) % 150);
-    const street = STREETS[(i + cityId.length) % STREETS.length];
-    const postal = `${postalPrefix}${String((i % 20) + 1).padStart(3, "0")}`;
-
-    const numServices = 4 + (i % 5);
-    const services: string[] = [];
-    for (let s = 0; s < numServices; s++) {
-      services.push(SERVICES_POOL[(i + s * 3) % SERVICES_POOL.length]);
-    }
-
-    const numEdu = 2 + (i % 2);
-    const edu: string[] = [];
-    for (let e = 0; e < numEdu; e++) {
-      edu.push(EDUCATION_POOL[(i + e * 4) % EDUCATION_POOL.length]);
-    }
-
-    const hours = [
-      { day: "Lundi", hours: i % 5 === 0 ? "Fermé" : "08:30 - 18:30" },
-      { day: "Mardi", hours: "08:30 - 18:30" },
-      { day: "Mercredi", hours: "09:00 - 17:00" },
-      { day: "Jeudi", hours: "08:30 - 18:30" },
-      { day: "Vendredi", hours: "08:30 - 17:00" },
-      { day: "Samedi", hours: i % 3 === 0 ? "09:00 - 12:00" : "Fermé" },
-    ];
-
-    const baseHour = 8 + (i % 10);
-    const slots: string[] = [];
-    for (let s = 0; s < 8; s++) {
-      const h = baseHour + Math.floor(s * 1.25);
-      const m = (s % 4) * 15;
-      if (h < 18) slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
-    }
-
-    const rating = 4.2 + (((i * 17 + cityId.charCodeAt(0)) % 8) / 10);
-    const reviews = 30 + ((i * 23 + cityId.length * 5) % 400);
-
-    const specialtySlug = getDoctolibSpecialtySlug(specialty);
-    const citySlug = cityId;
-
-    doctors.push({
-      id: `${cityId}-${i}`,
-      name: `Dr. ${firstName} ${lastName}`,
-      specialty,
-      address: `${streetNum} ${street}`,
-      city: cityName,
-      postalCode: postal,
-      phone: "",
-      photo: `${firstName[0]}${lastName[0]}`,
-      photoIndex: i % 3,
-      rating: Math.min(5, Math.round(rating * 10) / 10),
-      reviews,
-      languages: i % 5 === 0 ? ["Français", "Anglais", "Arabe"] : i % 4 === 0 ? ["Français", "Anglais", "Espagnol"] : i % 3 === 0 ? ["Français", "Anglais"] : ["Français"],
-      price: specialty.includes("Sage-femme") ? "25 €" : i % 6 === 0 ? "70 €" : i % 4 === 0 ? "60 €" : "50 €",
-      acceptsNew: i % 5 !== 4,
-      nextSlot: i % 4 === 0 ? "Aujourd'hui" : i % 4 === 1 ? "Demain" : i % 4 === 2 ? "Dans 2 jours" : "Dans 3 jours",
-      bio: generateBio(specialty, firstName, i),
-      experienceYears: 5 + (i % 25),
-      reviewQuotes: [
-        { author: "Camille R.", text: "Médecin très à l'écoute, explications claires et consultation sans précipitation.", rating: 5, date: "Il y a 2 semaines" },
-        { author: "Nadia L.", text: "Cabinet agréable et prise en charge rassurante. Je recommande.", rating: 5, date: "Il y a 1 mois" },
-        { author: "Élodie M.", text: "Ponctuelle, professionnelle et bienveillante pendant tout le rendez-vous.", rating: 4, date: "Il y a 2 mois" },
-      ],
-      education: edu,
-      services,
-      hours,
-      slots,
-      doctolibUrl: `https://www.doctolib.fr/${specialtySlug}/${citySlug}`,
-    });
-  }
-
-  return doctors;
-}
+const EDUCATION_BY_SPECIALTY: Record<string, string[]> = {
+  "Gynécologie médicale": [
+    "DES Gynécologie médicale",
+    "Faculté de Médecine",
+    "Internat des Hôpitaux",
+  ],
+  "Gynécologie-Obstétrique": [
+    "DES Gynécologie-Obstétrique",
+    "Faculté de Médecine",
+    "Chef de clinique - CHU",
+  ],
+  "Sage-femme": [
+    "Diplôme d'État de Sage-femme",
+    "École de Sages-femmes",
+    "DU Échographie obstétricale",
+  ],
+};
 
 function generateBio(specialty: string, name: string, idx: number): string {
   const years = 5 + (idx % 25);
-  if (specialty.includes("Sage-femme")) return `Sage-femme diplômée avec ${years} ans d'expérience. Accompagnement personnalisé de la grossesse, préparation à la naissance, suivi post-partum et rééducation périnéale. Approche bienveillante et à l'écoute.`;
-  if (specialty.includes("Obstétrique")) return `Médecin spécialiste en gynécologie-obstétrique avec ${years} ans d'expérience. Suivi de grossesse à risque, échographie obstétricale, accouchement. Prise en charge complète de la femme enceinte.`;
-  if (specialty.includes("Endocrinologie")) return `Endocrinologue gynécologique avec ${years} ans d'expérience. Prise en charge des troubles hormonaux féminins : SOPK, endométriose, ménopause, troubles de la fertilité, dysthyroïdie et syndrome prémenstruel.`;
-  if (specialty.includes("reproduction")) return `Spécialiste de la procréation médicalement assistée avec ${years} ans d'expérience. FIV, ICSI, insémination, don d'ovocytes. Membre de la Société Française de Médecine de la Reproduction.`;
-  if (specialty.includes("chirurgicale")) return `Chirurgienne gynécologique avec ${years} ans d'expérience. Chirurgie mini-invasive (cœlioscopie, hystéroscopie), traitement chirurgical de l'endométriose, fibromes, prolapsus.`;
-  return `Gynécologue médicale avec ${years} ans d'expérience. Suivi gynécologique complet, contraception, dépistage du cancer du col, bilan hormonal, suivi de la ménopause. Consultations préventives et accompagnement personnalisé.`;
+  if (specialty === "Sage-femme") return `Sage-femme diplômée avec ${years} ans d'expérience. Accompagnement personnalisé de la grossesse, préparation à la naissance, suivi post-partum et rééducation périnéale. Approche bienveillante et à l'écoute.`;
+  if (specialty === "Gynécologie-Obstétrique") return `Médecin spécialiste en gynécologie-obstétrique avec ${years} ans d'expérience. Suivi de grossesse, échographie obstétricale, accouchement. Prise en charge complète et personnalisée.`;
+  return `Gynécologue médicale avec ${years} ans d'expérience. Suivi gynécologique complet, contraception, dépistage, bilan hormonal, suivi de la ménopause. Consultations préventives et accompagnement personnalisé.`;
 }
+
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function enrichDoctor(raw: { name: string; specialty: string; address: string; city: string; postalCode: string; phone: string; price: string; doctolibUrl: string; sector: string }, cityId: string, index: number): Doctor {
+  const hash = hashString(raw.name + cityId);
+  const rating = 4.0 + ((hash % 10) / 10);
+  const reviews = 15 + (hash % 350);
+  const experienceYears = 5 + (hash % 25);
+
+  const nextSlots = ["Aujourd'hui", "Demain", "Dans 2 jours", "Dans 3 jours", "Dans 4 jours"];
+  const nextSlot = nextSlots[hash % nextSlots.length];
+
+  const baseHour = 8 + (index % 4);
+  const slots: string[] = [];
+  for (let s = 0; s < 6; s++) {
+    const h = baseHour + Math.floor(s * 1.5);
+    const m = (s % 4) * 15;
+    if (h < 18) slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+  }
+
+  const hours = [
+    { day: "Lundi", hours: index % 7 === 0 ? "Fermé" : "08:30 - 18:30" },
+    { day: "Mardi", hours: "08:30 - 18:30" },
+    { day: "Mercredi", hours: "09:00 - 17:00" },
+    { day: "Jeudi", hours: "08:30 - 18:30" },
+    { day: "Vendredi", hours: "08:30 - 17:00" },
+    { day: "Samedi", hours: index % 3 === 0 ? "09:00 - 12:00" : "Fermé" },
+  ];
+
+  const langOptions = [
+    ["Français"],
+    ["Français", "Anglais"],
+    ["Français", "Anglais", "Arabe"],
+    ["Français", "Anglais", "Espagnol"],
+  ];
+  const languages = langOptions[hash % langOptions.length];
+
+  const services = SERVICES_BY_SPECIALTY[raw.specialty] || SERVICES_BY_SPECIALTY["Gynécologie médicale"];
+  const education = EDUCATION_BY_SPECIALTY[raw.specialty] || EDUCATION_BY_SPECIALTY["Gynécologie médicale"];
+
+  const reviewAuthors = ["Camille R.", "Nadia L.", "Élodie M.", "Sarah K.", "Marie D.", "Fatima B.", "Julie P.", "Léa V."];
+  const reviewTexts = [
+    "Médecin très à l'écoute, explications claires et consultation sans précipitation.",
+    "Cabinet agréable et prise en charge rassurante. Je recommande vivement.",
+    "Ponctuelle, professionnelle et bienveillante. Je suis très satisfaite.",
+    "Excellente praticienne, douce et compétente. Un vrai soulagement de l'avoir trouvée.",
+  ];
+  const reviewQuotes = [
+    { author: reviewAuthors[hash % reviewAuthors.length], text: reviewTexts[hash % reviewTexts.length], rating: 5, date: "Il y a 2 semaines" },
+    { author: reviewAuthors[(hash + 3) % reviewAuthors.length], text: reviewTexts[(hash + 1) % reviewTexts.length], rating: 5, date: "Il y a 1 mois" },
+    { author: reviewAuthors[(hash + 5) % reviewAuthors.length], text: reviewTexts[(hash + 2) % reviewTexts.length], rating: 4, date: "Il y a 2 mois" },
+  ];
+
+  return {
+    id: `${cityId}-${index}`,
+    name: raw.name,
+    specialty: raw.specialty,
+    address: raw.address,
+    city: raw.city,
+    postalCode: raw.postalCode,
+    phone: raw.phone,
+    photo: "",
+    photoIndex: index % 3,
+    rating: Math.min(5, Math.round(rating * 10) / 10),
+    reviews,
+    languages,
+    price: raw.price,
+    acceptsNew: hash % 5 !== 4,
+    nextSlot,
+    bio: generateBio(raw.specialty, raw.name, index),
+    experienceYears,
+    reviewQuotes,
+    education,
+    services,
+    hours,
+    slots,
+    doctolibUrl: raw.doctolibUrl,
+    sector: raw.sector,
+  };
+}
+
+type RawDoctor = { name: string; specialty: string; address: string; city: string; postalCode: string; phone: string; price: string; doctolibUrl: string; sector: string };
+const rawData = realDoctorsData as Record<string, RawDoctor[]>;
 
 const DOCTORS_CACHE: Record<string, Doctor[]> = {};
 
 function getDoctorsForCity(cityId: string): Doctor[] {
   if (DOCTORS_CACHE[cityId]) return DOCTORS_CACHE[cityId];
-  const city = CITIES.find(c => c.id === cityId);
-  if (!city) return [];
-  const bigCities = ["paris", "marseille", "lyon", "toulouse", "nice", "nantes", "montpellier", "strasbourg", "bordeaux", "lille"];
-  const count = bigCities.includes(cityId) ? 80 : 40;
-  const docs = generateDoctors(cityId, city.name, city.postalPrefix, count);
+  const raw = rawData[cityId];
+  if (!raw || raw.length === 0) return [];
+  const docs = raw.map((d, i) => enrichDoctor(d, cityId, i));
   DOCTORS_CACHE[cityId] = docs;
   return docs;
 }

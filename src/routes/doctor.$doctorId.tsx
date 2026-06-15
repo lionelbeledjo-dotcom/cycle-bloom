@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Calendar, CheckCircle2, Clock, Globe, MapPin, Star, ExternalLink } from "lucide-react";
+import { Calendar, CheckCircle2, Clock, Globe, MapPin, Star, ExternalLink, Phone, Shield } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { getDoctorById, type Doctor } from "@/lib/doctors-database";
 
@@ -52,6 +52,16 @@ function DoctorDetailPage() {
                   <span className="flex items-center gap-1"><Globe className="h-4 w-4" /> {doctor.languages.join(", ")}</span>
                 </div>
                 <p className="mt-3 flex items-center gap-1 text-sm"><MapPin className="h-4 w-4 text-rose-vif" /> {doctor.address}, {doctor.postalCode} {doctor.city}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                  {doctor.phone && (
+                    <a href={`tel:${doctor.phone}`} className="flex items-center gap-1 text-rose-vif hover:underline">
+                      <Phone className="h-3.5 w-3.5" /> {doctor.phone.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5")}
+                    </a>
+                  )}
+                  {doctor.sector && (
+                    <span className="flex items-center gap-1"><Shield className="h-3.5 w-3.5" /> {doctor.sector}</span>
+                  )}
+                </div>
               </div>
             </div>
           </section>
