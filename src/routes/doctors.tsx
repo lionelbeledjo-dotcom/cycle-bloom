@@ -15,10 +15,26 @@ export const Route = createFileRoute("/doctors")({
 
 const SPECIALTIES_FILTER = ["Toutes", "Gynécologie médicale", "Gynécologie-Obstétrique", "Sage-femme", "Endocrinologie", "Reproduction"];
 
-function getDoctorPhoto(doctor: Doctor): string {
-  const seed = doctor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const gender = "female";
-  return `https://i.pravatar.cc/150?u=${doctor.id}-${seed}-${gender}`;
+function DoctorAvatar({ doctor, size = "sm" }: { doctor: Doctor; size?: "sm" | "lg" }) {
+  const colors = [
+    "from-rose-400 to-pink-500",
+    "from-violet-400 to-purple-500",
+    "from-blue-400 to-indigo-500",
+    "from-emerald-400 to-teal-500",
+    "from-amber-400 to-orange-500",
+    "from-cyan-400 to-blue-500",
+    "from-fuchsia-400 to-pink-500",
+    "from-lime-400 to-emerald-500",
+  ];
+  const idx = doctor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const gradient = colors[idx % colors.length];
+  const initials = doctor.name.replace("Dr. ", "").split(" ").map(n => n[0]).join("").slice(0, 2);
+  const sizeClass = size === "lg" ? "h-20 w-20 text-2xl" : "h-14 w-14 text-base";
+  return (
+    <div className={`${sizeClass} rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold shadow-lg shrink-0`}>
+      {initials}
+    </div>
+  );
 }
 
 const EMERGENCY_NUMBERS = [
@@ -293,15 +309,15 @@ function Doctors() {
 
 function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => void }) {
   return (
-    <Link to="/doctor/$doctorId" params={{ doctorId: doctor.id }} onClick={onClick} className="block w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
+    <div className="block w-full text-left rounded-2xl border border-white/70 glass p-4 shadow-sm hover:shadow-bloom hover:-translate-y-0.5 transition">
       <div className="flex items-start gap-4">
-        <img src={getDoctorPhoto(doctor)} alt={`Portrait de ${doctor.name}`} loading="lazy" width={768} height={768} className="h-14 w-14 rounded-2xl object-cover shrink-0" />
+        <DoctorAvatar doctor={doctor} />
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <div>
+            <Link to="/doctor/$doctorId" params={{ doctorId: doctor.id }} onClick={onClick} className="hover:text-rose-vif transition">
               <h3 className="font-display font-bold text-sm">{doctor.name}</h3>
               <p className="text-xs text-violet-doux font-medium">{doctor.specialty}</p>
-            </div>
+            </Link>
             <div className="text-right shrink-0">
               <div className="text-sm font-bold text-rose-vif">{doctor.price}</div>
               {doctor.acceptsNew && (
@@ -325,17 +341,19 @@ function DoctorListItem({ doctor, onClick }: { doctor: Doctor; onClick: () => vo
           <div className="mt-2 flex items-center gap-2">
             <Clock className="h-3 w-3 text-green-600" />
             <span className="text-xs font-medium text-green-700">Prochain RDV : {doctor.nextSlot}</span>
-            <div className="ml-auto flex gap-1.5">
-              {doctor.slots.slice(0, 3).map(slot => (
-                <span key={slot} className="rounded-md bg-green-50 border border-green-200 px-2 py-0.5 text-[10px] font-medium text-green-700">
-                  {slot}
-                </span>
-              ))}
-            </div>
+            <a
+              href={doctor.doctolibUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={e => e.stopPropagation()}
+              className="ml-auto rounded-lg bg-blue-600 px-3 py-1.5 text-[10px] font-bold text-white hover:bg-blue-700 transition"
+            >
+              Prendre RDV
+            </a>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -383,8 +401,8 @@ export function DoctorProfile({
           Un email de confirmation a été envoyé. Pensez à apporter votre carte vitale et votre mutuelle.
         </div>
         <div className="mt-6 flex gap-3 justify-center">
-          <a href={`tel:${doctor.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 rounded-full border border-border bg-white/70 px-5 py-2.5 text-sm font-medium hover:bg-white transition">
-            <Phone className="h-4 w-4" /> Appeler le cabinet
+          <a href={doctor.doctolibUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition">
+            <Calendar className="h-4 w-4" /> Voir sur Doctolib
           </a>
           <button onClick={onBack} className="rounded-full bg-gradient-to-r from-rose-vif to-violet-doux px-5 py-2.5 text-sm font-semibold text-white shadow-bloom hover:scale-[1.02] transition">
             Retour aux résultats
@@ -406,7 +424,7 @@ export function DoctorProfile({
           {/* Header */}
           <div className="rounded-3xl border border-white/70 glass p-6 shadow-bloom">
             <div className="flex items-start gap-5">
-              <img src={getDoctorPhoto(doctor)} alt={`Portrait de ${doctor.name}`} width={768} height={768} className="h-20 w-20 rounded-2xl object-cover shrink-0" />
+              <DoctorAvatar doctor={doctor} size="lg" />
               <div className="flex-1">
                 <h1 className="font-display text-2xl font-bold">{doctor.name}</h1>
                 <p className="text-sm text-violet-doux font-medium">{doctor.specialty}</p>
@@ -507,15 +525,15 @@ export function DoctorProfile({
 
           {/* Contact */}
           <div className="rounded-3xl border border-white/70 glass p-5 shadow-bloom">
-            <h3 className="font-display font-bold text-sm mb-3">Contact</h3>
-            <a href={`tel:${doctor.phone.replace(/\s/g, "")}`} className="flex items-center gap-3 rounded-2xl bg-white/70 p-3 hover:bg-white transition mb-2">
-              <Phone className="h-4 w-4 text-rose-vif" />
-              <span className="text-sm font-medium">{doctor.phone}</span>
-            </a>
-            <div className="flex items-center gap-3 rounded-2xl bg-white/70 p-3">
+            <h3 className="font-display font-bold text-sm mb-3">Localisation</h3>
+            <div className="flex items-center gap-3 rounded-2xl bg-white/70 p-3 mb-2">
               <MapPin className="h-4 w-4 text-violet-doux" />
               <span className="text-xs">{doctor.address}, {doctor.postalCode} {doctor.city}</span>
             </div>
+            <a href={doctor.doctolibUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-2xl bg-blue-50 border border-blue-200 p-3 hover:bg-blue-100 transition">
+              <Calendar className="h-4 w-4 text-blue-600" />
+              <span className="text-xs font-medium text-blue-700">Voir disponibilités sur Doctolib</span>
+            </a>
           </div>
 
           {/* Booking */}

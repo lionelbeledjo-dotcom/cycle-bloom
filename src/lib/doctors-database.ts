@@ -21,6 +21,7 @@ export interface Doctor {
   services: string[];
   hours: { day: string; hours: string }[];
   slots: string[];
+  doctolibUrl: string;
 }
 
 export const CITIES = [
@@ -64,35 +65,11 @@ export const CITIES = [
   { id: "avignon", name: "Avignon", region: "Provence-Alpes-Côte d'Azur", postalPrefix: "84", lat: 43.9493, lon: 4.8055 },
   { id: "versailles", name: "Versailles", region: "Île-de-France", postalPrefix: "78", lat: 48.8014, lon: 2.1301 },
   { id: "pau", name: "Pau", region: "Nouvelle-Aquitaine", postalPrefix: "64", lat: 43.2951, lon: -0.3708 },
-  { id: "la-rochelle", name: "La Rochelle", region: "Nouvelle-Aquitaine", postalPrefix: "17", lat: 46.1603, lon: -1.1511 },
-  { id: "cannes", name: "Cannes", region: "Provence-Alpes-Côte d'Azur", postalPrefix: "06", lat: 43.5528, lon: 7.0174 },
-  { id: "antibes", name: "Antibes", region: "Provence-Alpes-Côte d'Azur", postalPrefix: "06", lat: 43.5804, lon: 7.1251 },
-  { id: "calais", name: "Calais", region: "Hauts-de-France", postalPrefix: "62", lat: 50.9513, lon: 1.8587 },
-  { id: "dunkerque", name: "Dunkerque", region: "Hauts-de-France", postalPrefix: "59", lat: 51.0343, lon: 2.3768 },
-  { id: "bayonne", name: "Bayonne", region: "Nouvelle-Aquitaine", postalPrefix: "64", lat: 43.4933, lon: -1.4753 },
-  { id: "chambery", name: "Chambéry", region: "Auvergne-Rhône-Alpes", postalPrefix: "73", lat: 45.5646, lon: 5.9178 },
-  { id: "lorient", name: "Lorient", region: "Bretagne", postalPrefix: "56", lat: 47.7483, lon: -3.3702 },
-  { id: "saint-nazaire", name: "Saint-Nazaire", region: "Pays de la Loire", postalPrefix: "44", lat: 47.2733, lon: -2.2137 },
-  { id: "valence", name: "Valence", region: "Auvergne-Rhône-Alpes", postalPrefix: "26", lat: 44.9334, lon: 4.8924 },
   { id: "roanne", name: "Roanne", region: "Auvergne-Rhône-Alpes", postalPrefix: "42", lat: 46.0341, lon: 4.0689 },
-  { id: "saint-malo", name: "Saint-Malo", region: "Bretagne", postalPrefix: "35", lat: 48.6493, lon: -2.0007 },
-  { id: "troyes", name: "Troyes", region: "Grand Est", postalPrefix: "10", lat: 48.2973, lon: 4.0744 },
-  { id: "bourges", name: "Bourges", region: "Centre-Val de Loire", postalPrefix: "18", lat: 47.0810, lon: 2.3988 },
-  { id: "colmar", name: "Colmar", region: "Grand Est", postalPrefix: "68", lat: 48.0794, lon: 7.3584 },
-  { id: "chartres", name: "Chartres", region: "Centre-Val de Loire", postalPrefix: "28", lat: 48.4566, lon: 1.4893 },
-  { id: "quimper", name: "Quimper", region: "Bretagne", postalPrefix: "29", lat: 47.9960, lon: -4.0999 },
-  { id: "vannes", name: "Vannes", region: "Bretagne", postalPrefix: "56", lat: 47.6559, lon: -2.7600 },
-  { id: "la-roche-sur-yon", name: "La Roche-sur-Yon", region: "Pays de la Loire", postalPrefix: "85", lat: 46.6705, lon: -1.4268 },
-  { id: "auxerre", name: "Auxerre", region: "Bourgogne-Franche-Comté", postalPrefix: "89", lat: 47.7979, lon: 3.5700 },
-  { id: "tarbes", name: "Tarbes", region: "Occitanie", postalPrefix: "65", lat: 43.2327, lon: 0.0782 },
-  { id: "albi", name: "Albi", region: "Occitanie", postalPrefix: "81", lat: 43.9283, lon: 2.1487 },
-  { id: "boulogne-billancourt", name: "Boulogne-Billancourt", region: "Île-de-France", postalPrefix: "92", lat: 48.8357, lon: 2.2413 },
-  { id: "nanterre", name: "Nanterre", region: "Île-de-France", postalPrefix: "92", lat: 48.8924, lon: 2.2069 },
-  { id: "creteil", name: "Créteil", region: "Île-de-France", postalPrefix: "94", lat: 48.7904, lon: 2.4559 },
-  { id: "poitiers", name: "Poitiers", region: "Nouvelle-Aquitaine", postalPrefix: "86", lat: 46.5802, lon: 0.3404 },
-  { id: "douai", name: "Douai", region: "Hauts-de-France", postalPrefix: "59", lat: 50.3716, lon: 3.0800 },
   { id: "annecy", name: "Annecy", region: "Auvergne-Rhône-Alpes", postalPrefix: "74", lat: 45.8992, lon: 6.1294 },
-  { id: "bourg-en-bresse", name: "Bourg-en-Bresse", region: "Auvergne-Rhône-Alpes", postalPrefix: "01", lat: 46.2054, lon: 5.2254 },
+  { id: "poitiers", name: "Poitiers", region: "Nouvelle-Aquitaine", postalPrefix: "86", lat: 46.5802, lon: 0.3404 },
+  { id: "colmar", name: "Colmar", region: "Grand Est", postalPrefix: "68", lat: 48.0794, lon: 7.3584 },
+  { id: "douai", name: "Douai", region: "Hauts-de-France", postalPrefix: "59", lat: 50.3716, lon: 3.0800 },
 ];
 
 const SPECIALTIES = [
@@ -172,12 +149,6 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
     const street = STREETS[(i + cityId.length) % STREETS.length];
     const postal = `${postalPrefix}${String((i % 20) + 1).padStart(3, "0")}`;
 
-    const p1 = String((i * 3 + 10) % 90 + 10);
-    const p2 = String((i * 7 + 20) % 90 + 10);
-    const p3 = String((i * 11 + 30) % 90 + 10);
-    const p4 = String((i * 13 + 40) % 90 + 10);
-    const phone = `04 ${p1} ${p2} ${p3} ${p4}`;
-
     const numServices = 4 + (i % 5);
     const services: string[] = [];
     for (let s = 0; s < numServices; s++) {
@@ -210,6 +181,8 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
     const rating = 4.2 + (((i * 17 + cityId.charCodeAt(0)) % 8) / 10);
     const reviews = 30 + ((i * 23 + cityId.length * 5) % 400);
 
+    const doctolibSearch = encodeURIComponent(`${specialty} ${cityName}`);
+
     doctors.push({
       id: `${cityId}-${i}`,
       name: `Dr. ${firstName} ${lastName}`,
@@ -217,7 +190,7 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
       address: `${streetNum} ${street}`,
       city: cityName,
       postalCode: postal,
-      phone,
+      phone: "",
       photo: `${firstName[0]}${lastName[0]}`,
       photoIndex: i % 3,
       rating: Math.min(5, Math.round(rating * 10) / 10),
@@ -229,7 +202,7 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
       bio: generateBio(specialty, firstName, i),
       experienceYears: 5 + (i % 25),
       reviewQuotes: [
-        { author: "Camille R.", text: "Médecin très à l’écoute, explications claires et consultation sans précipitation.", rating: 5, date: "Il y a 2 semaines" },
+        { author: "Camille R.", text: "Médecin très à l'écoute, explications claires et consultation sans précipitation.", rating: 5, date: "Il y a 2 semaines" },
         { author: "Nadia L.", text: "Cabinet agréable et prise en charge rassurante. Je recommande.", rating: 5, date: "Il y a 1 mois" },
         { author: "Élodie M.", text: "Ponctuelle, professionnelle et bienveillante pendant tout le rendez-vous.", rating: 4, date: "Il y a 2 mois" },
       ],
@@ -237,6 +210,7 @@ function generateDoctors(cityId: string, cityName: string, postalPrefix: string,
       services,
       hours,
       slots,
+      doctolibUrl: `https://www.doctolib.fr/recherche?q=${doctolibSearch}`,
     });
   }
 
