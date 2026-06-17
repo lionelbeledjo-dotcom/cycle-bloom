@@ -19,8 +19,8 @@ function ProfilePage() {
   const update = useUpdateProfile();
 
   const [firstName, setFirstName] = useState("");
-  const [cycleLength, setCycleLength] = useState(28);
-  const [periodLength, setPeriodLength] = useState(5);
+  const [cycleLengthStr, setCycleLengthStr] = useState("28");
+  const [periodLengthStr, setPeriodLengthStr] = useState("5");
   const [lastPeriod, setLastPeriod] = useState("");
   const [email, setEmail] = useState("");
   const [showSecurity, setShowSecurity] = useState(false);
@@ -28,14 +28,24 @@ function ProfilePage() {
   useEffect(() => {
     if (profile) {
       setFirstName(profile.first_name ?? "");
-      setCycleLength(profile.cycle_length);
-      setPeriodLength(profile.period_length);
+      setCycleLengthStr(String(profile.cycle_length));
+      setPeriodLengthStr(String(profile.period_length));
       setLastPeriod(profile.last_period_date ?? "");
     }
     supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ""));
   }, [profile]);
 
   const save = async () => {
+    const cycleLength = parseInt(cycleLengthStr) || 28;
+    const periodLength = parseInt(periodLengthStr) || 5;
+    if (cycleLength < 15 || cycleLength > 60) {
+      toast.error("La longueur du cycle doit être entre 15 et 60 jours");
+      return;
+    }
+    if (periodLength < 1 || periodLength > 15) {
+      toast.error("La durée des règles doit être entre 1 et 15 jours");
+      return;
+    }
     try {
       await update.mutateAsync({
         first_name: firstName,
@@ -111,12 +121,32 @@ function ProfilePage() {
             <h3 className="font-display text-lg font-semibold">Mon cycle</h3>
           </div>
           <Field label="Longueur moyenne du cycle (jours)">
-            <input type="number" min={15} max={60} value={cycleLength} onChange={(e) => setCycleLength(parseInt(e.target.value) || 28)}
-              className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20" />
+            <div className="relative">
+              <input type="number" min={15} max={60} value={cycleLengthStr} onChange={(e) => setCycleLengthStr(e.target.value)}
+                placeholder="28"
+                className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20" />
+              {cycleLengthStr && (
+                <button type="button" onClick={() => setCycleLengthStr("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-gray-200 hover:bg-gray-300 p-1 transition">
+                  <span className="sr-only">Effacer</span>
+                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              )}
+            </div>
           </Field>
           <Field label="Durée moyenne des règles (jours)">
-            <input type="number" min={1} max={15} value={periodLength} onChange={(e) => setPeriodLength(parseInt(e.target.value) || 5)}
-              className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20" />
+            <div className="relative">
+              <input type="number" min={1} max={15} value={periodLengthStr} onChange={(e) => setPeriodLengthStr(e.target.value)}
+                placeholder="5"
+                className="w-full rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm outline-none focus:border-rose-vif focus:ring-2 focus:ring-rose-vif/20" />
+              {periodLengthStr && (
+                <button type="button" onClick={() => setPeriodLengthStr("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-gray-200 hover:bg-gray-300 p-1 transition">
+                  <span className="sr-only">Effacer</span>
+                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              )}
+            </div>
           </Field>
           <Field label="Premier jour des dernières règles">
             <input type="date" value={lastPeriod} onChange={(e) => setLastPeriod(e.target.value)}
